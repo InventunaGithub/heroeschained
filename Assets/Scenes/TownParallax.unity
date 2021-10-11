@@ -1530,7 +1530,10 @@ MonoBehaviour:
   - {fileID: 959968215}
   - {fileID: 994143179}
   LimitLeft: -1000
+  LimitBottom: -1000
   LimitRight: 1000
+  LimitTop: 100
+  MoveVertical: 0
 --- !u!1 &2089446486
 GameObject:
   m_ObjectHideFlags: 0
