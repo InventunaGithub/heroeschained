@@ -9,16 +9,17 @@ public class IntensityChanger : MonoBehaviour
     public float Intensity = 1;
     Material objectMaterial;
     Color materialColor;
-    public List<Color> ChildMaterialColors;
+    List<Color> childMaterialColors;
     float lastIntensity;
 
     void Start()
     {
         objectMaterial = gameObject.GetComponent<Renderer>().material;
         materialColor = objectMaterial.color;
+        ChildMaterialColors = new List<Color>();
         foreach (Transform g in transform.GetComponentsInChildren<Transform>())
         {
-            ChildMaterialColors.Add(transform.gameObject.GetComponent<Renderer>().material.color);
+            ChildMaterialColors.Add(g.gameObject.GetComponent<Renderer>().material.color);
         }
         SetIntensity();
     }
