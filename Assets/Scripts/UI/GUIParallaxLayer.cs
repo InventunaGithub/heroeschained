@@ -45,13 +45,13 @@ public class GUIParallaxLayer : MonoBehaviour
             RectTransformLayer.DOAnchorPosX(RectTransformLayer.localPosition.x + (MouseSpeed * Speed), 1);
         }
     }
-    public bool OnLimitY(float MouseSpeed, float limitLeft, float limitRight)
+    public bool OnLimitY(float MouseSpeed, float limitBottom, float limitTop)
     {
-        if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) > limitRight)
+        if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) > limitTop)
         {
             return true;
         }
-        else if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) < limitLeft)
+        else if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) < limitBottom)
         {
             return true;
         }
@@ -61,15 +61,15 @@ public class GUIParallaxLayer : MonoBehaviour
         }
     }
 
-    public void MoveY(float MouseSpeed, float limitLeft, float limitRight)
+    public void MoveY(float MouseSpeed, float limitBottom, float limitTop)
     {
-        if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) > limitRight)
+        if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) > limitTop)
         {
-            RectTransformLayer.DOAnchorPosY(limitRight, 1);
+            RectTransformLayer.DOAnchorPosY(limitTop, 1);
         }
-        else if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) < limitLeft)
+        else if (RectTransformLayer.localPosition.y + (MouseSpeed * Speed) < limitBottom)
         {
-            RectTransformLayer.DOAnchorPosY(limitLeft, 1);
+            RectTransformLayer.DOAnchorPosY(limitBottom, 1);
         }
         else
         {
