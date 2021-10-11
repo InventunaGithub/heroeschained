@@ -16,10 +16,10 @@ public class IntensityChanger : MonoBehaviour
     {
         objectMaterial = gameObject.GetComponent<Renderer>().material;
         materialColor = objectMaterial.color;
-        ChildMaterialColors = new List<Color>();
+        childMaterialColors = new List<Color>();
         foreach (Transform g in transform.GetComponentsInChildren<Transform>())
         {
-            ChildMaterialColors.Add(g.gameObject.GetComponent<Renderer>().material.color);
+            childMaterialColors.Add(g.gameObject.GetComponent<Renderer>().material.color);
         }
         SetIntensity();
     }
@@ -31,7 +31,7 @@ public class IntensityChanger : MonoBehaviour
         int index = 0;
         foreach (Transform g in transform.GetComponentsInChildren<Transform>())
         {
-            g.gameObject.GetComponent<Renderer>().material.color = ChildMaterialColors[index] * Intensity;
+            g.gameObject.GetComponent<Renderer>().material.color = childMaterialColors[index] * Intensity;
             index = index + 1;
         }
         // MERT GÖREV BİTİŞİ
