@@ -11,7 +11,7 @@ public class IntensityChanger : MonoBehaviour
     Color materialColor;
     List<Color> childMaterialColors;
     float lastIntensity;
-    public float intensityBorder;
+    public float IntensityBorder;
     bool borderPassed = false;
     List<GameObject> landObjects;
 
@@ -36,9 +36,9 @@ public class IntensityChanger : MonoBehaviour
     private void SetIntensity()
     {
         // MERT GÖREV BAŞLANGICI
-        if (Intensity < intensityBorder && borderPassed)
+        if (Intensity < IntensityBorder && borderPassed)
         {
-            Intensity = intensityBorder;
+            Intensity = IntensityBorder;
         }
         objectMaterial.color = materialColor * Intensity;
         int index = 0;
