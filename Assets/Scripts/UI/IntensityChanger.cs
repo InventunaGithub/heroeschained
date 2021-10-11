@@ -11,7 +11,7 @@ public class IntensityChanger : MonoBehaviour
     Color materialColor;
     List<Color> childMaterialColors;
     float lastIntensity;
-    public float IntensityBorder;
+    public float IntensityBorder = 0.35f;
     bool borderPassed = false;
     List<GameObject> landObjects;
 
