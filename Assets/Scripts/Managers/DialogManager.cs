@@ -39,7 +39,7 @@ public class DialogManager : MonoBehaviour
             GameObject Answer = Instantiate(AnswerPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             Answer.transform.SetParent(GameObject.Find("5").transform, false);
             Answer.transform.localPosition = new Vector3(0, (dialogItem.Answers.Length / 2) * (-40) + (index * 40), 0);
-            Answer.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = answer.Reserved2;
+            Answer.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = answer.InAnswerText;
             Answer.GetComponent<Button>().onClick.AddListener(delegate { RenderDialog(answer); });
             index = index + 1;
         }

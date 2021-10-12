@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 0
   Question: Diablog item 0
+  InAnswerText: Dialog item 0 in Answer
   Reserved1: 0
-  Reserved2: Reserved 0
+  Reserved2: 
   Reserved3: {fileID: 0}
   Answers:
   - {fileID: 11400000, guid: 9db4d582b9f2a0b41832c4a24edee363, type: 2}
