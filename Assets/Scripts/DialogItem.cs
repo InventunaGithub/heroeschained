@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "DialogItem", menuName = "Inventuna/Heroes_Chained/DialogItem", order = 1)]
+[CreateAssetMenu(fileName = "DialogItem", menuName = "Inventuna/HeroesChained/DialogItem", order = 1)]
 public class DialogItem : ScriptableObject
 {
     public int Id;
