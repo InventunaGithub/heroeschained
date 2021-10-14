@@ -73,22 +73,4 @@ public class VariableManager : MonoBehaviour
         Variables.Remove(variableName);
     }
 
-    void Start()
-    {
-        // FOR TEST PURPOSES ONLY, TO BE DELETED BY THE LEAD
-        Add("Var1", "String");
-        Add("Var2", 1);
-        Add("Var1", "String");
-        Debug.Log("Does Var1 Exists ? " + Exists("Var1").ToString());
-        Debug.Log("Does Var5 Exists ? " + Exists("Var5").ToString());
-        Debug.Log("Var 1 = " + Get("Var1").ToString());
-        Set("Var1", "New String Set");
-        Debug.Log("Changed Var 1 = " + Get("Var1").ToString());
-        Delete("Var1");
-        Debug.Log("Changed Var 1 = " + Get("Var1").ToString());
-        Debug.Log("Trying to get Var5 " + Get("Var5").ToString());
-        Delete("Var5");
-        Set("Var5" , 123);
-        
-    }
 }
