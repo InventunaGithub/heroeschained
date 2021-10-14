@@ -6,8 +6,8 @@ namespace CommandTerminal
 {
     public static class BuiltinCommands
     {
-        [RegisterCommand(Help = "Does nothing")]
-        static void CommandNoop(CommandArg[] args) { }
+        //[RegisterCommand(Help = "Does nothing")]
+        //static void CommandNoop(CommandArg[] args) { }
 
         [RegisterCommand(Help = "Clears the Command Console", MaxArgCount = 0)]
         static void CommandClear(CommandArg[] args) {
@@ -39,41 +39,41 @@ namespace CommandTerminal
             }
         }
 
-        [RegisterCommand(Help = "Times the execution of a Command", MinArgCount = 1)]
-        static void CommandTime(CommandArg[] args) {
-            var sw = new Stopwatch();
-            sw.Start();
+        //[RegisterCommand(Help = "Times the execution of a Command", MinArgCount = 1)]
+        //static void CommandTime(CommandArg[] args) {
+        //    var sw = new Stopwatch();
+        //    sw.Start();
 
-            Terminal.Shell.RunCommand(JoinArguments(args));
+        //    Terminal.Shell.RunCommand(JoinArguments(args));
 
-            sw.Stop();
-            Terminal.Log("Time: {0}ms", (double)sw.ElapsedTicks / 10000);
-        }
+        //    sw.Stop();
+        //    Terminal.Log("Time: {0}ms", (double)sw.ElapsedTicks / 10000);
+        //}
 
-        [RegisterCommand(Help = "Outputs message")]
-        static void CommandPrint(CommandArg[] args) {
-            Terminal.Log(JoinArguments(args));
-        }
+        //[RegisterCommand(Help = "Outputs message")]
+        //static void CommandPrint(CommandArg[] args) {
+        //    Terminal.Log(JoinArguments(args));
+        //}
 
-    #if DEBUG
-        [RegisterCommand(Help = "Outputs the StackTrace of the previous message", MaxArgCount = 0)]
-        static void CommandTrace(CommandArg[] args) {
-            int log_count = Terminal.Buffer.Logs.Count;
+    //#if DEBUG
+    //    [RegisterCommand(Help = "Outputs the StackTrace of the previous message", MaxArgCount = 0)]
+    //    static void CommandTrace(CommandArg[] args) {
+    //        int log_count = Terminal.Buffer.Logs.Count;
 
-            if (log_count - 2 <  0) {
-                Terminal.Log("Nothing to trace.");
-                return;
-            }
+    //        if (log_count - 2 <  0) {
+    //            Terminal.Log("Nothing to trace.");
+    //            return;
+    //        }
 
-            var log_item = Terminal.Buffer.Logs[log_count - 2];
+    //        var log_item = Terminal.Buffer.Logs[log_count - 2];
 
-            if (log_item.stack_trace == "") {
-                Terminal.Log("{0} (no trace)", log_item.message);
-            } else {
-                Terminal.Log(log_item.stack_trace);
-            }
-        }
-    #endif
+    //        if (log_item.stack_trace == "") {
+    //            Terminal.Log("{0} (no trace)", log_item.message);
+    //        } else {
+    //            Terminal.Log(log_item.stack_trace);
+    //        }
+    //    }
+    //#endif
 
         [RegisterCommand(Help = "Quits running Application", MaxArgCount = 0)]
         static void CommandQuit(CommandArg[] args) {
@@ -98,5 +98,6 @@ namespace CommandTerminal
 
             return sb.ToString();
         }
+
     }
 }
