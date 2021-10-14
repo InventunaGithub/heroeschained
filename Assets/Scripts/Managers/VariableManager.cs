@@ -57,7 +57,7 @@ public class VariableManager : MonoBehaviour
         {
             Debug.Log("There is no variable named " + variableName);
             Debug.LogException(e, this);
-            return null;
+            return "DoesNotExist";
         }
     }
 
