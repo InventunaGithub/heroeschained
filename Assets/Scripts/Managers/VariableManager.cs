@@ -23,42 +23,32 @@ public class VariableManager : MonoBehaviour
 
     public void Add(string variableName , object value)
     {
-        try
+        if (Variables.ContainsKey(variableName))
         {
-            Variables.Add(variableName, value);
+            throw new Exception("There's already a variable with same name");
         }
-        catch (Exception e)
-        {
-            Debug.Log("There already a variable named " + variableName);
-            Debug.LogException(e, this);
-        }
+
+        Variables.Add(variableName, value);
     }
 
     public void Set(string variableName, object value)
     {
-        try
+        if(!Variables.ContainsKey(variableName))
         {
-            Variables[variableName] = value;
+            throw new Exception("Variable not found");
         }
-        catch (Exception e)
-        {
-            Debug.Log("There is no variable named " + variableName);
-            Debug.LogException(e, this);
-        }
+
+        Variables[variableName] = value;
     }
 
     public object Get(string variableName)
     {
-        try
+        if (!Variables.ContainsKey(variableName))
         {
-            return Variables[variableName];
+            throw new Exception("Variable not found");
         }
-        catch (Exception e)
-        {
-            Debug.Log("There is no variable named " + variableName);
-            Debug.LogException(e, this);
-            return "DoesNotExist";
-        }
+
+        return Variables[variableName];
     }
 
     public bool Exists(string variableName)
@@ -69,22 +59,18 @@ public class VariableManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("There is no variable named " + variableName);
             return false;
         }
     }
 
     public void Delete(string variableName)
     {
-        try
+        if (!Variables.ContainsKey(variableName))
         {
-            Variables.Remove(variableName);
+            throw new Exception("Variable not found");
         }
-        catch (Exception e)
-        {
-            Debug.Log("There is no variable named " + variableName);
-            Debug.LogException(e, this);
-        }
+
+        Variables.Remove(variableName);
     }
 
     void Start()
