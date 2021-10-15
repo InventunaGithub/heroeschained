@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
+  m_Name: Meele1
+  m_EditorClassIdentifier: 
+  HeroID: 0
+  Name: Melee1
+  HeroSkills:
+  - CardID: -1
+    Name: NormalAttack
+    Info: 
+    Power: 0
+    Energy: 0
+    RemainingTurn: 0
+    Range: 0
+    used: 0
+    artwork: {fileID: 0}
+    skillType: 3
+    skillTarget: 1
+    statusEffect: 14
+  StatusEffects: []
+  BaseHealth: 134
+  BaseDamage: 5
+  Strength: 0
+  Dexterity: 0
+  Intelligence: 0
+  Vitality: 0
+  Armor: 0
+  Damage: 0
+  Health: 15
+  Range: 5
