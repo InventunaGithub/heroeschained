@@ -28,13 +28,13 @@ public class Card
     public int Range;
     public bool Used;
 
-    public Card(int CardID, string Name, string Info, int Power, int Range)
+    public Card(int cardID, string name, string info, int power, int range)
     {
-        this.CardID = CardID;
-        this.Name = Name;
-        this.Info = Info;
-        this.Power = Power;
-        this.Range = Range;
+        CardID = cardID;
+        Name = name;
+        Info = info;
+        Power = power;
+        Range = range;
     }
 }
 
@@ -60,22 +60,22 @@ public class Hero
     public AITypes AIType;
 
 
-    public Hero(string Name, int HeroID, int BaseHealth, int BaseDamage, int Strength, int Dexterity, int Intelligence, int Vitality, int Range, List<Card> Skills = null , AITypes AIType = AITypes.Closest)
+    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, List<Card> skills = null , AITypes AIType = AITypes.Closest)
     {
-        this.HeroID = HeroID;
-        this.Name = Name;
-        this.BaseHealth = BaseHealth;
-        this.Strength = Strength;
-        this.Dexterity = Dexterity;
-        this.Intelligence = Intelligence;
-        this.Vitality = Vitality;
-        this.Range = Range;
-        this.BaseDamage = BaseDamage;
+        HeroID = heroID;
+        Name = name;
+        BaseHealth = baseHealth;
+        Strength = strength;
+        Dexterity = dexterity;
+        Intelligence = intelligence;
+        Vitality = vitality;
+        Range = range;
+        BaseDamage = baseDamage;
         Health = this.BaseHealth + (this.Vitality * 2);
         MaxHealth = Health;
         Damage = BaseDamage + (this.Strength * 2);
         Armor = 10;
-        this.Skills = Skills;
+        Skills = skills;
         this.AIType = AIType; 
     }
 
