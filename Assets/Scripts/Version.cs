@@ -8,7 +8,7 @@ public class Version : MonoBehaviour
     [SerializeField] int VersionMinor;
     [SerializeField] int Build;
 
-    string GetVersion()
+    public string GetVersion()
     {
         return VersionMajor.ToString() + "." + VersionMinor.ToString()
             + " build " + Build.ToString();
