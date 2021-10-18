@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Version : MonoBehaviour
 {
-    [SerializeField] int VersionMajor;
-    [SerializeField] int VersionMinor;
-    [SerializeField] int Build;
+    [SerializeField] int versionMajor;
+    [SerializeField] int versionMinor;
+    [SerializeField] int build;
 
     public string GetVersion()
     {
-        return VersionMajor.ToString() + "." + VersionMinor.ToString()
-            + " build " + Build.ToString();
+        return versionMajor.ToString() + "." + versionMinor.ToString()
+            + " build " + build.ToString();
     }
 }
