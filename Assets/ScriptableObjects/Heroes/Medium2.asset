@@ -38,4 +38,4 @@ MonoBehaviour:
   Damage: 0
   Health: 0
   Range: 10
-  AIType: 0
+  AIType: 1

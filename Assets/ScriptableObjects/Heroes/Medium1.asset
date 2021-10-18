@@ -29,7 +29,7 @@ MonoBehaviour:
     statusEffect: 14
   StatusEffects: []
   BaseHealth: 109
-  BaseDamage: 5
+  BaseDamage: 24
   Strength: 0
   Dexterity: 0
   Intelligence: 0
@@ -38,3 +38,4 @@ MonoBehaviour:
   Damage: 0
   Health: 0
   Range: 10
+  AIType: 0

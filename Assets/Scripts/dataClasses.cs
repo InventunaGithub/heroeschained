@@ -157,7 +157,7 @@ public class Hero
     bool isElectirified;
 
 
-    public Hero(string name, int heroID, int baseHealth, int strength, int dexterity, int intelligence, int vitality, int Range, List<Card> HeroSkills = null , AITypes AIType = AITypes.Closest)
+    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int Range, List<Card> HeroSkills = null , AITypes AIType = AITypes.Closest)
     {
         HeroID = heroID;
         Name = name;
@@ -167,6 +167,7 @@ public class Hero
         Intelligence = intelligence;
         Vitality = vitality;
         this.Range = Range;
+        this.BaseDamage = baseDamage;
         Health = baseHealth + (Vitality * 2);
         maxHealth = Health;
         Damage = BaseDamage + (strength * 2);

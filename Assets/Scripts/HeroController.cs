@@ -57,11 +57,23 @@ public class HeroController : MonoBehaviour
         {   
             if(MainHero.AIType == AITypes.Closest)
             {
-                ChooseClosestTarget();
+                SetAgentPathToClosest();
             }
             else if (MainHero.AIType == AITypes.Lockon)
             {
-                ChooseClosestTarget();
+                if(!targetChosed)
+                {
+                    SetAgentPathToClosest();
+                }
+                else
+                {
+                    if(playerRef.GetComponent<HeroController>().MainHero.Health <= 0)
+                    {
+                        SetAgentPathToClosest();
+                    }
+                }
+
+                SetAgentPath(playerRef.gameObject);
             }
 
             if (closestTargetDistance < MainHero.Range && CanSeeTarget(playerRef))
@@ -92,7 +104,7 @@ public class HeroController : MonoBehaviour
         }
     }
 
-    public void ChooseClosestTarget()
+    public void SetAgentPathToClosest()
     {
         closestTargetDistance = float.MaxValue;
         NavMeshPath Path = null;
@@ -127,11 +139,24 @@ public class HeroController : MonoBehaviour
             
         }
 
-
         if (ShortestPath != null)
         {
             Agent.SetPath(ShortestPath);
         }
+    }
+
+    public void SetAgentPath(GameObject target)
+    {
+        NavMeshPath path = new NavMeshPath();
+   
+        if (CanSeeTarget(playerRef))
+        {
+            transform.LookAt(target.transform);
+        }
+
+        NavMesh.CalculatePath(transform.position, target.transform.position, Agent.areaMask, path);
+
+        Agent.SetPath(path);
     }
 
     IEnumerator Attack(Hero TargetHero)
