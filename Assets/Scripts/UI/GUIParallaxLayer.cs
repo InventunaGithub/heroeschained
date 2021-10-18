@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
+// Author: Mert Karavural
+// Date: 7 Oct 2020
+
 public class GUIParallaxLayer : MonoBehaviour
 {
     public float Speed = 1f;

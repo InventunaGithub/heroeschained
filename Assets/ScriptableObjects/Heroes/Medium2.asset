@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
+  m_Name: Medium2
+  m_EditorClassIdentifier: 
+  HeroID: 0
+  Name: Medium2
+  Skills:
+  - CardID: 0
+    Name: Normal Attack
+    Info: 
+    Power: 0
+    Range: 0
+    Used: 0
+  StatusEffects: []
+  BaseHealth: 109
+  BaseDamage: 84
+  Strength: 40
+  Dexterity: 0
+  Intelligence: 0
+  Vitality: 0
+  Armor: 0
+  Damage: 0
+  Health: 0
+  Range: 10
+  AIType: 1

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Author: Mert Karavural
+// Date: 7 Oct 2020
+
 public class GUIParallaxHandler : MonoBehaviour
 {
     public GUIParallaxLayer[] Layers;
