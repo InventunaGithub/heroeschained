@@ -507,28 +507,18 @@ MonoBehaviour:
     PlayerID: 0
     Name: 
     Team: []
-    Deck: []
-    Hand: []
-    Graveyard: []
-    Energy: 0
-    maxEnergy: 100
   King2:
     PlayerID: 0
     Name: 
     Team: []
-    Deck: []
-    Hand: []
-    Graveyard: []
-    Energy: 0
-    maxEnergy: 100
-  mockHeroSo:
-  - {fileID: 11400000, guid: 3a7483d081d63d44bada919d00dd0dda, type: 2}
+  MockHeroSo:
   - {fileID: 11400000, guid: b36c757d1e72dbb408fac5ee5eefc867, type: 2}
+  - {fileID: 11400000, guid: 3a7483d081d63d44bada919d00dd0dda, type: 2}
   - {fileID: 11400000, guid: d7dfaf535a2d1c148a7f70f888f6eb6e, type: 2}
-  - {fileID: 11400000, guid: 953d4091b3cb7264891b045e8f939b5d, type: 2}
-  - {fileID: 11400000, guid: 6607554c1d044ba44b7bf263f86c4d7e, type: 2}
   - {fileID: 11400000, guid: b0eca5467f2c66e41a40a51eb3bbc406, type: 2}
-  mockHeroes: []
+  - {fileID: 11400000, guid: 6607554c1d044ba44b7bf263f86c4d7e, type: 2}
+  - {fileID: 11400000, guid: 953d4091b3cb7264891b045e8f939b5d, type: 2}
+  MockHeroes: []
   Characters: {fileID: 968158089}
 --- !u!1 &968158089
 GameObject:

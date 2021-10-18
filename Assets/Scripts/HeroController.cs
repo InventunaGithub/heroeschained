@@ -21,22 +21,25 @@ public class HeroController : MonoBehaviour
     public float NormalAttackCooldown;
     private bool isAttacking;
     private bool targetChosed;
-    public float radius = 25.0f; //This is sight Radius
+    public float Radius = 25.0f; //This is sight Radius
     [Range(0, 360)]
     public float angle = 180f; //This is view Angle
-    public GameObject playerRef;
-    public LayerMask targetMask;
-    public LayerMask obstructionMask;
+    public GameObject PlayerRef;
+    public LayerMask ObstructionMask;
     List<Transform> inRange = new List<Transform>();
-    public Animator animator;
+    public Animator HeroAnimator;
 
     void Start()
     {
         character = gameObject.GetComponent<ThirdPersonCharacter>();
-        animator = gameObject.GetComponent<Animator>();
-        obstructionMask = LayerMask.GetMask("Obstacle");
+        HeroAnimator = gameObject.GetComponent<Animator>();
+        ObstructionMask = LayerMask.GetMask("Obstacle");
         Agent = gameObject.GetComponent<NavMeshAgent>();
         Agent.updateRotation = false;
+        if(Owner.Team.Count == 0)
+        {
+            throw new System.Exception("Team does not have any members");
+        }
         MainHero = Owner.Team[ChildNo];
         closestTargetDistance = float.MaxValue;
         NormalAttackCooldown = 5 - (MainHero.Dexterity * 0.5f);
@@ -52,7 +55,7 @@ public class HeroController : MonoBehaviour
         if (MainHero.Health <= 0)
         {
             Owner.Team.Remove(MainHero);
-            animator.SetBool("DeathTrigger" , true);
+            HeroAnimator.SetBool("DeathTrigger" , true);
             character.Move(Vector3.zero, false, false);
             Agent.isStopped = true;
         }
@@ -70,16 +73,16 @@ public class HeroController : MonoBehaviour
                 }
                 else
                 {
-                    if(playerRef.GetComponent<HeroController>().MainHero.Health <= 0)
+                    if(PlayerRef.GetComponent<HeroController>().MainHero.Health <= 0)
                     {
                         SetAgentPathToClosest();
                     }
                 }
 
-                SetAgentPath(playerRef.gameObject);
+                SetAgentPath(PlayerRef.gameObject);
             }
 
-            if (closestTargetDistance < MainHero.Range && CanSeeTarget(playerRef))
+            if (closestTargetDistance < MainHero.Range && CanSeeTarget(PlayerRef))
             {
                 Agent.SetDestination(gameObject.transform.position);
                 if (!isAttacking && Enemy.Team.Count >= 0)
@@ -100,7 +103,7 @@ public class HeroController : MonoBehaviour
             if (Enemy.Team.Count == 0)
             {
                 character.Move(Vector3.zero, false, false);
-                animator.SetBool("Win", true);
+                HeroAnimator.SetBool("Win", true);
                 Agent.isStopped = true;
             }
 
@@ -110,8 +113,8 @@ public class HeroController : MonoBehaviour
     public void SetAgentPathToClosest()
     {
         closestTargetDistance = float.MaxValue;
-        NavMeshPath Path = null;
-        NavMeshPath ShortestPath = null;
+        NavMeshPath path = null;
+        NavMeshPath shortestPath = null;
 
         for (int i = 0; i < Enemy.Team.Count; i++)
         {
@@ -119,24 +122,24 @@ public class HeroController : MonoBehaviour
             {
                 continue;
             }
-            Path = new NavMeshPath();
+            path = new NavMeshPath();
 
-            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].HeroObject.transform.position, Agent.areaMask, Path))
+            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].HeroObject.transform.position, Agent.areaMask, path))
             {
-                float distance = Vector3.Distance(transform.position, Path.corners[0]);
+                float distance = Vector3.Distance(transform.position, path.corners[0]);
 
-                for (int j = 1; j < Path.corners.Length; j++)
+                for (int j = 1; j < path.corners.Length; j++)
                 {
-                    distance += Vector3.Distance(Path.corners[j - 1], Path.corners[j]);
+                    distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
                 }
 
                 if (distance < closestTargetDistance)
                 {
                     closestTargetDistance = distance;
-                    ShortestPath = Path;
+                    shortestPath = path;
                     TargetHero = i;
-                    playerRef = Enemy.Team[TargetHero].HeroObject;
-                    if (CanSeeTarget(playerRef))
+                    PlayerRef = Enemy.Team[TargetHero].HeroObject;
+                    if (CanSeeTarget(PlayerRef))
                     {
                         transform.LookAt(Enemy.Team[TargetHero].HeroObject.transform);
                     }
@@ -146,9 +149,9 @@ public class HeroController : MonoBehaviour
             
         }
 
-        if (ShortestPath != null)
+        if (shortestPath != null)
         {
-            Agent.SetPath(ShortestPath);
+            Agent.SetPath(shortestPath);
         }
     }
 
@@ -156,7 +159,7 @@ public class HeroController : MonoBehaviour
     {
         NavMeshPath path = new NavMeshPath();
    
-        if (CanSeeTarget(playerRef))
+        if (CanSeeTarget(PlayerRef))
         {
             transform.LookAt(target.transform);
         }
@@ -187,7 +190,7 @@ public class HeroController : MonoBehaviour
         if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, ObstructionMask))
             {
                 return true;
             }
