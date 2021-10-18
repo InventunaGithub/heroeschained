@@ -75,6 +75,12 @@ public class VariableManager : MonoBehaviour
         Variables.Remove(variableName);
     }
 
+    public void Reset()
+    {
+      
+        Variables.Clear();
+    }
+
     public List<string> ListAll()
     {
         List<string> temp = new List<string>();
