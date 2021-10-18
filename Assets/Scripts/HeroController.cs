@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityStandardAssets.Characters.ThirdPerson;
 
+//Author: Mert Karavural
+//Date: 28 Sep 2020
+
 public class HeroController : MonoBehaviour
 {
     ThirdPersonCharacter character;
@@ -112,9 +115,13 @@ public class HeroController : MonoBehaviour
 
         for (int i = 0; i < Enemy.Team.Count; i++)
         {
+            if(Enemy.Team[i] == null)
+            {
+                continue;
+            }
             Path = new NavMeshPath();
 
-            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].heroObject.transform.position, Agent.areaMask, Path))
+            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].HeroObject.transform.position, Agent.areaMask, Path))
             {
                 float distance = Vector3.Distance(transform.position, Path.corners[0]);
 
@@ -128,10 +135,10 @@ public class HeroController : MonoBehaviour
                     closestTargetDistance = distance;
                     ShortestPath = Path;
                     TargetHero = i;
-                    playerRef = Enemy.Team[TargetHero].heroObject;
+                    playerRef = Enemy.Team[TargetHero].HeroObject;
                     if (CanSeeTarget(playerRef))
                     {
-                        transform.LookAt(Enemy.Team[TargetHero].heroObject.transform);
+                        transform.LookAt(Enemy.Team[TargetHero].HeroObject.transform);
                     }
                     targetChosed = true;
                 }
@@ -161,9 +168,13 @@ public class HeroController : MonoBehaviour
 
     IEnumerator Attack(Hero TargetHero)
     {
+        if(MainHero.Skills.Count == 0)
+        {
+            throw new System.Exception("Hero Does Not Have Any Skills.");
+        }
         isAttacking = true;
-        TargetHero.effectedBy(MainHero.usedSkill(0));
-        Debug.Log(Owner.Name +" "+MainHero.Name + " Attacked to " + TargetHero.Name +" with " + MainHero.usedSkill(0).Name + " and dealt " + MainHero.usedSkill(0).Power.ToString() + " Targe hero's remaining Health is "+  TargetHero.Health);
+        TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
+        Debug.Log(Owner.Name +" "+MainHero.Name + " Attacked to " + TargetHero.Name +" with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is "+  TargetHero.Health);
         yield return new WaitForSeconds(NormalAttackCooldown);
         isAttacking = false;
     }

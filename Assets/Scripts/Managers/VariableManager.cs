@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using System;
 using CommandTerminal;
 
+//Author: Mert Karavural
+//Date: 14 Oct 2020
+
 public class VariableManager : MonoBehaviour
 {
     public static VariableManager Instance { get;private set; }

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Author: Mert Karavural
+// Date: 14 Sep 2020
+
 
 [CreateAssetMenu(fileName = "New Card", menuName = "Inventuna/HeroesChained/Card")]
 public class CardSO : ScriptableObject
@@ -12,10 +15,5 @@ public class CardSO : ScriptableObject
     public string Info;
     public int Power;
     public int Energy;
-    public int RemainingTurn;
     public int Range;
-    public SkillTypes skillType;
-    public SkillTargets skillTarget;
-    public StatusEffect statusEffect; // can be use to finish the fight mechanic by interrupt 
-    public Sprite artwork;
 }

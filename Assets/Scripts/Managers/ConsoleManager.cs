@@ -6,6 +6,10 @@ using System;
 using CommandTerminal;
 using System.IO;
 
+//Author: Mert Karavural
+//Date: 14 Oct 2020
+
+
 public class ConsoleManager : MonoBehaviour
 {
     

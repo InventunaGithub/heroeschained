@@ -14,19 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Medium2
-  HeroSkills:
-  - CardID: -1
-    Name: NormalAttack
+  Skills:
+  - CardID: 0
+    Name: Normal Attack
     Info: 
     Power: 0
-    Energy: 0
-    RemainingTurn: 0
     Range: 0
-    used: 0
-    artwork: {fileID: 0}
-    skillType: 3
-    skillTarget: 1
-    statusEffect: 14
+    Used: 0
   StatusEffects: []
   BaseHealth: 109
   BaseDamage: 84

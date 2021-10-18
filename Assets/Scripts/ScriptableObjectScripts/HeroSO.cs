@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO MAKE THE EFFECTEDBYCLASS , MAKE HERO SKILLS.
+//Author: Mert Karavural
+//Date: 15 Sep 2020
 
 [CreateAssetMenu(fileName = "New Hero", menuName = "Inventuna/HeroesChained/Hero")]
 public class HeroSO : ScriptableObject
 {
     public int HeroID; //Uniq id ?
     public string Name;
-    //public Item[] Items;
-    public List<Card> HeroSkills;
-    public List<Card> StatusEffects; // this should be skills or card ?
+    public List<Card> Skills;
     public int BaseHealth;
     public int BaseDamage = 5;
     public int Strength;

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Mert Karavural
+//Date: 11 Oct 2020
+
 
 [CreateAssetMenu(fileName = "DialogItem", menuName = "Inventuna/HeroesChained/DialogItem", order = 1)]
 public class DialogItem : ScriptableObject
