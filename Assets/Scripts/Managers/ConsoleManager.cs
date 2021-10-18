@@ -12,7 +12,10 @@ public class ConsoleManager : MonoBehaviour
     [RegisterCommand(Help = "Shows Version")]
     static void CommandVer(CommandArg[] args)
     {
-        if (Terminal.IssuedError) return; // Error will be handled by Terminal
+        if (Terminal.IssuedError)
+        {
+            return;// Error will be handled by Terminal
+        }
 
         Terminal.Log("Version 0");
     }
@@ -28,7 +31,11 @@ public class ConsoleManager : MonoBehaviour
                 string variableName = args[1].String;
                 object value = args[2];
                 VariableManager.Instance.Add(variableName, value);
-                if (Terminal.IssuedError) return; // Error will be handled by Terminal
+                if (Terminal.IssuedError)
+                {
+                    return;// Error will be handled by Terminal
+                }
+
                 Terminal.Log(variableName + " added with value :  " + value.ToString());
             }
             else
@@ -43,8 +50,13 @@ public class ConsoleManager : MonoBehaviour
                 string variableName = args[1].String;
                 object value = args[2];
                 VariableManager.Instance.Set(variableName, value);
-                if (Terminal.IssuedError) return; // Error will be handled by Terminal
-                Terminal.Log(variableName + " added with value :  " + value.ToString());
+
+                if (Terminal.IssuedError)
+                {
+                    return;// Error will be handled by Terminal
+                }
+
+                Terminal.Log(variableName + " value changed to :  " + value.ToString());
             }
             else
             {
@@ -56,7 +68,10 @@ public class ConsoleManager : MonoBehaviour
             if (args.Length == 2)
             {
                 string variableName = args[1].String;
-                if (Terminal.IssuedError) return; // Error will be handled by Terminal
+                if (Terminal.IssuedError)
+                {
+                    return;// Error will be handled by Terminal
+                }
 
                 Terminal.Log("Value : " + VariableManager.Instance.Get(variableName).ToString());
             }
@@ -76,7 +91,11 @@ public class ConsoleManager : MonoBehaviour
         {
             if (args.Length == 1)
             {
-                if (Terminal.IssuedError) return; // Error will be handled by Terminal
+                if (Terminal.IssuedError)
+                {
+                    return;// Error will be handled by Terminal
+                }
+
                 foreach (string item in VariableManager.Instance.ListAll())
                 {
                     Terminal.Log(item);
@@ -100,7 +119,10 @@ public class ConsoleManager : MonoBehaviour
 
                 File.WriteAllText(path, allVariables);
 
-                if (Terminal.IssuedError) return; // Error will be handled by Terminal
+                if (Terminal.IssuedError)
+                {
+                    return;// Error will be handled by Terminal
+                }
 
                 Terminal.Log("Dump.txt created at " + path);
             }
@@ -115,7 +137,10 @@ public class ConsoleManager : MonoBehaviour
             {
                 VariableManager.Instance.Reset();
 
-                if (Terminal.IssuedError) return; // Error will be handled by Terminal
+                if (Terminal.IssuedError)
+                {
+                    return;// Error will be handled by Terminal
+                }
 
                 Terminal.Log("All variables deleted. ");
             }
@@ -143,7 +168,10 @@ public class ConsoleManager : MonoBehaviour
                     throw new Exception("Dump.txt does not exist.");
                 }
 
-                if (Terminal.IssuedError) return; // Error will be handled by Terminal
+                if (Terminal.IssuedError)
+                {
+                    return;// Error will be handled by Terminal
+                }
 
                 Terminal.Log("Dump.txt read at " + path);
             }
@@ -206,7 +234,10 @@ public class ConsoleManager : MonoBehaviour
     [RegisterCommand(Name = "Pause", Help = "Pauses the game")]
     static void CommandPause(CommandArg[] args)
     {
-        if (Terminal.IssuedError) return; // Error will be handled by Terminal
+        if (Terminal.IssuedError)
+        {
+            return;// Error will be handled by Terminal
+        }
 
         Terminal.Log("Game Paused");
         Debug.Break();
@@ -216,7 +247,10 @@ public class ConsoleManager : MonoBehaviour
     static void CommandFpsOn(CommandArg[] args)
     {
         VariableManager.Instance.ShowFPS = true;
-        if (Terminal.IssuedError) return; // Error will be handled by Terminal
+        if (Terminal.IssuedError)
+        {
+            return;// Error will be handled by Terminal
+        }
 
         Terminal.Log("Fps meter opened");
     }
@@ -225,7 +259,10 @@ public class ConsoleManager : MonoBehaviour
     static void CommandFpsOff(CommandArg[] args)
     {
         VariableManager.Instance.ShowFPS = false;
-        if (Terminal.IssuedError) return; // Error will be handled by Terminal
+        if (Terminal.IssuedError)
+        {
+            return;// Error will be handled by Terminal
+        }
 
         Terminal.Log("Fps meter closed");
     }
@@ -233,7 +270,10 @@ public class ConsoleManager : MonoBehaviour
     [RegisterCommand(Name = "os", Help = "Outputs operating system and platform.")]
     static void CommandOs(CommandArg[] args)
     {
-        if (Terminal.IssuedError) return; // Error will be handled by Terminal
+        if (Terminal.IssuedError)
+        {
+            return;// Error will be handled by Terminal
+        }
 
         Terminal.Log(SystemInfo.operatingSystem);
     }
