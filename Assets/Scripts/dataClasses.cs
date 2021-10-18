@@ -87,7 +87,8 @@ public class Item
 
 public enum SkillTypes { buff, debuff, heal, damage, magicDamage, interrupt, piercing, shake, format, stabilise, bloodritual, godlightning};
 public enum SkillTargets { arena, singleTarget, enemies, allies, card, self, king };
-public enum StatusEffect { burn, heal, damage, atk, dex, armor, freeze, sleep, exhaust, daze, electrified, wet, bleed, energy, none }; //damage is normal damage per round
+public enum StatusEffect { burn, heal, damage, atk, dex, armor, freeze, sleep, exhaust, daze, electrified, wet, bleed, energy, none };
+public enum AITypes {Closest , Lockon};
 
 [System.Serializable]
 public class Card
@@ -106,7 +107,7 @@ public class Card
     public SkillTargets skillTarget;
     public StatusEffect statusEffect; // can be use to finish the fight mechanic by interrupt 
 
-    public Card(int CardID, string Name, string Info, int Power, int Energy, int RemainingTurn, int Range, SkillTypes skillType, SkillTargets skillTarget, StatusEffect statusEffect)
+    public Card(int CardID, string Name, string Info, int Power, int Energy, int RemainingTurn, int Range, SkillTypes skillType, SkillTargets skillTarget, StatusEffect statusEffect, Sprite artwork = null)
     {
         this.CardID = CardID;
         this.Name = Name;
@@ -118,20 +119,10 @@ public class Card
         this.skillType = skillType;
         this.skillTarget = skillTarget;
         this.statusEffect = statusEffect;
-    }
-    public Card(int CardID, string Name, string Info, int Power, int Energy, int RemainingTurn, int Range, SkillTypes skillType, SkillTargets skillTarget, StatusEffect statusEffect , Sprite artwork)
-    {
-        this.CardID = CardID;
-        this.Name = Name;
-        this.Info = Info;
-        this.Power = Power;
-        this.Energy = Energy;
-        this.Range = Range;
-        this.RemainingTurn = RemainingTurn;
-        this.skillType = skillType;
-        this.skillTarget = skillTarget;
-        this.statusEffect = statusEffect;
-        this.artwork = artwork;
+        if(artwork != null)
+        {
+            this.artwork = artwork;
+        }
     }
 }
 
@@ -145,7 +136,7 @@ public class Hero
     public List<Card> HeroStatuses; // this should be skills or card ?
     public GameObject heroObject;
     public int BaseHealth;
-    public int BaseDamage = 5;
+    public int BaseDamage;
     public int Strength;
     public int Dexterity;
     public int Intelligence;
@@ -155,6 +146,7 @@ public class Hero
     public int Health;
     public int maxHealth;
     public int Range;
+    public AITypes AIType;
     public bool isFrozen;
     public bool isAsleep;
     public bool isDazed;
@@ -164,23 +156,8 @@ public class Hero
     public bool isWet;
     bool isElectirified;
 
-    //Burning , bleeding or other status effects must be added as status cards. / burn card bleeding card etc. OR status effects can be default , as like burn hits 3 , bleeding hits 2 etc
-    public Hero(string name, int heroID, int baseHealth, int strength, int dexterity, int intelligence, int vitality , int Range)
-    {
-        HeroID = heroID;
-        Name = name;
-        BaseHealth = baseHealth;
-        Strength = strength;
-        Dexterity = dexterity;
-        Intelligence = intelligence;
-        Vitality = vitality;
-        Health = baseHealth + (Vitality * 2);
-        maxHealth = Health;
-        Damage = BaseDamage + (strength * 2);
-        Armor = 10;
-        HeroStatuses = new List<Card>();
-    }
-    public Hero(string name, int heroID, int baseHealth, int strength, int dexterity, int intelligence, int vitality , int Range, List<Card> HeroSkills)
+
+    public Hero(string name, int heroID, int baseHealth, int strength, int dexterity, int intelligence, int vitality, int Range, List<Card> HeroSkills = null , AITypes AIType = AITypes.Closest)
     {
         HeroID = heroID;
         Name = name;
@@ -195,7 +172,12 @@ public class Hero
         Damage = BaseDamage + (strength * 2);
         Armor = 10;
         HeroStatuses = new List<Card>();
-        this.HeroSkills = HeroSkills; 
+        if(HeroSkills == null)
+        {
+            HeroSkills = new List<Card>();
+        }
+        this.HeroSkills = HeroSkills;
+        this.AIType = AIType; 
     }
 
     public bool CanPlay()// Returns if the hero can play this turn.
@@ -227,98 +209,8 @@ public class Hero
         }
         return TempCard;
     }
-    public void TurnOver() //Control what should happen after hero's turn is over. Also the base use of this class is to determine if status effect is gone because of the round counts.
-    {
-        //reduce hero's status effects turn number.
-        List<Card> TempStatuses = new List<Card>(HeroStatuses);
-
-        foreach (var statusCard in HeroStatuses)
-        {
-            statusCard.RemainingTurn -= 1; //!!!!!!!!!!!!!!!!!!!!!!!!! to remove a buff from a hero , you must set remaining turn to 0 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            if (statusCard.RemainingTurn <= 0)
-            {
-                if (statusCard.statusEffect == StatusEffect.freeze)
-                {
-                    isFrozen = false;
-                }
-                if (statusCard.statusEffect == StatusEffect.burn)
-                {
-                    isBurning = false;
-                }
-                if (statusCard.statusEffect == StatusEffect.bleed)
-                {
-                    isBleeding = false;
-                }
-                if (statusCard.statusEffect == StatusEffect.electrified)
-                {
-                    isElectirified = false;
-                }
-                if (statusCard.statusEffect == StatusEffect.wet)
-                {
-                    isWet = false;
-                }
-                if (statusCard.statusEffect == StatusEffect.sleep)
-                {
-                    isAsleep = false;
-                }
-                if (statusCard.statusEffect == StatusEffect.daze)
-                {
-                    isDazed = false;
-                }
-                if (statusCard.statusEffect == StatusEffect.atk)
-                {
-                    if (statusCard.skillType == SkillTypes.buff)
-                    {
-                        Damage -= statusCard.Power;
-                    }
-                    if (statusCard.skillType == SkillTypes.debuff)
-                    {
-                        Damage += statusCard.Power;
-                    }
-                }
-                if (statusCard.statusEffect == StatusEffect.dex)
-                {
-                    if (statusCard.skillType == SkillTypes.buff)
-                    {
-                        Dexterity -= statusCard.Power;
-                    }
-                    if (statusCard.skillType == SkillTypes.debuff)
-                    {
-                        Dexterity += statusCard.Power;
-                    }
-                }
-                if (statusCard.statusEffect == StatusEffect.armor)
-                {
-                    if (statusCard.skillType == SkillTypes.buff)
-                    {
-                        Armor -= statusCard.Power;
-                    }
-                    if (statusCard.skillType == SkillTypes.debuff)
-                    {
-                        Armor += statusCard.Power;
-                    }
-                }
-                TempStatuses.Remove(statusCard); //Removing this when you are going in with foreach is causing bugs.
-            }
-            if (statusCard.statusEffect == StatusEffect.burn)
-            {
-                Health -= 2;
-            }
-            if (statusCard.statusEffect == StatusEffect.bleed)
-            {
-                Health -= 2;
-            }
-            
-        }
-        if(isWet && isElectirified)
-        {
-            Health -= 5;
-        }
-        HeroStatuses = TempStatuses;
-        Normalise();
-    }
-
-    public void effectedBy(Card card)//This is used for most situations. Normal attacks and such still counts as cards.
+    
+    public void effectedBy(Card card) //This is used for most situations. Normal attacks and such still counts as cards.
     {
         
         if (card.skillType == SkillTypes.godlightning)
@@ -424,10 +316,6 @@ public class Hero
         if (card.statusEffect == StatusEffect.bleed)
         {
             isBleeding = true;
-        }
-        if (card.statusEffect == StatusEffect.electrified)
-        {
-            isElectirified = true;
         }
         if (card.statusEffect == StatusEffect.wet)
         {

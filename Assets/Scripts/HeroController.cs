@@ -16,14 +16,14 @@ public class HeroController : MonoBehaviour
     public NavMeshAgent Agent;
     float closestTargetDistance;
     public float NormalAttackCooldown;
-    bool isAttacking;
+    private bool isAttacking;
+    private bool targetChosed;
     public float radius = 25.0f; //This is sight Radius
     [Range(0, 360)]
     public float angle = 180f; //This is view Angle
     public GameObject playerRef;
     public LayerMask targetMask;
     public LayerMask obstructionMask;
-    public bool canSeePlayer;
     List<Transform> inRange = new List<Transform>();
     public Animator animator;
 
@@ -32,16 +32,6 @@ public class HeroController : MonoBehaviour
         character = gameObject.GetComponent<ThirdPersonCharacter>();
         animator = gameObject.GetComponent<Animator>();
         obstructionMask = LayerMask.GetMask("Obstacle");
-        if (Owner.Name == "King1")
-        {
-            gameObject.layer = 7;
-            targetMask = LayerMask.GetMask("King2");
-        }
-        else
-        {
-            gameObject.layer = 8;
-            targetMask = LayerMask.GetMask("King1");
-        }
         Agent = gameObject.GetComponent<NavMeshAgent>();
         Agent.updateRotation = false;
         MainHero = Owner.Team[ChildNo];
@@ -64,15 +54,17 @@ public class HeroController : MonoBehaviour
             Agent.isStopped = true;
         }
         else
-        {
-            //TODO Fix a bug : When you see an enemy you attack it and when the enemy you attacked dies , this code automaticly chooses another enemy and run to it. This should not supposed to happend because yhis hero never saw that enemy.
-            if (inRange.Count == 0)
+        {   
+            if(MainHero.AIType == AITypes.Closest)
             {
-                //This happens when there's no enemy in sight and never seen one before. So patrol.
+                ChooseClosestTarget();
             }
-            StartCoroutine(FOVRoutine());
-            ChooseTarget();
-            if (closestTargetDistance < MainHero.Range && canSeePlayer)
+            else if (MainHero.AIType == AITypes.Lockon)
+            {
+                ChooseClosestTarget();
+            }
+
+            if (closestTargetDistance < MainHero.Range && CanSeeTarget(playerRef))
             {
                 Agent.SetDestination(gameObject.transform.position);
                 if (!isAttacking && Enemy.Team.Count >= 0)
@@ -80,7 +72,6 @@ public class HeroController : MonoBehaviour
                     StartCoroutine(Attack(Enemy.Team[TargetHero]));
                 }
             }
-
 
             if (Agent.remainingDistance > Agent.stoppingDistance)
             {
@@ -101,7 +92,7 @@ public class HeroController : MonoBehaviour
         }
     }
 
-    public void ChooseTarget()
+    public void ChooseClosestTarget()
     {
         closestTargetDistance = float.MaxValue;
         NavMeshPath Path = null;
@@ -109,10 +100,6 @@ public class HeroController : MonoBehaviour
 
         for (int i = 0; i < Enemy.Team.Count; i++)
         {
-            if (Enemy.Team[i] == null)
-            {
-                continue;
-            }
             Path = new NavMeshPath();
 
             if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].heroObject.transform.position, Agent.areaMask, Path))
@@ -129,11 +116,12 @@ public class HeroController : MonoBehaviour
                     closestTargetDistance = distance;
                     ShortestPath = Path;
                     TargetHero = i;
-                    if(canSeePlayer)
+                    playerRef = Enemy.Team[TargetHero].heroObject;
+                    if (CanSeeTarget(playerRef))
                     {
                         transform.LookAt(Enemy.Team[TargetHero].heroObject.transform);
                     }
-                    playerRef = Enemy.Team[TargetHero].heroObject;
+                    targetChosed = true;
                 }
             }
             
@@ -155,54 +143,26 @@ public class HeroController : MonoBehaviour
         isAttacking = false;
     }
 
-    private IEnumerator FOVRoutine()
+    private bool CanSeeTarget(GameObject targetGO)
     {
-        WaitForSeconds wait = new WaitForSeconds(0.2f);
+        Transform target = targetGO.transform;
+        Vector3 directionToTarget = (target.position - transform.position).normalized;
 
-        while (true)
+        if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
         {
-            yield return wait;
-            FieldOfViewCheck();
-        }
-    }
-
-    private void FieldOfViewCheck()
-    {
-        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
-        if (rangeChecks.Length != 0)
-        {
-            Transform target = rangeChecks[0].transform;
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
-
-            if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
             {
-                float distanceToTarget = Vector3.Distance(transform.position, target.position);
-                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
-                {
-                    foreach (var element in rangeChecks)
-                    {
-                        if (!inRange.Contains(element.transform))
-                        {
-                            inRange.Add(element.transform);
-                        }
-                    }
-                    canSeePlayer = true;
-                }
-                else
-                {
-                    canSeePlayer = false;
-                }
+                return true;
             }
             else
             {
-                canSeePlayer = false;
+                return false;
             }
         }
-        else if (canSeePlayer)
+        else
         {
-            canSeePlayer = false;
+            return false;
         }
     }
-    //TODO Move , Normal Attack , Range , Ranged Attack , Find path ..
-    //main things are going to be Attack() method , which will find and opponent to attack and use NormalAttack Card on it.
 }

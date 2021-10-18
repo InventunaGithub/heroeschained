@@ -79,6 +79,7 @@ MonoBehaviour:
     Health: 0
     maxHealth: 0
     Range: 0
+    AIType: 0
     isFrozen: 0
     isAsleep: 0
     isDazed: 0
@@ -118,7 +119,6 @@ MonoBehaviour:
   obstructionMask:
     serializedVersion: 2
     m_Bits: 0
-  canSeePlayer: 0
   animator: {fileID: 0}
 --- !u!195 &7651758027555281489
 NavMeshAgent:
@@ -134,7 +134,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

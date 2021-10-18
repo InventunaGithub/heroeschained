@@ -22,5 +22,6 @@ public class HeroSO : ScriptableObject
     public int Damage;
     public int Health;
     public int Range;
+    public AITypes AIType;
     
 }
