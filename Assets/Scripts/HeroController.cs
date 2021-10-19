@@ -71,13 +71,12 @@ public class HeroController : MonoBehaviour
     void Update()
     {
         NormalAttackAnimation();
-        HeroAnimator.SetFloat("Speed", Agent.speed);
         if (MainHero.Health <= 0)
         {
             DyingAnimation();
             Owner.Team.Remove(MainHero);
             Agent.velocity = Vector3.zero;
-            Agent.SetPath(null);
+
         }
         else
         {
@@ -110,20 +109,18 @@ public class HeroController : MonoBehaviour
                     StartCoroutine(Attack(Enemy.Team[TargetHero]));
                 }
             }
-            if (Agent.remainingDistance > Agent.stoppingDistance)
+
+            if (Agent.remainingDistance <= Agent.stoppingDistance)
             {
-                Agent.velocity = Agent.desiredVelocity;
-            }
-            else
-            {
-                Agent.SetPath(null);
+                Agent.velocity = Vector3.zero;
+                IdleAnimation();
             }
 
 
             if (Enemy.Team.Count == 0)
             {
-                VictoryAnimation(); 
-                Agent.SetPath(null);
+                VictoryAnimation();
+                Agent.velocity = Vector3.zero;
                 Agent.isStopped = true;
             }
 
@@ -172,6 +169,7 @@ public class HeroController : MonoBehaviour
         if (shortestPath != null)
         {
             Agent.SetPath(shortestPath);
+            RunningAnimation();
         }
     }
 
@@ -187,6 +185,7 @@ public class HeroController : MonoBehaviour
         NavMesh.CalculatePath(transform.position, target.transform.position, Agent.areaMask, path);
 
         Agent.SetPath(path);
+        RunningAnimation();
     }
 
     private bool CanSeeTarget(GameObject targetGO)
@@ -218,6 +217,7 @@ public class HeroController : MonoBehaviour
         {
             throw new System.Exception("Hero Does Not Have Any Skills.");
         }
+        NormalAttackAnimation();
         isAttacking = true;
         TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
         Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + TargetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + TargetHero.Health);
@@ -227,26 +227,26 @@ public class HeroController : MonoBehaviour
 
     public void DyingAnimation()
     {
-        HeroAnimator.SetTrigger("Death");
+        HeroAnimator.CrossFade("Death" , 0.01f);
     }
 
     public void RunningAnimation()
     {
-        
+        HeroAnimator.CrossFade("SSRun", 0.01f);
     }
     public void IdleAnimation()
     {
-        
+        HeroAnimator.CrossFade("Idle", 0.01f);
     }
 
     public void NormalAttackAnimation()
     {
-        HeroAnimator.SetBool("isAttacking", isAttacking);
+        HeroAnimator.CrossFade("SSAttack", 0.01f);
     }
 
     public void VictoryAnimation()
     {
-        
+        HeroAnimator.CrossFade("Victory", 0.01f);
     }
 
 }
