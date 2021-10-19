@@ -16,6 +16,7 @@ public class Player
 }
 
 public enum AITypes {Closest , Lockon};
+public enum HeroTypes {Mage, Archer, Warrior, Human};
 
 [System.Serializable]
 public class Card
@@ -58,9 +59,10 @@ public class Hero
     public int MaxHealth;
     public int Range;
     public AITypes AIType;
+    public HeroTypes HeroType;
 
 
-    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, List<Card> skills = null , AITypes AIType = AITypes.Closest)
+    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, List<Card> skills = null, AITypes AIType = AITypes.Closest, HeroTypes HeroType = HeroTypes.Human)
     {
         HeroID = heroID;
         Name = name;

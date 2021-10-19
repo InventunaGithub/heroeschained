@@ -29,7 +29,7 @@ public class MockController : MonoBehaviour
             {
 
                 Hero hero = MockHeroes[i % MockHeroes.Count];
-                King2.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills , hero.AIType));
+                King2.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills , hero.AIType, hero.HeroType));
                 Characters.transform.GetChild(i).GetComponent<HeroController>().ChildNo = King2.Team.IndexOf(King2.Team.Last());
                 King2.Team.Last().HeroObject = Characters.transform.GetChild(i).gameObject;
                 Characters.transform.GetChild(i).GetComponent<HeroController>().Owner = King2;
@@ -38,7 +38,7 @@ public class MockController : MonoBehaviour
             else
             {
                 Hero hero = MockHeroes[i % MockHeroes.Count];
-                King1.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills, hero.AIType));
+                King1.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills, hero.AIType, hero.HeroType));
                 Characters.transform.GetChild(i).GetComponent<HeroController>().ChildNo = King1.Team.IndexOf(King1.Team.Last());
                 King1.Team.Last().HeroObject = Characters.transform.GetChild(i).gameObject;
                 Characters.transform.GetChild(i).GetComponent<HeroController>().Owner = King1;
@@ -59,7 +59,7 @@ public class MockController : MonoBehaviour
     {
         foreach (var hero in MockHeroSo)
         {
-            MockHeroes.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills, hero.AIType));
+            MockHeroes.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills, hero.AIType, hero.HeroType));
         }
     }
 }

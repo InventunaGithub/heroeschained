@@ -21,7 +21,6 @@ MonoBehaviour:
     Power: 0
     Range: 0
     Used: 0
-  StatusEffects: []
   BaseHealth: 109
   BaseDamage: 24
   Strength: 0
@@ -33,3 +32,4 @@ MonoBehaviour:
   Health: 0
   Range: 10
   AIType: 0
+  HeroType: 1
