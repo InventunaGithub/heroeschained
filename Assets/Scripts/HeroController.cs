@@ -163,7 +163,6 @@ public class HeroController : MonoBehaviour
         {
             transform.LookAt(target.transform);
         }
-
         NavMesh.CalculatePath(transform.position, target.transform.position, Agent.areaMask, path);
 
         Agent.SetPath(path);
@@ -175,6 +174,20 @@ public class HeroController : MonoBehaviour
         {
             throw new System.Exception("Hero Does Not Have Any Skills.");
         }
+        if(MainHero.Range <= 5)
+        {
+            HeroAnimator.CrossFade("Punch", 0.01f);
+        }
+        if(MainHero.Range <= 10)
+        {
+            HeroAnimator.CrossFade("ShootArrow", 0.01f);
+        }
+        if(MainHero.Range > 10)
+        {
+            HeroAnimator.CrossFade("SpellCast1", 0.01f);
+        }
+
+        //randominize pucnhing animations.
         isAttacking = true;
         TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
         Debug.Log(Owner.Name +" "+MainHero.Name + " Attacked to " + TargetHero.Name +" with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is "+  TargetHero.Health);
