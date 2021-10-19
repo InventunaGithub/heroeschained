@@ -22,8 +22,8 @@ MonoBehaviour:
     Range: 0
     Used: 0
   BaseHealth: 109
-  BaseDamage: 84
-  Strength: 40
+  BaseDamage: 12
+  Strength: 0
   Dexterity: 0
   Intelligence: 0
   Vitality: 0

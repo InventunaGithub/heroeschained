@@ -6,8 +6,12 @@ using UnityEngine.AI;
 //Author: Mert Karavural
 //Date: 28 Sep 2020
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Animator))]
 public class HeroController : MonoBehaviour
 {
+
     public Hero MainHero;
     public int TargetHero;
     public int ChildNo;
@@ -17,7 +21,7 @@ public class HeroController : MonoBehaviour
     public NavMeshAgent Agent;
     float closestTargetDistance;
     public float NormalAttackCooldown;
-    private bool isAttacking;
+    private bool isAttacking = false;
     private bool targetChosed;
     public float Radius = 25.0f; //This is sight Radius
     [Range(0, 360)]
@@ -29,7 +33,8 @@ public class HeroController : MonoBehaviour
 
     void Start()
     {
-        HeroAnimator = gameObject.GetComponent<Animator>();
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        HeroAnimator = GetComponent<Animator>();
         ObstructionMask = LayerMask.GetMask("Obstacle");
         Agent = gameObject.GetComponent<NavMeshAgent>();
         if (Owner.Team.Count == 0)
@@ -38,21 +43,41 @@ public class HeroController : MonoBehaviour
         }
         MainHero = Owner.Team[ChildNo];
         closestTargetDistance = float.MaxValue;
-        NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
+        NormalAttackCooldown = 1 - (MainHero.Dexterity * 0.5f);
         if (NormalAttackCooldown < 0.7f)
         {
             NormalAttackCooldown = 0.7f;
         }
+        if(MainHero.HeroType == HeroTypes.Warrior)
+        {
+            HeroAnimator.SetInteger("Type", 1);
+        }
+        else if (MainHero.HeroType == HeroTypes.Archer)
+        {
+            HeroAnimator.SetInteger("Type", 2);
+        }
+        else if (MainHero.HeroType == HeroTypes.Mage)
+        {
+            HeroAnimator.SetInteger("Type", 3);
+        }
+        else if (MainHero.HeroType == HeroTypes.Human)
+        {
+            HeroAnimator.SetInteger("Type", 0);
+        }
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        NormalAttackAnimation();
+        HeroAnimator.SetFloat("Speed", Agent.speed);
         if (MainHero.Health <= 0)
         {
+            DyingAnimation();
             Owner.Team.Remove(MainHero);
-            Agent.isStopped = true;
+            Agent.velocity = Vector3.zero;
+            Agent.SetPath(null);
         }
         else
         {
@@ -85,9 +110,20 @@ public class HeroController : MonoBehaviour
                     StartCoroutine(Attack(Enemy.Team[TargetHero]));
                 }
             }
+            if (Agent.remainingDistance > Agent.stoppingDistance)
+            {
+                Agent.velocity = Agent.desiredVelocity;
+            }
+            else
+            {
+                Agent.SetPath(null);
+            }
+
 
             if (Enemy.Team.Count == 0)
             {
+                VictoryAnimation(); 
+                Agent.SetPath(null);
                 Agent.isStopped = true;
             }
 
@@ -147,6 +183,7 @@ public class HeroController : MonoBehaviour
         {
             transform.LookAt(target.transform);
         }
+
         NavMesh.CalculatePath(transform.position, target.transform.position, Agent.areaMask, path);
 
         Agent.SetPath(path);
@@ -181,24 +218,35 @@ public class HeroController : MonoBehaviour
         {
             throw new System.Exception("Hero Does Not Have Any Skills.");
         }
-
-        if (MainHero.Range <= 5)
-        {
-
-        }
-        if (MainHero.Range <= 10)
-        {
-
-        }
-        if (MainHero.Range > 10)
-        {
-
-        }
-
         isAttacking = true;
         TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
         Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + TargetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + TargetHero.Health);
         yield return new WaitForSeconds(NormalAttackCooldown);
         isAttacking = false;
     }
+
+    public void DyingAnimation()
+    {
+        HeroAnimator.SetTrigger("Death");
+    }
+
+    public void RunningAnimation()
+    {
+        
+    }
+    public void IdleAnimation()
+    {
+        
+    }
+
+    public void NormalAttackAnimation()
+    {
+        HeroAnimator.SetBool("isAttacking", isAttacking);
+    }
+
+    public void VictoryAnimation()
+    {
+        
+    }
+
 }
