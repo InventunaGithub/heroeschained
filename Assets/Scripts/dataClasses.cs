@@ -16,6 +16,17 @@ public class Player
 }
 
 public enum AITypes {Closest , Lockon};
+public enum ItemTypes
+{
+    Weapon, WeaponTwoHanded, Shield,
+    Armor, Helm, Belt, Boot, Ring, Amulet, Gem,
+    Gold, Scroll, Potion, Misc
+}
+public enum ItemQualities
+{
+    Common, Uncommon, Rare, Unique
+}
+
 
 [System.Serializable]
 public class Card
