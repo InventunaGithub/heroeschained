@@ -59,8 +59,8 @@ public class HeroController : MonoBehaviour
         {
             if(!isDead)
             {
-                DyingAnimation();
                 isDead = true;
+                DyingAnimation();
             }
             Owner.Team.Remove(MainHero);
             Agent.SetDestination(gameObject.transform.position);
@@ -110,22 +110,23 @@ public class HeroController : MonoBehaviour
                 Agent.SetDestination(gameObject.transform.position);
                 Agent.isStopped = true;
             }
-
+            if (isAttacking)
+            {
+                NormalAttackAnimation();
+            }
+            else if (isRunning)
+            {
+                RunningAnimation();
+            }
+            else if (Enemy.Team.Count > 0)
+            {
+                IdleAnimation();
+            }
         }
 
-        if (isRunning && !isAttacking)
-        {
-            RunningAnimation();
-        }
-        else if(!isRunning && !isAttacking)
-        {
-            IdleAnimation();
-        }
+       
 
-        if (isAttacking)
-        {
-            NormalAttackAnimation();
-        }
+        
     }
 
     public void SetAgentPathToClosest()
@@ -234,6 +235,7 @@ public class HeroController : MonoBehaviour
             throw new System.Exception("Hero Does Not Have Any Skills.");
         }
         isAttacking = true;
+        isRunning = false;
         TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
         Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + TargetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + TargetHero.Health);
         yield return new WaitForSeconds(NormalAttackCooldown);
@@ -244,21 +246,22 @@ public class HeroController : MonoBehaviour
     {
         isRunning = false;
         isAttacking = false;
-        HeroAnimator.CrossFade("SSDeath", 0.01f);
+        HeroAnimator.CrossFade("SSDeath", 0.1f);
     }
 
     public void RunningAnimation()
     {
-        HeroAnimator.CrossFade("SSRun", 0.01f);
+        HeroAnimator.CrossFade("SSRun", 0.1f);
     }
     public void IdleAnimation()
     {
-        HeroAnimator.CrossFade("ReadyIdle", 0.01f);
+        HeroAnimator.CrossFade("ReadyIdle", 0.1f);
     }
 
     public void NormalAttackAnimation()
     {
-        HeroAnimator.CrossFade("SSAttack", 0.01f);
+        isRunning = false;
+        HeroAnimator.CrossFade("SSAttack", 0.1f);
     }
 
     public void VictoryAnimation()
@@ -266,7 +269,7 @@ public class HeroController : MonoBehaviour
         isRunning = false;
         isDead = false;
         isAttacking = false;
-        HeroAnimator.CrossFade("Victory" , 0.01f);
+        HeroAnimator.CrossFade("Victory" , 0.1f);
     }
 
 }
