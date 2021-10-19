@@ -31,5 +31,5 @@ MonoBehaviour:
   Damage: 0
   Health: 15
   Range: 1
-  AIType: 1
+  AIType: 0
   HeroType: 2

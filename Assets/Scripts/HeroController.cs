@@ -17,7 +17,6 @@ public class HeroController : MonoBehaviour
     public int ChildNo;
     public Player Owner;
     public Player Enemy;
-    public List<Transform> Targets;
     public NavMeshAgent Agent;
     float closestTargetDistance;
     public float NormalAttackCooldown;
@@ -30,6 +29,8 @@ public class HeroController : MonoBehaviour
     public LayerMask ObstructionMask;
     List<Transform> inRange = new List<Transform>();
     public Animator HeroAnimator;
+    private bool isDead = false;
+    private bool isRunning = false;
 
     void Start()
     {
@@ -43,40 +44,26 @@ public class HeroController : MonoBehaviour
         }
         MainHero = Owner.Team[ChildNo];
         closestTargetDistance = float.MaxValue;
-        NormalAttackCooldown = 1 - (MainHero.Dexterity * 0.5f);
+        NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
         if (NormalAttackCooldown < 0.7f)
         {
             NormalAttackCooldown = 0.7f;
         }
-        if(MainHero.HeroType == HeroTypes.Warrior)
-        {
-            HeroAnimator.SetInteger("Type", 1);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            HeroAnimator.SetInteger("Type", 2);
-        }
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            HeroAnimator.SetInteger("Type", 3);
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            HeroAnimator.SetInteger("Type", 0);
-        }
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        NormalAttackAnimation();
+       
         if (MainHero.Health <= 0)
         {
-            DyingAnimation();
+            if(!isDead)
+            {
+                DyingAnimation();
+                isDead = true;
+            }
             Owner.Team.Remove(MainHero);
-            Agent.velocity = Vector3.zero;
-
+            Agent.SetDestination(gameObject.transform.position);
         }
         else
         {
@@ -112,18 +99,32 @@ public class HeroController : MonoBehaviour
 
             if (Agent.remainingDistance <= Agent.stoppingDistance)
             {
-                Agent.velocity = Vector3.zero;
-                IdleAnimation();
+                Agent.SetDestination(gameObject.transform.position);
+                isRunning= false;
             }
 
 
             if (Enemy.Team.Count == 0)
             {
                 VictoryAnimation();
-                Agent.velocity = Vector3.zero;
+                Agent.SetDestination(gameObject.transform.position);
                 Agent.isStopped = true;
             }
 
+        }
+
+        if (isRunning && !isAttacking)
+        {
+            RunningAnimation();
+        }
+        else if(!isRunning && !isAttacking)
+        {
+            IdleAnimation();
+        }
+
+        if (isAttacking)
+        {
+            NormalAttackAnimation();
         }
     }
 
@@ -168,8 +169,16 @@ public class HeroController : MonoBehaviour
 
         if (shortestPath != null)
         {
-            Agent.SetPath(shortestPath);
-            RunningAnimation();
+            
+            if (Agent.remainingDistance > Agent.stoppingDistance || Agent.remainingDistance == 0)
+            {
+                Agent.SetPath(shortestPath);
+                if (!isRunning && !isAttacking)
+                {
+                    isRunning = true;
+                }
+            }
+            
         }
     }
 
@@ -184,8 +193,15 @@ public class HeroController : MonoBehaviour
 
         NavMesh.CalculatePath(transform.position, target.transform.position, Agent.areaMask, path);
 
-        Agent.SetPath(path);
-        RunningAnimation();
+        if (Agent.remainingDistance > Agent.stoppingDistance || Agent.remainingDistance == 0)
+        {
+            Agent.SetPath(path);
+            if (!isRunning && !isAttacking)
+            {
+                isRunning = true;
+            }
+        }
+       
     }
 
     private bool CanSeeTarget(GameObject targetGO)
@@ -217,7 +233,6 @@ public class HeroController : MonoBehaviour
         {
             throw new System.Exception("Hero Does Not Have Any Skills.");
         }
-        NormalAttackAnimation();
         isAttacking = true;
         TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
         Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + TargetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + TargetHero.Health);
@@ -227,7 +242,9 @@ public class HeroController : MonoBehaviour
 
     public void DyingAnimation()
     {
-        HeroAnimator.CrossFade("Death" , 0.01f);
+        isRunning = false;
+        isAttacking = false;
+        HeroAnimator.CrossFade("SSDeath", 0.01f);
     }
 
     public void RunningAnimation()
@@ -236,7 +253,7 @@ public class HeroController : MonoBehaviour
     }
     public void IdleAnimation()
     {
-        HeroAnimator.CrossFade("Idle", 0.01f);
+        HeroAnimator.CrossFade("ReadyIdle", 0.01f);
     }
 
     public void NormalAttackAnimation()
@@ -246,7 +263,10 @@ public class HeroController : MonoBehaviour
 
     public void VictoryAnimation()
     {
-        HeroAnimator.CrossFade("Victory", 0.01f);
+        isRunning = false;
+        isDead = false;
+        isAttacking = false;
+        HeroAnimator.CrossFade("Victory" , 0.01f);
     }
 
 }
