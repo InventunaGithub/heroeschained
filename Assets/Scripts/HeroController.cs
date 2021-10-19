@@ -176,15 +176,15 @@ public class HeroController : MonoBehaviour
         }
         if(MainHero.Range <= 5)
         {
-            HeroAnimator.CrossFade("Punch", 0.01f);
+
         }
         if(MainHero.Range <= 10)
         {
-            HeroAnimator.CrossFade("ShootArrow", 0.01f);
+
         }
         if(MainHero.Range > 10)
         {
-            HeroAnimator.CrossFade("SpellCast1", 0.01f);
+
         }
 
         //randominize pucnhing animations.
