@@ -31,6 +31,7 @@ public class HeroController : MonoBehaviour
     private Animator heroAnimator;
     private bool isDead = false;
     private bool isAttacking = false;
+    private bool isRunning = false;
     private bool victory = false;
     public bool SeeingTarget = false;
     public bool interwal = false;
@@ -114,21 +115,21 @@ public class HeroController : MonoBehaviour
                     agent.isStopped = false;
                     agent.SetPath(path);
                     transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
-                    RunningAnimation();
+                    if(!isRunning)
+                    {
+                        RunningAnimation();
+                        isRunning = true;
+                    }
                 }
                 else
                 {
+                    isRunning = false;
                     agent.isStopped = true;
                     if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
                     {
                         StartCoroutine(Attack(Enemy.Team[TargetHero]));
                     }
                 }
-            }
-
-            for (int i = 0; i < path.corners.Length - 1; i++)
-            {
-                Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
             }
         }
     }
@@ -214,6 +215,8 @@ public class HeroController : MonoBehaviour
         yield return new WaitForSeconds(NormalAttackCooldown);
         onCooldown = false;
     }
+
+        
     IEnumerator ShootProjectile(GameObject projectile , GameObject splash, Transform shootingPosition , Transform targetPosition , Vector3 offset , float travelTime , string animation)
     {
         isAttacking = true;
