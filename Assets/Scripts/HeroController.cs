@@ -18,35 +18,35 @@ public class HeroController : MonoBehaviour
     public int ChildNo;
     public Player Owner;
     public Player Enemy;
-    public NavMeshAgent Agent;
-    float closestTargetDistance;
+    private NavMeshAgent agent;
     public float NormalAttackCooldown;
     private bool onCooldown = false;
-    private bool targetChosed;
     public float Radius = 25.0f; //This is sight Radius
     [Range(0, 360)]
     public float angle = 180f; //This is view Angle
-    public GameObject PlayerRef;
+    public GameObject TargetHeroGO;
     public GameObject[] Projectiles;
-    public LayerMask ObstructionMask;
-    List<Transform> inRange = new List<Transform>();
-    public Animator HeroAnimator;
+    private LayerMask obstructionMask;
+    private List<Transform> inRange = new List<Transform>();
+    private Animator heroAnimator;
     private bool isDead = false;
-    private bool isRunning = false;
     private bool isAttacking = false;
+    private bool victory = false;
+    public bool SeeingTarget = false;
+    public bool interwal = false;
+    public float Distance = 0;
 
     void Start()
     {
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-        HeroAnimator = GetComponent<Animator>();
-        ObstructionMask = LayerMask.GetMask("Obstacle");
-        Agent = gameObject.GetComponent<NavMeshAgent>();
+        heroAnimator = GetComponent<Animator>();
+        obstructionMask = LayerMask.GetMask("Obstacle");
+        agent = gameObject.GetComponent<NavMeshAgent>();
         if (Owner.Team.Count == 0)
         {
             throw new System.Exception("Team does not have any members");
         }
         MainHero = Owner.Team[ChildNo];
-        closestTargetDistance = float.MaxValue;
         NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
         if (NormalAttackCooldown < 0.7f)
         {
@@ -57,8 +57,8 @@ public class HeroController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
-        if (MainHero.Health <= 0)
+        
+        if (MainHero.Health <= 0) //Death state
         {
             if(!isDead)
             {
@@ -66,74 +66,79 @@ public class HeroController : MonoBehaviour
                 DyingAnimation();
             }
             Owner.Team.Remove(MainHero);
-            Agent.isStopped = true;
+            agent.isStopped = true;
+        }
+        else if (Enemy.Team.Count == 0) //Victory state
+        {
+            if (!victory)
+            {
+                victory = true;
+                VictoryAnimation();
+            }
+            agent.isStopped = true;
         }
         else
         {
-            if (MainHero.AIType == AITypes.Closest)
+            if (MainHero.AIType == AITypes.Closest && !interwal)
             {
-                SetAgentPathToClosest();
+                StartCoroutine(SelectClosestEnemy());
             }
             else if (MainHero.AIType == AITypes.Lockon)
             {
-                if (!targetChosed)
+                if (TargetHeroGO == null)
                 {
-                    SetAgentPathToClosest();
+                    TargetHeroGO = ClosestEnemy();
                 }
                 else
                 {
-                    if (PlayerRef.GetComponent<HeroController>().MainHero.Health <= 0)
+                    if (TargetHeroGO.GetComponent<HeroController>().MainHero.Health <= 0)
                     {
-                        SetAgentPathToClosest();
+                        TargetHeroGO = ClosestEnemy();
                     }
                 }
-
-                SetAgentPath(PlayerRef.gameObject);
             }
 
-            if (closestTargetDistance < MainHero.Range && CanSeeTarget(PlayerRef))
+            NavMeshPath path = new NavMeshPath();
+            SeeingTarget = CanSeeTarget(TargetHeroGO);
+            if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, agent.areaMask, path))
             {
-                Agent.isStopped = true;
-                isRunning = false;
-                if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
+                float distance = Vector3.Distance(transform.position, path.corners[0]);
+
+                for (int j = 1; j < path.corners.Length; j++)
                 {
-                    StartCoroutine(Attack(Enemy.Team[TargetHero]));
+                    distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
+                }
+                Distance = distance;
+                if((distance > MainHero.Range && distance > agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
+                {
+                    agent.isStopped = false;
+                    agent.SetPath(path);
+                    transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                    RunningAnimation();
+                }
+                else
+                {
+                    agent.isStopped = true;
+                    if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
+                    {
+                        StartCoroutine(Attack(Enemy.Team[TargetHero]));
+                    }
                 }
             }
 
-            if (Agent.remainingDistance <= Agent.stoppingDistance)
+            for (int i = 0; i < path.corners.Length - 1; i++)
             {
-                Agent.isStopped = true;
-                isRunning = false;
-            }
-
-            if (Enemy.Team.Count == 0)
-            {
-                VictoryAnimation();
-                Agent.isStopped = true;
-            }
-
-            if (isRunning && !isAttacking)
-            {
-                RunningAnimation();
-            }
-
-            if (!isAttacking && Enemy.Team.Count > 0 && !isRunning)
-            {
-                IdleAnimation();
+                Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
             }
         }
-
-       
-
-        
     }
 
-    public void SetAgentPathToClosest()
+    public GameObject ClosestEnemy()
     {
-        closestTargetDistance = float.MaxValue;
+        float closestTargetDistance = float.MaxValue;
         NavMeshPath path = null;
         NavMeshPath shortestPath = null;
+        GameObject Temp= null;
 
         for (int i = 0; i < Enemy.Team.Count; i++)
         {
@@ -143,7 +148,7 @@ public class HeroController : MonoBehaviour
             }
             path = new NavMeshPath();
 
-            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].HeroObject.transform.position, Agent.areaMask, path))
+            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].HeroObject.transform.position, agent.areaMask, path))
             {
                 float distance = Vector3.Distance(transform.position, path.corners[0]);
 
@@ -157,54 +162,12 @@ public class HeroController : MonoBehaviour
                     closestTargetDistance = distance;
                     shortestPath = path;
                     TargetHero = i;
-                    PlayerRef = Enemy.Team[TargetHero].HeroObject;
-                    if (CanSeeTarget(PlayerRef))
-                    {
-                        transform.LookAt(Enemy.Team[TargetHero].HeroObject.transform);
-                    }
-                    targetChosed = true;
+                    Temp = Enemy.Team[TargetHero].HeroObject;
                 }
             }
 
         }
-
-        if (shortestPath != null)
-        {
-            
-            if (Agent.remainingDistance > Agent.stoppingDistance || Agent.remainingDistance == 0)
-            {
-                Agent.isStopped = false;
-                Agent.SetPath(shortestPath);
-                if (!isRunning && !onCooldown)
-                {
-                    isRunning = true;
-                }
-            }
-            
-        }
-    }
-
-    public void SetAgentPath(GameObject target)
-    {
-        NavMeshPath path = new NavMeshPath();
-
-        if (CanSeeTarget(PlayerRef))
-        {
-            transform.LookAt(target.transform);
-        }
-
-        NavMesh.CalculatePath(transform.position, target.transform.position, Agent.areaMask, path);
-
-        if (Agent.remainingDistance > Agent.stoppingDistance || Agent.remainingDistance == 0)
-        {
-            Agent.isStopped = false;
-            Agent.SetPath(path);
-            if (!isRunning && !onCooldown)
-            {
-                isRunning = true;
-            }
-        }
-       
+        return Temp;
     }
 
     private bool CanSeeTarget(GameObject targetGO)
@@ -215,7 +178,7 @@ public class HeroController : MonoBehaviour
         if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, ObstructionMask))
+            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
             {
                 return true;
             }
@@ -228,6 +191,14 @@ public class HeroController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    IEnumerator SelectClosestEnemy()
+    {
+        interwal = true;
+        TargetHeroGO = ClosestEnemy();
+        yield return new WaitForSeconds(1);
+        interwal = false;
     }
 
     IEnumerator Attack(Hero TargetHero)
@@ -273,126 +244,119 @@ public class HeroController : MonoBehaviour
 
     bool AnimatorIsPlaying(string stateName)
     {
-        return HeroAnimator.GetCurrentAnimatorStateInfo(0).length > HeroAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && HeroAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
+        return heroAnimator.GetCurrentAnimatorStateInfo(0).length > heroAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && heroAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
     }
 
     public void DyingAnimation()
     {
-        isRunning = false;
         onCooldown = false;
 
         if (MainHero.HeroType == HeroTypes.Warrior)
         {
-            HeroAnimator.CrossFade("SSDeath", 0.1f);
+            heroAnimator.CrossFade("SSDeath", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Archer)
         {
-            HeroAnimator.CrossFade("DeathLeft", 0.1f);
+            heroAnimator.CrossFade("DeathLeft", 0.1f);
         }
 
         else if (MainHero.HeroType == HeroTypes.Mage)
         {
-            HeroAnimator.CrossFade("DeathLeft", 0.1f);
+            heroAnimator.CrossFade("DeathLeft", 0.1f);
         }
 
         else if(MainHero.HeroType == HeroTypes.Human)
         {
-            HeroAnimator.CrossFade("DeathLeft", 0.1f);
-        }
-
-       
-       
+            heroAnimator.CrossFade("DeathLeft", 0.1f);
+        }       
     }
 
     public void RunningAnimation()
     {
         if (MainHero.HeroType == HeroTypes.Warrior)
         {
-            HeroAnimator.CrossFade("SSRun", 0.1f);
+            heroAnimator.CrossFade("SSRun", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Archer)
         {
-            HeroAnimator.CrossFade("BowRun", 0.1f);
+            heroAnimator.CrossFade("BowRun", 0.1f);
         }
 
         else if (MainHero.HeroType == HeroTypes.Mage)
         {
-            HeroAnimator.CrossFade("MageRun", 0.1f);
+            heroAnimator.CrossFade("MageRun", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Human)
         {
-            HeroAnimator.CrossFade("MageRun", 0.1f);
+            heroAnimator.CrossFade("MageRun", 0.1f);
         }
     }
     public void IdleAnimation()
     {
         if (MainHero.HeroType == HeroTypes.Warrior)
         {
-            HeroAnimator.CrossFade("WarrIdle", 0.1f);
+            heroAnimator.CrossFade("WarrIdle", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Archer)
         {
-            HeroAnimator.CrossFade("BowIdle", 0.1f);
+            heroAnimator.CrossFade("BowIdle", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Mage)
         {
-            HeroAnimator.CrossFade("ReadyIdle", 0.1f);
+            heroAnimator.CrossFade("MageIdle", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Human)
         {
-            HeroAnimator.CrossFade("ReadyIdle", 0.1f);
+            heroAnimator.CrossFade("ReadyIdle", 0.1f);
         }
         
     }
 
     public void NormalAttackAnimation()
     {
-        isRunning = false;
-
         if (MainHero.HeroType == HeroTypes.Warrior)
         {
-            HeroAnimator.CrossFade("SSAttack", 0.1f);
-            StartCoroutine(CloseRangeAttack(Projectiles[4], PlayerRef.transform, new Vector3(0, 1, 0) , "SSAttack"));
+            heroAnimator.CrossFade("SSAttack", 0.1f);
+            StartCoroutine(CloseRangeAttack(Projectiles[4], TargetHeroGO.transform, new Vector3(0, 1, 0) , "SSAttack"));
         }
         else if (MainHero.HeroType == HeroTypes.Archer)
         {
-            HeroAnimator.CrossFade("ArrowDraw", 0.1f);
-            StartCoroutine(ShootProjectile(Projectiles[0], Projectiles[1], MainHero.HeroObject.transform, PlayerRef.transform , new Vector3(0,1,0), 0.5f , "ArrowDraw"));
+            heroAnimator.CrossFade("ArrowDraw", 0.1f);
+            StartCoroutine(ShootProjectile(Projectiles[0], Projectiles[1], MainHero.HeroObject.transform, TargetHeroGO.transform , new Vector3(0,1,0), 0.5f , "ArrowDraw"));
         }
         else if (MainHero.HeroType == HeroTypes.Mage)
         {
-            HeroAnimator.CrossFade("MagicCast", 0.1f);
-            StartCoroutine(ShootProjectile(Projectiles[2], Projectiles[3], MainHero.HeroObject.transform, PlayerRef.transform, new Vector3(0, 1, 0), 0.5f, "MagicCast"));
+            heroAnimator.CrossFade("MagicCast", 0.1f);
+            StartCoroutine(ShootProjectile(Projectiles[2], Projectiles[3], MainHero.HeroObject.transform, TargetHeroGO.transform, new Vector3(0, 1, 0), 0.5f, "MagicCast"));
         }
         else if (MainHero.HeroType == HeroTypes.Human)
         {
-            HeroAnimator.CrossFade("SSAttack", 0.1f);
-            StartCoroutine(CloseRangeAttack(Projectiles[4], PlayerRef.transform, new Vector3(0, 1, 0), "SSAttack"));
+            heroAnimator.CrossFade("SSAttack", 0.1f);
+            StartCoroutine(CloseRangeAttack(Projectiles[4], TargetHeroGO.transform, new Vector3(0, 1, 0), "SSAttack"));
         }
         
     }
 
     public void VictoryAnimation()
     {
-        isRunning = false;
         isDead = false;
         onCooldown = false;
         if (MainHero.HeroType == HeroTypes.Warrior)
         {
-            HeroAnimator.CrossFade("Victory", 0.1f);
+            heroAnimator.CrossFade("Victory", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Archer)
         {
-            HeroAnimator.CrossFade("Victory", 0.1f);
+            heroAnimator.CrossFade("Victory", 0.1f);
         }
 
         else if (MainHero.HeroType == HeroTypes.Mage)
         {
-            HeroAnimator.CrossFade("Victory", 0.1f);
+            heroAnimator.CrossFade("Victory", 0.1f);
         }
         else if (MainHero.HeroType == HeroTypes.Human)
         {
-            HeroAnimator.CrossFade("Victory", 0.1f);
+            heroAnimator.CrossFade("Victory", 0.1f);
         }
         
     }

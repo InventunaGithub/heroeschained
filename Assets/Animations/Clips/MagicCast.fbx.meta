@@ -39,8 +39,8 @@ ModelImporter:
       name: MagicCast
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
-      lastFrame: 63
+      firstFrame: 35
+      lastFrame: 93
       wrapMode: 0
       orientationOffsetY: -60
       level: 0

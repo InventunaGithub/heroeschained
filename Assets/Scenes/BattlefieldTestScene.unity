@@ -3849,6 +3849,10 @@ PrefabInstance:
       value: SM_Env_Wall_Pillar_Large_10
       objectReference: {fileID: 0}
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -5037,6 +5041,10 @@ PrefabInstance:
       value: SM_Env_Pillar_Square_Base_05
       objectReference: {fileID: 0}
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -5088,6 +5096,10 @@ PrefabInstance:
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_Name
       value: SM_Env_Pillar_Square_Base_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_IsActive
@@ -5616,6 +5628,10 @@ PrefabInstance:
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_Name
       value: SM_Env_Pillar_Square_Base_10
+      objectReference: {fileID: 0}
+    - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_IsActive
@@ -8230,12 +8246,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 322168632}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -8283,21 +8299,18 @@ MonoBehaviour:
     PlayerID: 0
     Name: 
     Team: []
-  Agent: {fileID: 0}
   NormalAttackCooldown: 0
   Radius: 10000
   angle: 180
-  PlayerRef: {fileID: 0}
+  TargetHeroGO: {fileID: 0}
   Projectiles:
   - {fileID: 2017335127744510850, guid: d78f398ab767e3e429526202a1eb80b9, type: 3}
   - {fileID: 107096, guid: 79b0a8abb1f641b4a8faa10b904758ea, type: 3}
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
-  ObstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  HeroAnimator: {fileID: 0}
+  SeeingTarget: 0
+  Distance: 0
 --- !u!136 &322168636
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8308,7 +8321,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -8328,26 +8341,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &322168641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 322168632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 6
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.2
 --- !u!1001 &322714742
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9823,12 +9816,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 373435031}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -9876,21 +9869,18 @@ MonoBehaviour:
     PlayerID: 0
     Name: 
     Team: []
-  Agent: {fileID: 0}
   NormalAttackCooldown: 0
   Radius: 10000
   angle: 180
-  PlayerRef: {fileID: 0}
+  TargetHeroGO: {fileID: 0}
   Projectiles:
   - {fileID: 2017335127744510850, guid: d78f398ab767e3e429526202a1eb80b9, type: 3}
   - {fileID: 107096, guid: 79b0a8abb1f641b4a8faa10b904758ea, type: 3}
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
-  ObstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  HeroAnimator: {fileID: 0}
+  SeeingTarget: 0
+  Distance: 0
 --- !u!136 &373435035
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9901,7 +9891,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -9921,26 +9911,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &373435040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 373435031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 6
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.2
 --- !u!1001 &375346044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25526,6 +25496,10 @@ PrefabInstance:
       value: SM_Env_Wall_Pillar_Large_08
       objectReference: {fileID: 0}
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -29317,21 +29291,18 @@ MonoBehaviour:
     PlayerID: 0
     Name: 
     Team: []
-  Agent: {fileID: 0}
   NormalAttackCooldown: 0
   Radius: 10000
   angle: 180
-  PlayerRef: {fileID: 0}
+  TargetHeroGO: {fileID: 0}
   Projectiles:
   - {fileID: 2017335127744510850, guid: d78f398ab767e3e429526202a1eb80b9, type: 3}
   - {fileID: 107096, guid: 79b0a8abb1f641b4a8faa10b904758ea, type: 3}
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
-  ObstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  HeroAnimator: {fileID: 0}
+  SeeingTarget: 0
+  Distance: 0
 --- !u!195 &1101392696
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -29341,12 +29312,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 404523570}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -29364,7 +29335,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -29384,26 +29355,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1101392705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404523570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 6
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.2
 --- !u!1 &1102047312 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 188278, guid: 2be6c8f228f8eb14aab539bc761d3818, type: 3}
@@ -35455,6 +35406,10 @@ PrefabInstance:
       value: SM_Env_Rubble_08
       objectReference: {fileID: 0}
     - target: {fileID: 159620, guid: 0ce8c4e13ce82544fbc1c305ac83b2af, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 159620, guid: 0ce8c4e13ce82544fbc1c305ac83b2af, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -35919,6 +35874,10 @@ PrefabInstance:
     - target: {fileID: 197042, guid: 8b910cd6f920f4c49aec7f9d5364de2c, type: 3}
       propertyPath: m_Name
       value: SM_Env_Rubble_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 197042, guid: 8b910cd6f920f4c49aec7f9d5364de2c, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 197042, guid: 8b910cd6f920f4c49aec7f9d5364de2c, type: 3}
       propertyPath: m_IsActive
@@ -37434,6 +37393,10 @@ PrefabInstance:
       value: SM_Env_Pillar_Square_Base_08
       objectReference: {fileID: 0}
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -37770,12 +37733,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 1444501733}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -37823,21 +37786,18 @@ MonoBehaviour:
     PlayerID: 0
     Name: 
     Team: []
-  Agent: {fileID: 0}
   NormalAttackCooldown: 0
   Radius: 10000
   angle: 180
-  PlayerRef: {fileID: 0}
+  TargetHeroGO: {fileID: 0}
   Projectiles:
   - {fileID: 2017335127744510850, guid: d78f398ab767e3e429526202a1eb80b9, type: 3}
   - {fileID: 107096, guid: 79b0a8abb1f641b4a8faa10b904758ea, type: 3}
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
-  ObstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  HeroAnimator: {fileID: 0}
+  SeeingTarget: 0
+  Distance: 0
 --- !u!136 &1444501737
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -37848,7 +37808,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -37868,26 +37828,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1444501742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444501733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 6
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.2
 --- !u!1 &1444594162 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 120464, guid: 6a169492d77438b4f94737f9d4c9109b, type: 3}
@@ -38214,6 +38154,10 @@ PrefabInstance:
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_Name
       value: SM_Env_Wall_Pillar_Large_09
+      objectReference: {fileID: 0}
+    - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_IsActive
@@ -38674,6 +38618,10 @@ PrefabInstance:
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_Name
       value: SM_Env_Wall_Pillar_Large_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_IsActive
@@ -40560,6 +40508,10 @@ PrefabInstance:
       value: SM_Env_Pillar_Square_Base_06
       objectReference: {fileID: 0}
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -42064,21 +42016,18 @@ MonoBehaviour:
     PlayerID: 0
     Name: 
     Team: []
-  Agent: {fileID: 0}
   NormalAttackCooldown: 0
   Radius: 10000
   angle: 180
-  PlayerRef: {fileID: 0}
+  TargetHeroGO: {fileID: 0}
   Projectiles:
   - {fileID: 2017335127744510850, guid: d78f398ab767e3e429526202a1eb80b9, type: 3}
   - {fileID: 107096, guid: 79b0a8abb1f641b4a8faa10b904758ea, type: 3}
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
-  ObstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  HeroAnimator: {fileID: 0}
+  SeeingTarget: 0
+  Distance: 0
 --- !u!195 &1602526631
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -42088,12 +42037,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 155113565}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -42111,7 +42060,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -42131,26 +42080,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1602526640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 155113565}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 6
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.2
 --- !u!1 &1603101962 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 162506, guid: 92f8c2e1e15bda544b2b3a62a69798e1, type: 3}
@@ -43017,6 +42946,10 @@ PrefabInstance:
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_Name
       value: SM_Env_Pillar_Square_Base_09
+      objectReference: {fileID: 0}
+    - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
       propertyPath: m_IsActive
@@ -47240,6 +47173,10 @@ PrefabInstance:
       value: SM_Env_Wall_Pillar_Large_05
       objectReference: {fileID: 0}
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -48174,21 +48111,18 @@ MonoBehaviour:
     PlayerID: 0
     Name: 
     Team: []
-  Agent: {fileID: 0}
   NormalAttackCooldown: 0
   Radius: 10000
   angle: 180
-  PlayerRef: {fileID: 0}
+  TargetHeroGO: {fileID: 0}
   Projectiles:
   - {fileID: 2017335127744510850, guid: d78f398ab767e3e429526202a1eb80b9, type: 3}
   - {fileID: 107096, guid: 79b0a8abb1f641b4a8faa10b904758ea, type: 3}
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
-  ObstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  HeroAnimator: {fileID: 0}
+  SeeingTarget: 0
+  Distance: 0
 --- !u!195 &1779341395
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -48198,12 +48132,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 1204307286}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -48221,7 +48155,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -48241,26 +48175,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1779341404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1204307286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 6
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.2
 --- !u!1 &1779480520 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 106042, guid: a9c41660a8948154890e05e9b6a4026e, type: 3}
@@ -50881,6 +50795,10 @@ PrefabInstance:
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_Name
       value: SM_Env_Wall_Pillar_Large_06
+      objectReference: {fileID: 0}
+    - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 161912, guid: 33604d1ec5375e3488891483b470a427, type: 3}
       propertyPath: m_IsActive
