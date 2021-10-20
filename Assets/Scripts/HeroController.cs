@@ -94,6 +94,7 @@ public class HeroController : MonoBehaviour
             if (closestTargetDistance < MainHero.Range && CanSeeTarget(PlayerRef))
             {
                 Agent.isStopped = true;
+                isRunning = false;
                 if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
                 {
                     StartCoroutine(Attack(Enemy.Team[TargetHero]));
@@ -102,8 +103,8 @@ public class HeroController : MonoBehaviour
 
             if (Agent.remainingDistance <= Agent.stoppingDistance)
             {
-                Agent.SetDestination(gameObject.transform.position);
-                isRunning= false;
+                Agent.isStopped = true;
+                isRunning = false;
             }
 
             if (Enemy.Team.Count == 0)
