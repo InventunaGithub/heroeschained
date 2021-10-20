@@ -16,7 +16,18 @@ public class Player
 }
 
 public enum AITypes {Closest , Lockon};
+public enum ItemTypes
+{
+    Weapon, WeaponTwoHanded, Shield,
+    Armor, Helm, Belt, Boot, Ring, Amulet, Gem,
+    Gold, Scroll, Potion, Misc
+}
+public enum ItemQualities
+{
+    Common, Uncommon, Rare, Unique
+}
 public enum HeroTypes {Mage, Archer, Warrior, Human};
+
 
 [System.Serializable]
 public class Card
@@ -83,21 +94,21 @@ public class Hero
     }
 
     public Card UsedSkill(Card usedCard)
-    {  
+    {
         Card TempCard = new Card(usedCard.CardID, usedCard.Name, usedCard.Info, usedCard.Power, usedCard.Range);
-        
+
         TempCard.Power += Damage;
 
         return TempCard;
     }
-    
+
     public void EffectedBy(Card card) //This is used for most situations. Normal attacks and such still counts as cards.
     {
         Hurt(card.Power);
 
         Normalise();
     }
-    
+
     void Hurt(int damage) // this is used for physical attacks , attacks that must pierce armor first.
     {
         if (Armor >= damage)
@@ -116,7 +127,7 @@ public class Hero
     {
         if(Armor < 0)
         {
-            Armor = 0; 
+            Armor = 0;
         }
         if (Health < 0)
         {
@@ -134,8 +145,5 @@ public class Hero
         {
             Health = MaxHealth;
         }
-
     }
-
 }
-
