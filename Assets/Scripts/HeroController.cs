@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
 //Author: Mert Karavural
 //Date: 28 Sep 2020
@@ -26,6 +27,7 @@ public class HeroController : MonoBehaviour
     [Range(0, 360)]
     public float angle = 180f; //This is view Angle
     public GameObject PlayerRef;
+    public GameObject[] Projectiles;
     public LayerMask ObstructionMask;
     List<Transform> inRange = new List<Transform>();
     public Animator HeroAnimator;
@@ -64,7 +66,7 @@ public class HeroController : MonoBehaviour
                 DyingAnimation();
             }
             Owner.Team.Remove(MainHero);
-            Agent.SetDestination(gameObject.transform.position);
+            Agent.isStopped = true;
         }
         else
         {
@@ -91,8 +93,8 @@ public class HeroController : MonoBehaviour
 
             if (closestTargetDistance < MainHero.Range && CanSeeTarget(PlayerRef))
             {
-                Agent.SetDestination(gameObject.transform.position);
-                if (!onCooldown && Enemy.Team.Count >= 0)
+                Agent.isStopped = true;
+                if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
                 {
                     StartCoroutine(Attack(Enemy.Team[TargetHero]));
                 }
@@ -104,19 +106,18 @@ public class HeroController : MonoBehaviour
                 isRunning= false;
             }
 
-
             if (Enemy.Team.Count == 0)
             {
                 VictoryAnimation();
-                Agent.SetDestination(gameObject.transform.position);
                 Agent.isStopped = true;
             }
 
-            if (isRunning)
+            if (isRunning && !isAttacking)
             {
                 RunningAnimation();
             }
-            else if (!isAttacking && Enemy.Team.Count > 0)
+
+            if (!isAttacking && Enemy.Team.Count > 0 && !isRunning)
             {
                 IdleAnimation();
             }
@@ -171,6 +172,7 @@ public class HeroController : MonoBehaviour
             
             if (Agent.remainingDistance > Agent.stoppingDistance || Agent.remainingDistance == 0)
             {
+                Agent.isStopped = false;
                 Agent.SetPath(shortestPath);
                 if (!isRunning && !onCooldown)
                 {
@@ -194,6 +196,7 @@ public class HeroController : MonoBehaviour
 
         if (Agent.remainingDistance > Agent.stoppingDistance || Agent.remainingDistance == 0)
         {
+            Agent.isStopped = false;
             Agent.SetPath(path);
             if (!isRunning && !onCooldown)
             {
@@ -232,15 +235,44 @@ public class HeroController : MonoBehaviour
         {
             throw new System.Exception("Hero Does Not Have Any Skills.");
         }
-
-        
         TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
         Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + TargetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + TargetHero.Health);
         onCooldown = true;
         NormalAttackAnimation();
         yield return new WaitForSeconds(NormalAttackCooldown);
         onCooldown = false;
+    }
+    IEnumerator ShootProjectile(GameObject projectile , GameObject splash, Transform shootingPosition , Transform targetPosition , Vector3 offset , float travelTime , string animation)
+    {
+        isAttacking = true;
+        while(AnimatorIsPlaying(animation))
+        {
+            yield return new WaitForSeconds(0.01f);
+        }
+        GameObject projectileGO = Instantiate(projectile, offset + shootingPosition.position , shootingPosition.rotation);
+        projectileGO.transform.DOMove(targetPosition.position + offset, 0.5f);
+        yield return new WaitForSeconds(travelTime);
+        Destroy(projectileGO);
+        GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
+        Destroy(splashGO, 0.3f);
         isAttacking = false;
+    }
+
+    IEnumerator CloseRangeAttack(GameObject splash,Transform targetPosition, Vector3 offset, string animation)
+    {
+        isAttacking = true;
+        while (AnimatorIsPlaying(animation))
+        {
+            yield return new WaitForSeconds(0.01f);
+        }
+        GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
+        Destroy(splashGO, 0.3f);
+        isAttacking = false;
+    }
+
+    bool AnimatorIsPlaying(string stateName)
+    {
+        return HeroAnimator.GetCurrentAnimatorStateInfo(0).length > HeroAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && HeroAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
     }
 
     public void DyingAnimation()
@@ -301,7 +333,6 @@ public class HeroController : MonoBehaviour
         {
             HeroAnimator.CrossFade("BowIdle", 0.1f);
         }
-
         else if (MainHero.HeroType == HeroTypes.Mage)
         {
             HeroAnimator.CrossFade("ReadyIdle", 0.1f);
@@ -315,25 +346,27 @@ public class HeroController : MonoBehaviour
 
     public void NormalAttackAnimation()
     {
-        isAttacking = true;
         isRunning = false;
 
         if (MainHero.HeroType == HeroTypes.Warrior)
         {
             HeroAnimator.CrossFade("SSAttack", 0.1f);
+            StartCoroutine(CloseRangeAttack(Projectiles[4], PlayerRef.transform, new Vector3(0, 1, 0) , "SSAttack"));
         }
         else if (MainHero.HeroType == HeroTypes.Archer)
         {
             HeroAnimator.CrossFade("ArrowDraw", 0.1f);
+            StartCoroutine(ShootProjectile(Projectiles[0], Projectiles[1], MainHero.HeroObject.transform, PlayerRef.transform , new Vector3(0,1,0), 0.5f , "ArrowDraw"));
         }
-
         else if (MainHero.HeroType == HeroTypes.Mage)
         {
             HeroAnimator.CrossFade("MagicCast", 0.1f);
+            StartCoroutine(ShootProjectile(Projectiles[2], Projectiles[3], MainHero.HeroObject.transform, PlayerRef.transform, new Vector3(0, 1, 0), 0.5f, "MagicCast"));
         }
         else if (MainHero.HeroType == HeroTypes.Human)
         {
             HeroAnimator.CrossFade("SSAttack", 0.1f);
+            StartCoroutine(CloseRangeAttack(Projectiles[4], PlayerRef.transform, new Vector3(0, 1, 0), "SSAttack"));
         }
         
     }
