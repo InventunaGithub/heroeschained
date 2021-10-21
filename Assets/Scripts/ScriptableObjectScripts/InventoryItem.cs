@@ -24,4 +24,21 @@ public class InventoryItem : ScriptableObject
     public bool AccountBound = false;
 
     public float SellValue;
+
+    public enum ItemTypes
+    {
+        Weapon, WeaponTwoHanded, Shield, Bracelet, Shoulder,
+        Armor, Helm, Belt, Boot, Ring, Amulet, Gem, Necklace,
+        Gold, Potion, Misc, Other
+    }
+
+    public enum ItemQualities
+    {
+        Common, Uncommon, Rare, Unique
+    }
+
+    public enum Other
+    {
+        Gem, Scroll, Card, CardConsumable, Useless
+    }
 }
