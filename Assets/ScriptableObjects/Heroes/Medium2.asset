@@ -32,4 +32,5 @@ MonoBehaviour:
   Health: 0
   Range: 10
   AIType: 0
-  HeroType: 1
+  HeroType: 0
+  HeroSkin: {fileID: 1475453720705624, guid: 8f9228f2edb4a494b88ead025871460e, type: 3}

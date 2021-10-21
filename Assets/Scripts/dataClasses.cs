@@ -71,9 +71,10 @@ public class Hero
     public int Range;
     public AITypes AIType;
     public HeroTypes HeroType;
+    public GameObject HeroSkin;
 
 
-    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, List<Card> skills = null, AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
+    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, GameObject heroSkin, List<Card> skills = null, AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
     {
         HeroID = heroID;
         Name = name;
@@ -89,6 +90,7 @@ public class Hero
         Damage = BaseDamage + (this.Strength * 2);
         Armor = 10;
         Skills = skills;
+        HeroSkin = heroSkin;
         this.AIType = AIType;
         HeroType = heroType;
     }

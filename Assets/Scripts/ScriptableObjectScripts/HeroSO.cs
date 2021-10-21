@@ -23,5 +23,6 @@ public class HeroSO : ScriptableObject
     public int Range;
     public AITypes AIType;
     public HeroTypes HeroType;
+    public GameObject HeroSkin;
     
 }

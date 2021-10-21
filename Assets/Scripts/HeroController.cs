@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using DG.Tweening;
 
 //Author: Mert Karavural
@@ -36,30 +37,40 @@ public class HeroController : MonoBehaviour
     public bool SeeingTarget = false;
     public bool interwal = false;
     public float Distance = 0;
+    public GameObject HealthBarGO;
+    private GameObject HeroHealthBar;
+    private Slider HealthBar;
 
     void Start()
     {
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-        heroAnimator = GetComponent<Animator>();
-        obstructionMask = LayerMask.GetMask("Obstacle");
-        agent = gameObject.GetComponent<NavMeshAgent>();
         if (Owner.Team.Count == 0)
         {
             throw new System.Exception("Team does not have any members");
         }
         MainHero = Owner.Team[ChildNo];
+        GameObject heroSkin = Instantiate(MainHero.HeroSkin , gameObject.transform.position , gameObject.transform.rotation);
+        heroSkin.transform.parent = gameObject.transform;
+        HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
+        HeroHealthBar.transform.parent = GameObject.Find("Canvas").transform;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        heroAnimator = transform.GetChild(0).GetComponent<Animator>();
+        obstructionMask = LayerMask.GetMask("Obstacle");
+        agent = gameObject.GetComponent<NavMeshAgent>();
         NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
         if (NormalAttackCooldown < 0.7f)
         {
             NormalAttackCooldown = 0.7f;
         }
+        HealthBar = HeroHealthBar.GetComponent<Slider>();
+        HealthBar.maxValue = MainHero.MaxHealth;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        if (MainHero.Health <= 0) //Death state
+        HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+        HealthBar.value = MainHero.Health;
+        if (MainHero.Health <= 0 && Enemy.Team.Count != 0) //Death state
         {
             if(!isDead)
             {
@@ -69,8 +80,12 @@ public class HeroController : MonoBehaviour
             Owner.Team.Remove(MainHero);
             agent.isStopped = true;
         }
-        else if (Enemy.Team.Count == 0) //Victory state
+        else if (Enemy.Team.Count == 0 && !isDead) //Victory state
         {
+            if(MainHero.Health == 0)
+            {
+                MainHero.Health = 1;
+            }
             if (!victory)
             {
                 victory = true;
@@ -123,6 +138,7 @@ public class HeroController : MonoBehaviour
                 }
                 else
                 {
+                    transform.LookAt(TargetHeroGO.transform);
                     isRunning = false;
                     agent.isStopped = true;
                     if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
@@ -208,9 +224,7 @@ public class HeroController : MonoBehaviour
         {
             throw new System.Exception("Hero Does Not Have Any Skills.");
         }
-        TargetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
-        Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + TargetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + TargetHero.Health);
-        onCooldown = true;
+         onCooldown = true;
         NormalAttackAnimation();
         yield return new WaitForSeconds(NormalAttackCooldown);
         onCooldown = false;
@@ -229,6 +243,9 @@ public class HeroController : MonoBehaviour
         yield return new WaitForSeconds(travelTime);
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
+        Hero targetHero = Enemy.Team[TargetHero];
+        targetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
+        Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + targetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + targetHero.Health);
         Destroy(splashGO, 0.3f);
         isAttacking = false;
     }
@@ -241,6 +258,9 @@ public class HeroController : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
+        Hero targetHero = Enemy.Team[TargetHero];
+        targetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
+        Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + targetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + targetHero.Health);
         Destroy(splashGO, 0.3f);
         isAttacking = false;
     }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 70a92ccae95a6f744924ae71da622b1e
+guid: a01d31f492b252045aff4d62fc5bfca8
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
@@ -51,7 +51,7 @@ ModelImporter:
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
-      loopBlendPositionXZ: 0
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
@@ -529,23 +529,23 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: BowRun(Clone)
+    - name: Standing Run Forward (4)(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Beta_Joints
-      parentName: BowRun(Clone)
+      parentName: Standing Run Forward (4)(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Beta_Surface
-      parentName: BowRun(Clone)
+      parentName: Standing Run Forward (4)(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: mixamorig:Hips
-      parentName: BowRun(Clone)
+      parentName: Standing Run Forward (4)(Clone)
       position: {x: -0.000029412508, y: 1.0720447, z: 0.00018084764}
       rotation: {x: -0.00000002328306, y: 1.3552525e-16, z: -0.000000005820766, w: 1}
       scale: {x: 1, y: 1, z: 0.99999994}

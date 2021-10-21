@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1941975299658355595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1941975299658355594}
+  - component: {fileID: 1941975299658355597}
+  - component: {fileID: 1941975299658355598}
+  - component: {fileID: 1941975299658355599}
+  - component: {fileID: 1941975299658355592}
+  - component: {fileID: 1941975299658355593}
+  m_Layer: 0
+  m_Name: HeroObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1941975299658355594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1941975299658355597
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &1941975299658355598
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.3
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!95 &1941975299658355599
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1941975299658355592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23d08fea2a7b6474c8fa4d654e891990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainHero:
+    HeroID: 0
+    Name: 
+    Skills: []
+    HeroObject: {fileID: 0}
+    BaseHealth: 0
+    BaseDamage: 0
+    Strength: 0
+    Dexterity: 0
+    Intelligence: 0
+    Vitality: 0
+    Armor: 0
+    Damage: 0
+    Health: 0
+    MaxHealth: 0
+    Range: 0
+    AIType: 0
+    HeroType: 0
+    HeroSkin: {fileID: 0}
+  TargetHero: 0
+  ChildNo: 0
+  Owner:
+    PlayerID: 0
+    Name: 
+    Team: []
+  Enemy:
+    PlayerID: 0
+    Name: 
+    Team: []
+  NormalAttackCooldown: 0
+  Radius: 25
+  angle: 180
+  TargetHeroGO: {fileID: 0}
+  Projectiles:
+  - {fileID: 2017335127744510850, guid: d78f398ab767e3e429526202a1eb80b9, type: 3}
+  - {fileID: 107096, guid: 79b0a8abb1f641b4a8faa10b904758ea, type: 3}
+  - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
+  - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
+  - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
+  SeeingTarget: 0
+  interwal: 0
+  Distance: 0
+  HealthBarGO: {fileID: 928425666421249429, guid: 39af5cb212791b247bced8c171ad5af7, type: 3}
+--- !u!195 &1941975299658355593
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.3
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 2
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
