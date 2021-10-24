@@ -5,8 +5,6 @@ using UnityEngine;
 //Author: Mert Karavural
 //Date: 15 Sep 2020
 
-//Author: Deniz Afşar
-//Date: 21 Sep 2021
 public class Hero : MonoBehaviour
 {
     private Equipment equipment;
@@ -77,6 +75,34 @@ public class Hero : MonoBehaviour
         return inventory.RemoveItemAt(index);
     }
     #endregion Inventory
+
+    #region Equipment
+    public bool WearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes)
+    {
+
+        return equipment.WearItems(item, itemTypes);
+    }
+
+    public bool WearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes, int additional)
+    {
+       
+        return equipment.WearItems(item, itemTypes, additional);
+    }
+
+    public bool UnWearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes)
+    {
+        return true;
+    }
+
+    public bool UnWearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes, int additional)
+    {
+        return true;
+    }
+
+
+
+
+    #endregion Equipment
 
 
 

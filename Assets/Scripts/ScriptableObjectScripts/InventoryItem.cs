@@ -19,6 +19,7 @@ public class InventoryItem : ScriptableObject
 
     public ItemTypes ItemType = ItemTypes.Misc;
     public ItemQualities ItemQuality = ItemQualities.Common;
+    public EquipmentItemPlaces EquipmentItemPlace;
 
     public bool Consumable = false;
     public bool AccountBound = false;
@@ -27,9 +28,9 @@ public class InventoryItem : ScriptableObject
 
     public enum ItemTypes
     {
-        Weapon, WeaponTwoHanded, Shield, Bracelet, Shoulder,
-        Armor, Helm, Belt, Boot, Ring, Amulet, Gem, Necklace,
-        Gold, Potion, Misc, Other
+        Weapon, Weapon2Handed, Shield, Bracelet, Shoulder,
+        Armor, Helm, Belt, Boot, Ring, Necklace,
+        Misc, Other
     }
 
     public enum ItemQualities
@@ -41,4 +42,55 @@ public class InventoryItem : ScriptableObject
     {
         Gem, Scroll, Card, CardConsumable, Useless
     }
+
+    public enum EquipmentItemPlaces
+    {
+        Head, Chest, Neck, Shoulder, Wrist,
+        HandLeft, HandRight, FingerLeft1, FingerLeft2, FingerRight1,
+        FingerRight2, Waist, Feet
+    }
+
+    public EquipmentItemPlaces GetItem(ItemTypes type)
+    {
+        switch (type)
+        {
+            case ItemTypes.Weapon:
+                return EquipmentItemPlaces.HandRight;
+                break;
+            case ItemTypes.Weapon2Handed:
+                return EquipmentItemPlaces.HandRight;
+                break;
+            case ItemTypes.Shield:
+                return EquipmentItemPlaces.HandLeft;
+                break;
+            case ItemTypes.Bracelet:
+                return EquipmentItemPlaces.Wrist;
+                break;
+            case ItemTypes.Shoulder:
+                return EquipmentItemPlaces.Shoulder;
+                break;
+            case ItemTypes.Armor:
+                return EquipmentItemPlaces.Chest;
+                break;
+            case ItemTypes.Helm:
+                return EquipmentItemPlaces.Head;
+                break;
+            case ItemTypes.Belt:
+                return EquipmentItemPlaces.Waist;
+                break;
+            case ItemTypes.Boot:
+                return EquipmentItemPlaces.Feet;
+                break;
+            case ItemTypes.Ring:
+                //return FingersRight[0];
+                break;
+            case ItemTypes.Necklace:
+                return EquipmentItemPlaces.Neck;
+                break;
+            default:
+                return 0;
+        }
+    }
+
+
 }
