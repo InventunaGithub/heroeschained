@@ -5,8 +5,10 @@ using UnityEngine;
 //Author: Mert Karavural
 //Date: 15 Sep 2020
 
+public enum HeroTypes { Mage, Archer, Warrior, Human };
+
 public class Hero : MonoBehaviour
-{
+{ 
     private Equipment equipment;
     private Inventory inventory;
 
@@ -27,8 +29,11 @@ public class Hero : MonoBehaviour
     public int MaxHealth;
     public int Range;
     public AITypes AIType;
+    public HeroTypes HeroType;
+    public GameObject HeroSkin;
 
-    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, List<Card> skills = null, AITypes AIType = AITypes.Closest)
+
+    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, GameObject heroSkin, List<Card> skills = null, AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
     {
         HeroID = heroID;
         Name = name;
@@ -44,9 +49,11 @@ public class Hero : MonoBehaviour
         Damage = BaseDamage + (this.Strength * 2);
         Armor = 10;
         Skills = skills;
-        this.AIType = AIType;
         inventory = new Inventory();
         equipment = new Equipment();
+        HeroSkin = heroSkin;
+        this.AIType = AIType;
+        HeroType = heroType;
     }
 
     public Card UsedSkill(Card usedCard)
