@@ -26,6 +26,7 @@ public enum ItemQualities
 {
     Common, Uncommon, Rare, Unique
 }
+public enum HeroTypes {Mage, Archer, Warrior, Human};
 
 
 [System.Serializable]
@@ -69,9 +70,11 @@ public class Hero
     public int MaxHealth;
     public int Range;
     public AITypes AIType;
+    public HeroTypes HeroType;
+    public GameObject HeroSkin;
 
 
-    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, List<Card> skills = null , AITypes AIType = AITypes.Closest)
+    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, GameObject heroSkin, List<Card> skills = null, AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
     {
         HeroID = heroID;
         Name = name;
@@ -87,25 +90,27 @@ public class Hero
         Damage = BaseDamage + (this.Strength * 2);
         Armor = 10;
         Skills = skills;
-        this.AIType = AIType; 
+        HeroSkin = heroSkin;
+        this.AIType = AIType;
+        HeroType = heroType;
     }
 
     public Card UsedSkill(Card usedCard)
-    {  
+    {
         Card TempCard = new Card(usedCard.CardID, usedCard.Name, usedCard.Info, usedCard.Power, usedCard.Range);
-        
+
         TempCard.Power += Damage;
 
         return TempCard;
     }
-    
+
     public void EffectedBy(Card card) //This is used for most situations. Normal attacks and such still counts as cards.
     {
         Hurt(card.Power);
 
         Normalise();
     }
-    
+
     void Hurt(int damage) // this is used for physical attacks , attacks that must pierce armor first.
     {
         if (Armor >= damage)
@@ -124,7 +129,7 @@ public class Hero
     {
         if(Armor < 0)
         {
-            Armor = 0; 
+            Armor = 0;
         }
         if (Health < 0)
         {

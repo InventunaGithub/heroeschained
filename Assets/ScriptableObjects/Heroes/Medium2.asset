@@ -21,10 +21,9 @@ MonoBehaviour:
     Power: 0
     Range: 0
     Used: 0
-  StatusEffects: []
   BaseHealth: 109
-  BaseDamage: 84
-  Strength: 40
+  BaseDamage: 12
+  Strength: 0
   Dexterity: 0
   Intelligence: 0
   Vitality: 0
@@ -32,4 +31,6 @@ MonoBehaviour:
   Damage: 0
   Health: 0
   Range: 10
-  AIType: 1
+  AIType: 0
+  HeroType: 0
+  HeroSkin: {fileID: 1475453720705624, guid: 8f9228f2edb4a494b88ead025871460e, type: 3}

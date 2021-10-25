@@ -10,8 +10,10 @@ public class MockController : MonoBehaviour
 {
     public Player King1;
     public Player King2;
-    public List<HeroSO> MockHeroSo;
-    public List<Hero> MockHeroes;
+    public List<HeroSO> Team1SO;
+    public List<HeroSO> Team2SO;
+    public List<Hero> Team1Heroes;
+    public List<Hero> Team2Heroes;
     public GameObject Characters;
     // Start is called before the first frame update
     void Awake()
@@ -22,44 +24,36 @@ public class MockController : MonoBehaviour
         King2.Name = "King2";
         scriptableObjectToNormal();
         Characters = GameObject.Find("Characters");
-        for (int i = 0; i < Characters.transform.childCount; i++)
+        int onChildIndex = 0;
+        foreach (Hero hero in Team1Heroes)
         {
-            
-            if(i >= (Characters.transform.childCount / 2))
-            {
-
-                Hero hero = MockHeroes[i % MockHeroes.Count];
-                King2.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills , hero.AIType));
-                Characters.transform.GetChild(i).GetComponent<HeroController>().ChildNo = King2.Team.IndexOf(King2.Team.Last());
-                King2.Team.Last().HeroObject = Characters.transform.GetChild(i).gameObject;
-                Characters.transform.GetChild(i).GetComponent<HeroController>().Owner = King2;
-                Characters.transform.GetChild(i).GetComponent<HeroController>().Enemy = King1;
-            }
-            else
-            {
-                Hero hero = MockHeroes[i % MockHeroes.Count];
-                King1.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills, hero.AIType));
-                Characters.transform.GetChild(i).GetComponent<HeroController>().ChildNo = King1.Team.IndexOf(King1.Team.Last());
-                King1.Team.Last().HeroObject = Characters.transform.GetChild(i).gameObject;
-                Characters.transform.GetChild(i).GetComponent<HeroController>().Owner = King1;
-                Characters.transform.GetChild(i).GetComponent<HeroController>().Enemy = King2;
-            }
-           
+            King1.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.HeroSkin, hero.Skills, hero.AIType, hero.HeroType));
+            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().ChildNo = King1.Team.IndexOf(King1.Team.Last());
+            King1.Team.Last().HeroObject = Characters.transform.GetChild(onChildIndex).gameObject;
+            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Owner = King1;
+            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Enemy = King2;
+            onChildIndex += 1;
+        }
+        foreach (Hero hero in Team2Heroes)
+        {
+            King2.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.HeroSkin, hero.Skills, hero.AIType, hero.HeroType));
+            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().ChildNo = King2.Team.IndexOf(King2.Team.Last());
+            King2.Team.Last().HeroObject = Characters.transform.GetChild(onChildIndex).gameObject;
+            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Owner = King2;
+            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Enemy = King1;
+            onChildIndex += 1;
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     void scriptableObjectToNormal()
     {
-        foreach (var hero in MockHeroSo)
+        foreach (var hero in Team1SO)
         {
-            MockHeroes.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.Skills, hero.AIType));
+            Team1Heroes.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.HeroSkin, hero.Skills, hero.AIType, hero.HeroType));
+        }
+        foreach (var hero in Team2SO)
+        {
+            Team2Heroes.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.HeroSkin, hero.Skills, hero.AIType, hero.HeroType));
         }
     }
 }
