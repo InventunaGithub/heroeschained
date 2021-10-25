@@ -49,64 +49,6 @@ public class Hero : MonoBehaviour
         equipment = new Equipment();
     }
 
-    #region Inventory
-    public int GetInventoryItemCount()
-    {
-        return inventory.ItemCount();
-    }
-
-    public InventoryItem GetInventoryItem(int index)
-    {
-        return inventory.GetItem(index);
-    }
-
-    public bool AddItemToInventory(InventoryItem item)
-    {
-        return inventory.Add(item);
-    }
-
-    public bool RemoveFromInventory(InventoryItem item)
-    {
-        return inventory.RemoveItem(item);
-    }
-
-    public bool RemoveFromInventoryAt(int index)
-    {
-        return inventory.RemoveItemAt(index);
-    }
-    #endregion Inventory
-
-    #region Equipment
-    public bool WearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes)
-    {
-
-        return equipment.WearItems(item, itemTypes);
-    }
-
-    public bool WearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes, int additional)
-    {
-       
-        return equipment.WearItems(item, itemTypes, additional);
-    }
-
-    public bool UnWearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes)
-    {
-        return true;
-    }
-
-    public bool UnWearItem(InventoryItem item, InventoryItem.ItemTypes itemTypes, int additional)
-    {
-        return true;
-    }
-
-
-
-
-    #endregion Equipment
-
-
-
-
     public Card UsedSkill(Card usedCard)
     {
         Card TempCard = new Card(usedCard.CardID, usedCard.Name, usedCard.Info, usedCard.Power, usedCard.Range);
