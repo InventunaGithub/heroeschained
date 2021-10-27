@@ -34,6 +34,8 @@ public class HeroController : MonoBehaviour
     private bool isAttacking = false;
     private bool isRunning = false;
     private bool victory = false;
+    private bool agentEnabled = false;
+    private bool heroActivated = false;
     public bool SeeingTarget = false;
     public bool interwal = false;
     public float Distance = 0;
@@ -51,8 +53,7 @@ public class HeroController : MonoBehaviour
         GameObject heroSkin = Instantiate(MainHero.HeroSkin , gameObject.transform.position , gameObject.transform.rotation);
         heroSkin.transform.parent = gameObject.transform;
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
-        HeroHealthBar.transform.parent = GameObject.Find("Canvas").transform;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
         heroAnimator = transform.GetChild(0).GetComponent<Animator>();
         obstructionMask = LayerMask.GetMask("Obstacle");
         agent = gameObject.GetComponent<NavMeshAgent>();
@@ -63,91 +64,132 @@ public class HeroController : MonoBehaviour
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
         HealthBar.maxValue = MainHero.MaxHealth;
+        GetComponent<NavMeshAgent>().enabled = false;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
     // Update is called once per frame
     void Update()
     {
-        HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
-        HealthBar.value = MainHero.Health;
-        if (MainHero.Health <= 0 && Enemy.Team.Count != 0) //Death state
+        if(heroActivated)
         {
-            if(!isDead)
+            if(!agentEnabled)
             {
-                isDead = true;
-                DyingAnimation();
+                agentEnabled = true;
+                GetComponent<NavMeshAgent>().enabled = true;
             }
-            Owner.Team.Remove(MainHero);
-            agent.isStopped = true;
-        }
-        else if (Enemy.Team.Count == 0 && !isDead) //Victory state
-        {
-            if(MainHero.Health == 0)
+            HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+            HealthBar.value = MainHero.Health;
+            if (MainHero.Health <= 0 && Enemy.Team.Count != 0) //Death state
             {
-                MainHero.Health = 1;
-            }
-            if (!victory)
-            {
-                victory = true;
-                VictoryAnimation();
-            }
-            agent.isStopped = true;
-        }
-        else
-        {
-            if (MainHero.AIType == AITypes.Closest && !interwal)
-            {
-                StartCoroutine(SelectClosestEnemy());
-            }
-            else if (MainHero.AIType == AITypes.Lockon)
-            {
-                if (TargetHeroGO == null)
+                if (!isDead)
                 {
-                    TargetHeroGO = ClosestEnemy();
+                    isDead = true;
+                    DyingAnimation();
+                }
+                Owner.Team.Remove(MainHero);
+                if (GetComponent<NavMeshAgent>().enabled)
+                {
+                    agent.isStopped = true;
+                }
+                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                GetComponent<NavMeshAgent>().enabled = false;
+                GetComponent<CapsuleCollider>().enabled = false;
+            }
+            else if (Enemy.Team.Count == 0 && !isDead) //Victory state
+            {
+                if (MainHero.Health == 0)
+                {
+                    MainHero.Health = 1;
+                }
+                if (!victory)
+                {
+                    victory = true;
+                    VictoryAnimation();
+                }
+
+                if (GetComponent<NavMeshAgent>().enabled)
+                {
+                    agent.isStopped = true;
+                }
+                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                GetComponent<NavMeshAgent>().enabled = false;
+                GetComponent<CapsuleCollider>().enabled = false;
+            }
+            else
+            {
+                if (isRunning)
+                {
+                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
                 else
                 {
-                    if (TargetHeroGO.GetComponent<HeroController>().MainHero.Health <= 0)
+                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                }
+                if (MainHero.AIType == AITypes.Closest && !interwal)
+                {
+                    StartCoroutine(SelectClosestEnemy());
+                }
+                else if (MainHero.AIType == AITypes.Lockon)
+                {
+                    if (TargetHeroGO == null)
                     {
                         TargetHeroGO = ClosestEnemy();
                     }
-                }
-            }
-
-            NavMeshPath path = new NavMeshPath();
-            SeeingTarget = CanSeeTarget(TargetHeroGO);
-            if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, agent.areaMask, path))
-            {
-                float distance = Vector3.Distance(transform.position, path.corners[0]);
-
-                for (int j = 1; j < path.corners.Length; j++)
-                {
-                    distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
-                }
-                Distance = distance;
-                if((distance > MainHero.Range && distance > agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
-                {
-                    agent.isStopped = false;
-                    agent.SetPath(path);
-                    transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
-                    if(!isRunning)
+                    else
                     {
-                        RunningAnimation();
-                        isRunning = true;
+                        if (TargetHeroGO.GetComponent<HeroController>().MainHero.Health <= 0)
+                        {
+                            TargetHeroGO = ClosestEnemy();
+                        }
                     }
                 }
-                else
+
+                NavMeshPath path = new NavMeshPath();
+                if(TargetHeroGO != null)
                 {
-                    transform.LookAt(TargetHeroGO.transform);
-                    isRunning = false;
-                    agent.isStopped = true;
-                    if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
+                    SeeingTarget = CanSeeTarget(TargetHeroGO);
+                    if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, agent.areaMask, path))
                     {
-                        StartCoroutine(Attack(Enemy.Team[TargetHero]));
+                        float distance = Vector3.Distance(transform.position, path.corners[0]);
+
+                        for (int j = 1; j < path.corners.Length; j++)
+                        {
+                            distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
+                        }
+                        Distance = distance;
+                        if ((distance > MainHero.Range && distance > agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
+                        {
+                            agent.isStopped = false;
+                            agent.SetPath(path);
+                            transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                            if (!isRunning)
+                            {
+                                RunningAnimation();
+                                isRunning = true;
+                            }
+                        }
+                        else
+                        {
+                            transform.LookAt(TargetHeroGO.transform);
+                            isRunning = false;
+                            agent.isStopped = true;
+                            if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
+                            {
+                                StartCoroutine(Attack(Enemy.Team[TargetHero]));
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    public void Activate(bool activation)
+    {
+        heroActivated = activation;
     }
 
     public GameObject ClosestEnemy()
@@ -189,6 +231,10 @@ public class HeroController : MonoBehaviour
 
     private bool CanSeeTarget(GameObject targetGO)
     {
+        if(targetGO == null)
+        {
+            return false;
+        }
         Transform target = targetGO.transform;
         Vector3 directionToTarget = (target.position - transform.position).normalized;
 
@@ -239,7 +285,7 @@ public class HeroController : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         GameObject projectileGO = Instantiate(projectile, offset + shootingPosition.position , shootingPosition.rotation);
-        projectileGO.transform.DOMove(targetPosition.position + offset, 0.5f);
+        projectileGO.transform.DOMove(targetPosition.position + offset, travelTime);
         yield return new WaitForSeconds(travelTime);
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1941975299658355599}
   - component: {fileID: 1941975299658355592}
   - component: {fileID: 1941975299658355593}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HeroObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.3
+  m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -137,6 +137,7 @@ MonoBehaviour:
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
+  GameStarted: 0
   SeeingTarget: 0
   interwal: 0
   Distance: 0
@@ -150,7 +151,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1941975299658355595}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.3
+  m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50

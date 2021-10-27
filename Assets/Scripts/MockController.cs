@@ -15,6 +15,7 @@ public class MockController : MonoBehaviour
     public List<Hero> Team1Heroes;
     public List<Hero> Team2Heroes;
     public GameObject Characters;
+    public GameObject HeroPrefab;
     // Start is called before the first frame update
     void Awake()
     {
@@ -27,20 +28,34 @@ public class MockController : MonoBehaviour
         int onChildIndex = 0;
         foreach (Hero hero in Team1Heroes)
         {
+            Transform gridPlace = GetComponent<FormationManager>().gridArea1.transform.GetChild(onChildIndex).transform;
             King1.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.HeroSkin, hero.Skills, hero.AIType, hero.HeroType));
-            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().ChildNo = King1.Team.IndexOf(King1.Team.Last());
-            King1.Team.Last().HeroObject = Characters.transform.GetChild(onChildIndex).gameObject;
-            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Owner = King1;
-            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Enemy = King2;
+            GameObject heroObject = Instantiate(HeroPrefab, Vector3.zero, Quaternion.identity);
+            heroObject.transform.tag = King1.Name;
+            heroObject.transform.SetParent(Characters.transform, false);
+            heroObject.GetComponent<HeroController>().ChildNo = King1.Team.IndexOf(King1.Team.Last());
+            heroObject.transform.position = gridPlace.position;
+            heroObject.transform.rotation = gridPlace.rotation;
+            gridPlace.GetComponent<Renderer>().material.color = Color.red;
+            heroObject.GetComponent<HeroController>().Owner = King1;
+            heroObject.GetComponent<HeroController>().Enemy = King2;
+            King1.Team.Last().HeroObject = heroObject;
             onChildIndex += 1;
         }
+        onChildIndex = 0;
         foreach (Hero hero in Team2Heroes)
         {
+            Transform gridPlace = GetComponent<FormationManager>().gridArea2.transform.GetChild(onChildIndex).transform;
             King2.Team.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.HeroSkin, hero.Skills, hero.AIType, hero.HeroType));
-            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().ChildNo = King2.Team.IndexOf(King2.Team.Last());
-            King2.Team.Last().HeroObject = Characters.transform.GetChild(onChildIndex).gameObject;
-            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Owner = King2;
-            Characters.transform.GetChild(onChildIndex).GetComponent<HeroController>().Enemy = King1;
+            GameObject heroObject = Instantiate(HeroPrefab, Vector3.zero, Quaternion.identity);
+            heroObject.transform.SetParent(Characters.transform, false);
+            heroObject.transform.tag = King2.Name;
+            heroObject.GetComponent<HeroController>().ChildNo = King2.Team.IndexOf(King2.Team.Last());
+            heroObject.transform.position = gridPlace.position ;
+            heroObject.transform.rotation = gridPlace.rotation ;
+            heroObject.GetComponent<HeroController>().Owner = King2;
+            heroObject.GetComponent<HeroController>().Enemy = King1;
+            King2.Team.Last().HeroObject = heroObject;
             onChildIndex += 1;
         }
     }
@@ -54,6 +69,16 @@ public class MockController : MonoBehaviour
         foreach (var hero in Team2SO)
         {
             Team2Heroes.Add(new Hero(hero.Name, hero.HeroID, hero.BaseHealth, hero.BaseDamage, hero.Strength, hero.Dexterity, hero.Intelligence, hero.Vitality, hero.Range, hero.HeroSkin, hero.Skills, hero.AIType, hero.HeroType));
+        }
+    }
+
+    public void StartTheGame()
+    {
+        GameObject.Find("GridArea1").SetActive(false);
+        GameObject.Find("GridArea2").SetActive(false);
+        foreach (Transform child in GameObject.Find("Characters").transform)
+        {
+            child.GetComponent<HeroController>().Activate(true);
         }
     }
 }

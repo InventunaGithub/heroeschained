@@ -30,7 +30,7 @@ MonoBehaviour:
   Armor: 0
   Damage: 0
   Health: 30
-  Range: 1
+  Range: 3
   AIType: 0
   HeroType: 2
   HeroSkin: {fileID: 1282194365053980, guid: ee423c1c24aacfc4d83a6289de7ee2da, type: 3}
