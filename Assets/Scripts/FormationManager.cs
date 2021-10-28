@@ -10,17 +10,20 @@ public class FormationManager : MonoBehaviour
     public GameObject gridArea1;
     public GameObject gridArea2;
     private Ray ray;
-    private bool clickedOnHero;
-    private GameObject hitGO;
+    public bool ClickedOnHero;
+    public  GameObject HitGO;
     private GameObject gridGO;
     public Transform LastGridPos;
     private LayerMask heroLayer;
+    public bool PlacingOnFullGrid;
+    public GridController GC;
 
     void Awake()
     {
         gridArea1 = GameObject.Find("GridArea1");
         gridArea2 = GameObject.Find("GridArea2");
         heroLayer = LayerMask.GetMask("HeroLayer");
+        Physics.IgnoreLayerCollision(9, 9, true);
     }
 
     void Update()
@@ -31,33 +34,31 @@ public class FormationManager : MonoBehaviour
         Physics.Raycast(ray, out hitData, 10000000);        
         if (Input.GetMouseButtonDown(0) && hitData.transform.tag == "King1")
         {
-            clickedOnHero = true;
-            hitGO = hitData.transform.gameObject;
-            hitGO.GetComponent<CapsuleCollider>().enabled = true;
+            ClickedOnHero = true;
+            HitGO = hitData.transform.gameObject;
         }
 
-        if (Input.GetMouseButton(0) && clickedOnHero)
+        if (Input.GetMouseButton(0) && ClickedOnHero)
         {
             if (Physics.Raycast(ray, out hitData, 1000 , ~heroLayer))
             {
-                hitGO.transform.position = hitData.point;
+                HitGO.transform.position = hitData.point;
             }
             
         }
 
-        if (Input.GetMouseButtonUp(0) && clickedOnHero)
+        if (Input.GetMouseButtonUp(0) && ClickedOnHero)
         {
             SetPos(LastGridPos);
-            clickedOnHero = false;
-            hitGO = null;
-            hitGO.GetComponent<CapsuleCollider>().enabled = false;
+            ClickedOnHero = false;
+            HitGO = null;
         }
 
     }
 
     public void SetPos(Transform posRef)
     {
-        hitGO.transform.position = posRef.position;
+        HitGO.transform.position = posRef.position;
     }
 
 }

@@ -42,6 +42,7 @@ public class HeroController : MonoBehaviour
     public GameObject HealthBarGO;
     private GameObject HeroHealthBar;
     private Slider HealthBar;
+    public Transform LastGridPos;
 
     void Start()
     {
@@ -77,6 +78,7 @@ public class HeroController : MonoBehaviour
             {
                 agentEnabled = true;
                 GetComponent<NavMeshAgent>().enabled = true;
+                Physics.IgnoreLayerCollision(9, 9, false);
             }
             HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
             HealthBar.value = MainHero.Health;
@@ -178,7 +180,10 @@ public class HeroController : MonoBehaviour
                             agent.isStopped = true;
                             if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
                             {
-                                StartCoroutine(Attack(Enemy.Team[TargetHero]));
+                                if(TargetHero < Enemy.Team.Count)
+                                {
+                                    StartCoroutine(Attack(Enemy.Team[TargetHero]));
+                                }
                             }
                         }
                     }
@@ -428,6 +433,21 @@ public class HeroController : MonoBehaviour
             heroAnimator.CrossFade("Victory", 0.1f);
         }
         
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        LastGridPos.position = other.transform.position; 
+
     }
 
 }

@@ -7,12 +7,14 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    FormationManager fm;
+    FormationManager FM;
     Renderer gridRenderer;
-    bool triggered;
+    public GameObject HeroOnGrid;
+    bool gridFull;
+    public bool Dropped;
     void Start()
     {
-        fm = GameObject.Find("Managers").GetComponent<FormationManager>();
+        FM = GameObject.Find("Managers").GetComponent<FormationManager>();
         gridRenderer = GetComponent<Renderer>();
     }
     void OnTriggerStay(Collider other)
@@ -20,32 +22,31 @@ public class GridController : MonoBehaviour
         gridRenderer.material.color = Color.red;
     }
     private void OnTriggerEnter(Collider other)
-    {
-        if (!triggered)
+    {   
+        if(HeroOnGrid == null)
         {
-            fm.LastGridPos = this.transform;
-            triggered = true;
+            HeroOnGrid = other.gameObject;
+            gridFull = true;
         }
-        else
+        if(!gridFull || HeroOnGrid == FM.HitGO)
         {
-            triggered = false;
+            FM.LastGridPos = this.transform;
         }
 
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!triggered)
+        if (!gridFull || HeroOnGrid == FM.HitGO)
         {
-            fm.LastGridPos = this.transform;
-            triggered = true;
+            if (FM.LastGridPos != this.transform)
+            {
+                FM.LastGridPos = this.transform;
+            }
+            gridRenderer.material.color = Color.green;
+            HeroOnGrid = null;
+            gridFull = false;
         }
-        else
-        {
-            triggered = false;
-        }
-
-        fm.LastGridPos = this.transform;
-        gridRenderer.material.color = Color.green;
+        
     }
 }
