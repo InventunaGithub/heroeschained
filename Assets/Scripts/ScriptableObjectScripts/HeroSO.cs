@@ -8,9 +8,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Hero", menuName = "Inventuna/HeroesChained/Hero")]
 public class HeroSO : ScriptableObject
 {
-    public int HeroID; //Uniq id ?
+    public int HeroID; 
     public string Name;
-    public List<Card> Skills;
     public int BaseHealth;
     public int BaseDamage = 5;
     public int Strength;

@@ -19,9 +19,33 @@ public class InventoryItem : ScriptableObject
 
     public ItemTypes ItemType = ItemTypes.Misc;
     public ItemQualities ItemQuality = ItemQualities.Common;
+    public EquipmentItemPlaces EquipmentItemPlace;
 
     public bool Consumable = false;
     public bool AccountBound = false;
 
     public float SellValue;
+}
+public enum ItemTypes
+{
+    Weapon, Weapon2Handed, Shield, Bracelet, Shoulder,
+    Armor, Helm, Belt, Boot, Ring, Necklace,
+    Misc, Other
+}
+
+public enum ItemQualities
+{
+    Common, Uncommon, Rare, Unique
+}
+
+public enum Other
+{
+    Gem, Scroll, Card, CardConsumable, Useless
+}
+
+public enum EquipmentItemPlaces
+{
+    Head, Chest, Neck, Shoulder, Wrist,
+    HandLeft, HandRight, FingerLeft1, FingerLeft2, FingerRight1,
+    FingerRight2, Waist, Feet
 }

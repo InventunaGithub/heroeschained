@@ -16,9 +16,8 @@ public class HeroController : MonoBehaviour
 
     public Hero MainHero;
     public int TargetHero;
-    public int ChildNo;
-    public Player Owner;
-    public Player Enemy;
+    private List<Hero> enemyTeam;
+    private List<Hero> team;
     private NavMeshAgent agent;
     public float NormalAttackCooldown;
     private bool onCooldown = false;
@@ -34,27 +33,24 @@ public class HeroController : MonoBehaviour
     private bool isAttacking = false;
     private bool isRunning = false;
     private bool victory = false;
-    private bool agentEnabled = false;
-    private bool heroActivated = false;
     public bool SeeingTarget = false;
     public bool interwal = false;
     public float Distance = 0;
     public GameObject HealthBarGO;
     private GameObject HeroHealthBar;
     private Slider HealthBar;
-    public Transform LastGridPos;
 
     void Start()
     {
-        if (Owner.Team.Count == 0)
-        {
-            throw new System.Exception("Team does not have any members");
-        }
-        MainHero = Owner.Team[ChildNo];
+        MainHero = GetComponent<Hero>();
+        MainHero.HeroObject = this.gameObject;
+        enemyTeam = GetComponent<BattlefieldManager>().Team2;
+        team = GetComponent<BattlefieldManager>().Team1;
         GameObject heroSkin = Instantiate(MainHero.HeroSkin , gameObject.transform.position , gameObject.transform.rotation);
         heroSkin.transform.parent = gameObject.transform;
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
-        HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        HeroHealthBar.transform.parent = GameObject.Find("Canvas").transform;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         heroAnimator = transform.GetChild(0).GetComponent<Animator>();
         obstructionMask = LayerMask.GetMask("Obstacle");
         agent = gameObject.GetComponent<NavMeshAgent>();
@@ -65,136 +61,91 @@ public class HeroController : MonoBehaviour
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
         HealthBar.maxValue = MainHero.MaxHealth;
-        GetComponent<NavMeshAgent>().enabled = false;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(heroActivated)
+        HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+        HealthBar.value = MainHero.Health;
+        if (MainHero.Health <= 0 && enemyTeam.Count != 0) //Death state
         {
-            if(!agentEnabled)
+            if(!isDead)
             {
-                agentEnabled = true;
-                GetComponent<NavMeshAgent>().enabled = true;
-                Physics.IgnoreLayerCollision(9, 9, false);
+                isDead = true;
+                DyingAnimation();
             }
-            HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
-            HealthBar.value = MainHero.Health;
-            if (MainHero.Health <= 0 && Enemy.Team.Count != 0) //Death state
+            team.Remove(MainHero);
+            agent.isStopped = true;
+        }
+        else if (enemyTeam.Count == 0 && !isDead) //Victory state
+        {
+            if(MainHero.Health == 0)
             {
-                if (!isDead)
-                {
-                    isDead = true;
-                    DyingAnimation();
-                }
-                Owner.Team.Remove(MainHero);
-                if (GetComponent<NavMeshAgent>().enabled)
-                {
-                    agent.isStopped = true;
-                }
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                GetComponent<NavMeshAgent>().enabled = false;
-                GetComponent<CapsuleCollider>().enabled = false;
+                MainHero.Health = 1;
             }
-            else if (Enemy.Team.Count == 0 && !isDead) //Victory state
+            if (!victory)
             {
-                if (MainHero.Health == 0)
-                {
-                    MainHero.Health = 1;
-                }
-                if (!victory)
-                {
-                    victory = true;
-                    VictoryAnimation();
-                }
-
-                if (GetComponent<NavMeshAgent>().enabled)
-                {
-                    agent.isStopped = true;
-                }
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                GetComponent<NavMeshAgent>().enabled = false;
-                GetComponent<CapsuleCollider>().enabled = false;
+                victory = true;
+                VictoryAnimation();
             }
-            else
+            agent.isStopped = true;
+        }
+        else
+        {
+            if (MainHero.AIType == AITypes.Closest && !interwal)
             {
-                if (isRunning)
+                StartCoroutine(SelectClosestEnemy());
+            }
+            else if (MainHero.AIType == AITypes.Lockon)
+            {
+                if (TargetHeroGO == null)
                 {
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    TargetHeroGO = ClosestEnemy();
                 }
                 else
                 {
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-                }
-                if (MainHero.AIType == AITypes.Closest && !interwal)
-                {
-                    StartCoroutine(SelectClosestEnemy());
-                }
-                else if (MainHero.AIType == AITypes.Lockon)
-                {
-                    if (TargetHeroGO == null)
+                    if (TargetHeroGO.GetComponent<HeroController>().MainHero.Health <= 0)
                     {
                         TargetHeroGO = ClosestEnemy();
                     }
-                    else
+                }
+            }
+
+            NavMeshPath path = new NavMeshPath();
+            SeeingTarget = CanSeeTarget(TargetHeroGO);
+            if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, agent.areaMask, path))
+            {
+                float distance = Vector3.Distance(transform.position, path.corners[0]);
+
+                for (int j = 1; j < path.corners.Length; j++)
+                {
+                    distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
+                }
+                Distance = distance;
+                if((distance > MainHero.Range && distance > agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
+                {
+                    agent.isStopped = false;
+                    agent.SetPath(path);
+                    transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                    if(!isRunning)
                     {
-                        if (TargetHeroGO.GetComponent<HeroController>().MainHero.Health <= 0)
-                        {
-                            TargetHeroGO = ClosestEnemy();
-                        }
+                        RunningAnimation();
+                        isRunning = true;
                     }
                 }
-
-                NavMeshPath path = new NavMeshPath();
-                if(TargetHeroGO != null)
+                else
                 {
-                    SeeingTarget = CanSeeTarget(TargetHeroGO);
-                    if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, agent.areaMask, path))
+                    transform.LookAt(TargetHeroGO.transform);
+                    isRunning = false;
+                    agent.isStopped = true;
+                    if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking)
                     {
-                        float distance = Vector3.Distance(transform.position, path.corners[0]);
-
-                        for (int j = 1; j < path.corners.Length; j++)
-                        {
-                            distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
-                        }
-                        Distance = distance;
-                        if ((distance > MainHero.Range && distance > agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
-                        {
-                            agent.isStopped = false;
-                            agent.SetPath(path);
-                            transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
-                            if (!isRunning)
-                            {
-                                RunningAnimation();
-                                isRunning = true;
-                            }
-                        }
-                        else
-                        {
-                            transform.LookAt(TargetHeroGO.transform);
-                            isRunning = false;
-                            agent.isStopped = true;
-                            if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
-                            {
-                                if(TargetHero < Enemy.Team.Count)
-                                {
-                                    StartCoroutine(Attack(Enemy.Team[TargetHero]));
-                                }
-                            }
-                        }
+                        StartCoroutine(Attack(enemyTeam[TargetHero]));
                     }
                 }
             }
         }
-    }
-
-    public void Activate(bool activation)
-    {
-        heroActivated = activation;
     }
 
     public GameObject ClosestEnemy()
@@ -204,15 +155,15 @@ public class HeroController : MonoBehaviour
         NavMeshPath shortestPath = null;
         GameObject Temp= null;
 
-        for (int i = 0; i < Enemy.Team.Count; i++)
+        for (int i = 0; i < enemyTeam.Count; i++)
         {
-            if (Enemy.Team[i] == null)
+            if (enemyTeam[i] == null)
             {
                 continue;
             }
             path = new NavMeshPath();
 
-            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].HeroObject.transform.position, agent.areaMask, path))
+            if (NavMesh.CalculatePath(transform.position, enemyTeam[i].HeroObject.transform.position, agent.areaMask, path))
             {
                 float distance = Vector3.Distance(transform.position, path.corners[0]);
 
@@ -226,7 +177,7 @@ public class HeroController : MonoBehaviour
                     closestTargetDistance = distance;
                     shortestPath = path;
                     TargetHero = i;
-                    Temp = Enemy.Team[TargetHero].HeroObject;
+                    Temp = enemyTeam[TargetHero].HeroObject;
                 }
             }
 
@@ -236,10 +187,6 @@ public class HeroController : MonoBehaviour
 
     private bool CanSeeTarget(GameObject targetGO)
     {
-        if(targetGO == null)
-        {
-            return false;
-        }
         Transform target = targetGO.transform;
         Vector3 directionToTarget = (target.position - transform.position).normalized;
 
@@ -271,11 +218,7 @@ public class HeroController : MonoBehaviour
 
     IEnumerator Attack(Hero TargetHero)
     {
-        if (MainHero.Skills.Count == 0)
-        {
-            throw new System.Exception("Hero Does Not Have Any Skills.");
-        }
-         onCooldown = true;
+        onCooldown = true;
         NormalAttackAnimation();
         yield return new WaitForSeconds(NormalAttackCooldown);
         onCooldown = false;
@@ -290,13 +233,12 @@ public class HeroController : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         GameObject projectileGO = Instantiate(projectile, offset + shootingPosition.position , shootingPosition.rotation);
-        projectileGO.transform.DOMove(targetPosition.position + offset, travelTime);
+        projectileGO.transform.DOMove(targetPosition.position + offset, 0.5f);
         yield return new WaitForSeconds(travelTime);
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        Hero targetHero = Enemy.Team[TargetHero];
-        targetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
-        Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + targetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + targetHero.Health);
+        Hero targetHero = enemyTeam[TargetHero];
+        targetHero.Hurt(MainHero.Damage);
         Destroy(splashGO, 0.3f);
         isAttacking = false;
     }
@@ -309,9 +251,8 @@ public class HeroController : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        Hero targetHero = Enemy.Team[TargetHero];
-        targetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
-        Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + targetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + targetHero.Health);
+        Hero targetHero = enemyTeam[TargetHero];
+        targetHero.Hurt(MainHero.Damage);
         Destroy(splashGO, 0.3f);
         isAttacking = false;
     }
@@ -433,21 +374,6 @@ public class HeroController : MonoBehaviour
             heroAnimator.CrossFade("Victory", 0.1f);
         }
         
-    }
-
-    void OnTriggerStay(Collider other)
-    {
-        
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        LastGridPos.position = other.transform.position; 
-
     }
 
 }
