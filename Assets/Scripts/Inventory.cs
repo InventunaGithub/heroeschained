@@ -7,37 +7,58 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private List<InventoryItem> items = new List<InventoryItem>();
+    [SerializeField] private List<InventoryItem> items = new();
     [SerializeField] private int capacity = 10;
 
-    void Add(InventoryItem item)
+
+    public bool Add(InventoryItem item)
     {
         if (!(items.Count >= capacity))
         {
             items.Add(item);
+            return true;
         }
         else
         {
             Debug.Log("Achieve the capacity");
+            return false;
         }
     }
 
-    void RemoveItem(InventoryItem item)
+    public bool RemoveItem(InventoryItem item)
     {
-        items.RemoveAt(items.IndexOf(item));
+        if (items.Contains(item))
+        {
+            items.Remove(item);
+            return true;
+        }
+        else
+        {
+            Debug.Log("This item is not in inventory");
+            return false;
+        }
     }
 
-    void RemoveItemAt(int index)
+    public bool RemoveItemAt(int index)
     {
-        items.RemoveAt(index);
+        if (items.Count > index && items[index] != null)
+        {
+            items.RemoveAt(index);
+            return true;
+        }
+        else
+        {
+            Debug.Log("Index is out of capacity or item is not found.");
+            return false;
+        }
     }
 
-    int ItemCount()
+    public int ItemCount()
     {
         return items.Count;
     }
 
-    InventoryItem GetItem(int index)
+    public InventoryItem GetItem(int index)
     {
         return items[index];
     }

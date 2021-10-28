@@ -5,54 +5,16 @@ using UnityEngine;
 //Author: Mert Karavural
 //Date: 15 Sep 2020
 
+public enum HeroTypes { Mage, Archer, Warrior, Human };
 
-[System.Serializable]
-public class Player
+
+[RequireComponent(typeof(Equipment))]
+[RequireComponent(typeof(Inventory))]
+public class Hero : MonoBehaviour
 {
-    public int PlayerID;
-    public string Name;
-    public List<Hero> Team;
+    private Equipment equipment;
+    private Inventory inventory;
 
-}
-
-public enum AITypes {Closest , Lockon};
-public enum ItemTypes
-{
-    Weapon, WeaponTwoHanded, Shield,
-    Armor, Helm, Belt, Boot, Ring, Amulet, Gem,
-    Gold, Scroll, Potion, Misc
-}
-public enum ItemQualities
-{
-    Common, Uncommon, Rare, Unique
-}
-public enum HeroTypes {Mage, Archer, Warrior, Human};
-
-
-[System.Serializable]
-public class Card
-{
-    //Base class for cards FOR NOW THIS IS USED BOTH CARDS AND SPELLS , BECAUSE OF THAT WE EVEN DO NORMAL ATTACKS BY "NORMAL ATTACK" CARD. it is for simpilicty.
-    public int CardID;
-    public string Name;
-    public string Info;
-    public int Power;
-    public int Range;
-    public bool Used;
-
-    public Card(int cardID, string name, string info, int power, int range)
-    {
-        CardID = cardID;
-        Name = name;
-        Info = info;
-        Power = power;
-        Range = range;
-    }
-}
-
-[System.Serializable]
-public class Hero
-{
     public int HeroID; //Uniq id ?
     public string Name;
     //public Item[] Items;
@@ -73,8 +35,16 @@ public class Hero
     public HeroTypes HeroType;
     public GameObject HeroSkin;
 
+    private void Start()
+    {
+        Hero2("Deniz");
+    }
 
-    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, GameObject heroSkin, List<Card> skills = null, AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
+    public void Hero2(string name, int heroID = 0, int baseHealth = 0,
+        int baseDamage = 0, int strength = 0, int dexterity = 0,
+        int intelligence = 0, int vitality = 0, int range = 0,
+        GameObject heroSkin = null, List<Card> skills = null,
+        AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
     {
         HeroID = heroID;
         Name = name;
@@ -93,6 +63,8 @@ public class Hero
         HeroSkin = heroSkin;
         this.AIType = AIType;
         HeroType = heroType;
+        inventory = GetComponent<Inventory>();
+        equipment = GetComponent<Equipment>();
     }
 
     public Card UsedSkill(Card usedCard)
@@ -127,7 +99,7 @@ public class Hero
 
     void Normalise()
     {
-        if(Armor < 0)
+        if (Armor < 0)
         {
             Armor = 0;
         }
@@ -148,4 +120,55 @@ public class Hero
             Health = MaxHealth;
         }
     }
+
+    #region Inventory
+    public int GetInventoryItemCount()
+    {
+        return inventory.ItemCount();
+    }
+
+    public InventoryItem GetInventoryItem(int index)
+    {
+        return inventory.GetItem(index);
+    }
+
+    public bool AddItemToInventory(InventoryItem item)
+    {
+        return inventory.Add(item);
+    }
+
+    public bool RemoveFromInventory(InventoryItem item)
+    {
+        return inventory.RemoveItem(item);
+    }
+
+    public bool RemoveFromInventoryAt(int index)
+    {
+        return inventory.RemoveItemAt(index);
+    }
+    #endregion Inventory
+
+    #region Equipment
+    public bool WearItem(InventoryItem item)
+    {
+
+        return equipment.WearItems(item);
+    }
+
+    public bool WearItem(InventoryItem item, int additional)
+    {
+
+        return equipment.WearItems(item, additional);
+    }
+
+    public bool UnWearItem(InventoryItem item)
+    {
+        return equipment.UnWearItems(item);
+    }
+
+    public bool UnWearItem(InventoryItem item, int additional)
+    {
+        return equipment.UnWearItems(item, additional);
+    }
+    #endregion Equipment
 }
