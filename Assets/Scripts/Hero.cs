@@ -7,8 +7,11 @@ using UnityEngine;
 
 public enum HeroTypes { Mage, Archer, Warrior, Human };
 
+
+[RequireComponent(typeof(Equipment))]
+[RequireComponent(typeof(Inventory))]
 public class Hero : MonoBehaviour
-{ 
+{
     private Equipment equipment;
     private Inventory inventory;
 
@@ -32,8 +35,16 @@ public class Hero : MonoBehaviour
     public HeroTypes HeroType;
     public GameObject HeroSkin;
 
+    private void Start()
+    {
+        Hero2("Deniz");
+    }
 
-    public Hero(string name, int heroID, int baseHealth, int baseDamage, int strength, int dexterity, int intelligence, int vitality, int range, GameObject heroSkin, List<Card> skills = null, AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
+    public void Hero2(string name, int heroID = 0, int baseHealth = 0,
+        int baseDamage = 0, int strength = 0, int dexterity = 0,
+        int intelligence = 0, int vitality = 0, int range = 0,
+        GameObject heroSkin = null, List<Card> skills = null,
+        AITypes AIType = AITypes.Closest, HeroTypes heroType = HeroTypes.Human)
     {
         HeroID = heroID;
         Name = name;
@@ -49,11 +60,11 @@ public class Hero : MonoBehaviour
         Damage = BaseDamage + (this.Strength * 2);
         Armor = 10;
         Skills = skills;
-        inventory = new Inventory();
-        equipment = new Equipment();
         HeroSkin = heroSkin;
         this.AIType = AIType;
         HeroType = heroType;
+        inventory = GetComponent<Inventory>();
+        equipment = GetComponent<Equipment>();
     }
 
     public Card UsedSkill(Card usedCard)
@@ -109,4 +120,55 @@ public class Hero : MonoBehaviour
             Health = MaxHealth;
         }
     }
+
+    #region Inventory
+    public int GetInventoryItemCount()
+    {
+        return inventory.ItemCount();
+    }
+
+    public InventoryItem GetInventoryItem(int index)
+    {
+        return inventory.GetItem(index);
+    }
+
+    public bool AddItemToInventory(InventoryItem item)
+    {
+        return inventory.Add(item);
+    }
+
+    public bool RemoveFromInventory(InventoryItem item)
+    {
+        return inventory.RemoveItem(item);
+    }
+
+    public bool RemoveFromInventoryAt(int index)
+    {
+        return inventory.RemoveItemAt(index);
+    }
+    #endregion Inventory
+
+    #region Equipment
+    public bool WearItem(InventoryItem item)
+    {
+
+        return equipment.WearItems(item);
+    }
+
+    public bool WearItem(InventoryItem item, int additional)
+    {
+
+        return equipment.WearItems(item, additional);
+    }
+
+    public bool UnWearItem(InventoryItem item)
+    {
+        return equipment.UnWearItems(item);
+    }
+
+    public bool UnWearItem(InventoryItem item, int additional)
+    {
+        return equipment.UnWearItems(item, additional);
+    }
+    #endregion Equipment
 }

@@ -327,7 +327,7 @@ public class Equipment : MonoBehaviour
     {
         switch (additional)
         {
-            case RingLeft1:
+            case Equipment.RingLeft1:
                 if (GetItem(EquipmentItemPlaces.FingerLeft1) != null)
                 {
                     FingersLeft[0] = null;
@@ -337,7 +337,7 @@ public class Equipment : MonoBehaviour
                 {
                     return false;
                 }
-            case RingLeft2:
+            case Equipment.RingLeft2:
                 if (GetItem(EquipmentItemPlaces.FingerLeft2) != null)
                 {
                     FingersLeft[1] = null;
@@ -347,7 +347,7 @@ public class Equipment : MonoBehaviour
                 {
                     return false;
                 }
-            case RingRight1:
+            case Equipment.RingRight1:
                 if (GetItem(EquipmentItemPlaces.FingerRight1) != null)
                 {
                     FingersRight[0] = null;
@@ -357,7 +357,7 @@ public class Equipment : MonoBehaviour
                 {
                     return false;
                 }
-            case RingRight2:
+            case Equipment.RingRight2:
                 if (GetItem(EquipmentItemPlaces.FingerRight2) != null)
                 {
                     FingersRight[1] = null;

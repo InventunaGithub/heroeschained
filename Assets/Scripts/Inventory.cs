@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private List<InventoryItem> items = new List<InventoryItem>();
+    [SerializeField] private List<InventoryItem> items = new();
     [SerializeField] private int capacity = 10;
+
 
     public bool Add(InventoryItem item)
     {
@@ -36,12 +37,11 @@ public class Inventory : MonoBehaviour
             Debug.Log("This item is not in inventory");
             return false;
         }
-        
     }
 
     public bool RemoveItemAt(int index)
     {
-        if(items.Count > index && items[index] != null)
+        if (items.Count > index && items[index] != null)
         {
             items.RemoveAt(index);
             return true;
