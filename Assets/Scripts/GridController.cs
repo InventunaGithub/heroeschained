@@ -7,14 +7,14 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    FormationManager FM;
+    BattlefieldManager BM;
     Renderer gridRenderer;
     public GameObject HeroOnGrid;
     bool gridFull;
     public bool Dropped;
     void Start()
     {
-        FM = GameObject.Find("Managers").GetComponent<FormationManager>();
+        BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
         gridRenderer = GetComponent<Renderer>();
     }
     void OnTriggerStay(Collider other)
@@ -28,20 +28,20 @@ public class GridController : MonoBehaviour
             HeroOnGrid = other.gameObject;
             gridFull = true;
         }
-        if(!gridFull || HeroOnGrid == FM.HitGO)
+        if(!gridFull || HeroOnGrid == BM.HitGO)
         {
-            FM.LastGridPos = this.transform;
+            BM.LastGridPos = this.transform;
         }
 
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!gridFull || HeroOnGrid == FM.HitGO)
+        if (!gridFull || HeroOnGrid == BM.HitGO)
         {
-            if (FM.LastGridPos != this.transform)
+            if (BM.LastGridPos != this.transform)
             {
-                FM.LastGridPos = this.transform;
+                BM.LastGridPos = this.transform;
             }
             gridRenderer.material.color = Color.green;
             HeroOnGrid = null;

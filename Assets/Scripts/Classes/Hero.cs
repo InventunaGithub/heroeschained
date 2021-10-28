@@ -34,10 +34,6 @@ public class Hero : MonoBehaviour
     public HeroTypes HeroType;
     public GameObject HeroSkin;
 
-    private void Start()
-    {
-        Init(RootSO);
-    }
 
     public void Init(HeroSO rootSO)
     {
