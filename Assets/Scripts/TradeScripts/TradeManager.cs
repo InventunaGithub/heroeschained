@@ -7,17 +7,17 @@ public class TradeManager : MonoBehaviour
     float saleTax = 0f;
     float auctionTax = 0f;
 
-    public bool Trade(GameCharacter Buyer, GameCharacter Seller, InventoryItem item)
+    public bool Trade(GameCharacter buyer, GameCharacter seller, InventoryItem item)
     {
-        if((Buyer is GamePlayer) && (Seller is GameNpc))
+        if((buyer is GamePlayer) && (seller is GameNpc))
         {
-            float tempValue = Buyer.GetSellValue(item);
-            tempValue += tempValue * saleTax;
-            if (((GamePlayer)Buyer).Gold >= tempValue)
+            float tempSellValue = buyer.GetSellValue(item);
+            tempSellValue += tempSellValue * saleTax;
+            if (((GamePlayer)buyer).Gold >= tempSellValue)
             {
-                if (Buyer.AddInventoryItem(item))
+                if (buyer.AddInventoryItem(item))
                 {
-                    ((GamePlayer)Buyer).Gold -= tempValue;
+                    ((GamePlayer)buyer).Gold -= tempSellValue;
                     return true;
                 }
                 else
@@ -31,12 +31,12 @@ public class TradeManager : MonoBehaviour
                 Debug.Log("Player's gold is insufficient.");
                 return false;
             }
-        }else if((Buyer is GameNpc) && (Seller is GamePlayer))
+        }else if((buyer is GameNpc) && (seller is GamePlayer))
         {
-            float tempValue = ((GamePlayer)Seller).GetSellValue(item);
-            if (Seller.RemoveInventoryItem(item))
+            float tempSellValue = ((GamePlayer)seller).GetSellValue(item);
+            if (seller.RemoveInventoryItem(item))
             {
-                ((GamePlayer)Seller).Gold += tempValue;
+                ((GamePlayer)seller).Gold += tempSellValue;
                 return true;
             }
             else
