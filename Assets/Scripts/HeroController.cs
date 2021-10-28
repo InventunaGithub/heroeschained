@@ -16,9 +16,8 @@ public class HeroController : MonoBehaviour
 
     public Hero MainHero;
     public int TargetHero;
-    public int ChildNo;
-    public Player Owner;
-    public Player Enemy;
+    private List<Hero> enemyTeam;
+    private List<Hero> team;
     private NavMeshAgent agent;
     public float NormalAttackCooldown;
     private bool onCooldown = false;
@@ -43,11 +42,10 @@ public class HeroController : MonoBehaviour
 
     void Start()
     {
-        if (Owner.Team.Count == 0)
-        {
-            throw new System.Exception("Team does not have any members");
-        }
-        MainHero = Owner.Team[ChildNo];
+        MainHero = GetComponent<Hero>();
+        MainHero.HeroObject = this.gameObject;
+        enemyTeam = GetComponent<BattlefieldManager>().Team2;
+        team = GetComponent<BattlefieldManager>().Team1;
         GameObject heroSkin = Instantiate(MainHero.HeroSkin , gameObject.transform.position , gameObject.transform.rotation);
         heroSkin.transform.parent = gameObject.transform;
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
@@ -70,17 +68,17 @@ public class HeroController : MonoBehaviour
     {
         HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
         HealthBar.value = MainHero.Health;
-        if (MainHero.Health <= 0 && Enemy.Team.Count != 0) //Death state
+        if (MainHero.Health <= 0 && enemyTeam.Count != 0) //Death state
         {
             if(!isDead)
             {
                 isDead = true;
                 DyingAnimation();
             }
-            Owner.Team.Remove(MainHero);
+            team.Remove(MainHero);
             agent.isStopped = true;
         }
-        else if (Enemy.Team.Count == 0 && !isDead) //Victory state
+        else if (enemyTeam.Count == 0 && !isDead) //Victory state
         {
             if(MainHero.Health == 0)
             {
@@ -141,9 +139,9 @@ public class HeroController : MonoBehaviour
                     transform.LookAt(TargetHeroGO.transform);
                     isRunning = false;
                     agent.isStopped = true;
-                    if (!onCooldown && Enemy.Team.Count >= 0 && !isAttacking)
+                    if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking)
                     {
-                        StartCoroutine(Attack(Enemy.Team[TargetHero]));
+                        StartCoroutine(Attack(enemyTeam[TargetHero]));
                     }
                 }
             }
@@ -157,15 +155,15 @@ public class HeroController : MonoBehaviour
         NavMeshPath shortestPath = null;
         GameObject Temp= null;
 
-        for (int i = 0; i < Enemy.Team.Count; i++)
+        for (int i = 0; i < enemyTeam.Count; i++)
         {
-            if (Enemy.Team[i] == null)
+            if (enemyTeam[i] == null)
             {
                 continue;
             }
             path = new NavMeshPath();
 
-            if (NavMesh.CalculatePath(transform.position, Enemy.Team[i].HeroObject.transform.position, agent.areaMask, path))
+            if (NavMesh.CalculatePath(transform.position, enemyTeam[i].HeroObject.transform.position, agent.areaMask, path))
             {
                 float distance = Vector3.Distance(transform.position, path.corners[0]);
 
@@ -179,7 +177,7 @@ public class HeroController : MonoBehaviour
                     closestTargetDistance = distance;
                     shortestPath = path;
                     TargetHero = i;
-                    Temp = Enemy.Team[TargetHero].HeroObject;
+                    Temp = enemyTeam[TargetHero].HeroObject;
                 }
             }
 
@@ -220,11 +218,7 @@ public class HeroController : MonoBehaviour
 
     IEnumerator Attack(Hero TargetHero)
     {
-        if (MainHero.Skills.Count == 0)
-        {
-            throw new System.Exception("Hero Does Not Have Any Skills.");
-        }
-         onCooldown = true;
+        onCooldown = true;
         NormalAttackAnimation();
         yield return new WaitForSeconds(NormalAttackCooldown);
         onCooldown = false;
@@ -243,9 +237,8 @@ public class HeroController : MonoBehaviour
         yield return new WaitForSeconds(travelTime);
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        Hero targetHero = Enemy.Team[TargetHero];
-        targetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
-        Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + targetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + targetHero.Health);
+        Hero targetHero = enemyTeam[TargetHero];
+        targetHero.Hurt(MainHero.Damage);
         Destroy(splashGO, 0.3f);
         isAttacking = false;
     }
@@ -258,9 +251,8 @@ public class HeroController : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        Hero targetHero = Enemy.Team[TargetHero];
-        targetHero.EffectedBy(MainHero.UsedSkill(MainHero.Skills[0]));
-        Debug.Log(Owner.Name + " " + MainHero.Name + " Attacked to " + targetHero.Name + " with " + MainHero.UsedSkill(MainHero.Skills[0]).Name + " and dealt " + MainHero.UsedSkill(MainHero.Skills[0]).Power.ToString() + " Targe hero's remaining Health is " + targetHero.Health);
+        Hero targetHero = enemyTeam[TargetHero];
+        targetHero.Hurt(MainHero.Damage);
         Destroy(splashGO, 0.3f);
         isAttacking = false;
     }
