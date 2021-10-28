@@ -6,13 +6,16 @@ public class TradeManager : MonoBehaviour
 {
     float saleTax = 0f;
     float auctionTax = 0f;
+    int minArbPer = 10;
+    int maxArbPer = 20;
 
     public bool Trade(GameCharacter buyer, GameCharacter seller, InventoryItem item)
     {
         if((buyer is GamePlayer) && (seller is GameNpc))
         {
             float tempSellValue = buyer.GetSellValue(item);
-            tempSellValue += tempSellValue * saleTax;
+            int randomArb = Random.Range(minArbPer, maxArbPer);
+            tempSellValue += tempSellValue * randomArb;
             if (((GamePlayer)buyer).Gold >= tempSellValue)
             {
                 if (buyer.AddInventoryItem(item))
