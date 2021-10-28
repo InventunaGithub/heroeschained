@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 1941975299658355599}
   - component: {fileID: 1941975299658355592}
   - component: {fileID: 1941975299658355593}
+  - component: {fileID: 4912175429042658950}
+  - component: {fileID: 1741922030503070596}
+  - component: {fileID: 1607750351267431756}
   m_Layer: 9
   m_Name: HeroObject
   m_TagString: Untagged
@@ -98,35 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d08fea2a7b6474c8fa4d654e891990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainHero:
-    HeroID: 0
-    Name: 
-    Skills: []
-    HeroObject: {fileID: 0}
-    BaseHealth: 0
-    BaseDamage: 0
-    Strength: 0
-    Dexterity: 0
-    Intelligence: 0
-    Vitality: 0
-    Armor: 0
-    Damage: 0
-    Health: 0
-    MaxHealth: 0
-    Range: 0
-    AIType: 0
-    HeroType: 0
-    HeroSkin: {fileID: 0}
+  MainHero: {fileID: 0}
   TargetHero: 0
-  ChildNo: 0
-  Owner:
-    PlayerID: 0
-    Name: 
-    Team: []
-  Enemy:
-    PlayerID: 0
-    Name: 
-    Team: []
   NormalAttackCooldown: 0
   Radius: 25
   angle: 180
@@ -163,3 +139,74 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4912175429042658950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8dcba0a65e241f794b0c0e8993205e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Head: {fileID: 0}
+  Chest: {fileID: 0}
+  Neck: {fileID: 0}
+  Shoulder: {fileID: 0}
+  Wrist: {fileID: 0}
+  HandRight: {fileID: 0}
+  HandLeft: {fileID: 0}
+  FingersLeft:
+  - {fileID: 0}
+  - {fileID: 0}
+  FingersRight:
+  - {fileID: 0}
+  - {fileID: 0}
+  Waist: {fileID: 0}
+  Feet: {fileID: 0}
+--- !u!114 &1741922030503070596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3449cf8318b7844d09f30866ed26cbe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items: []
+  capacity: 10
+--- !u!114 &1607750351267431756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941975299658355595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f63df1a50298194bb29aea32b4a21d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RootSO: {fileID: 0}
+  HeroID: 0
+  Name: 
+  HeroObject: {fileID: 0}
+  BaseHealth: 0
+  BaseDamage: 0
+  Strength: 0
+  Dexterity: 0
+  Intelligence: 0
+  Vitality: 0
+  Armor: 0
+  Damage: 0
+  Health: 0
+  MaxHealth: 0
+  Range: 0
+  AIType: 0
+  HeroType: 0
+  HeroSkin: {fileID: 0}
