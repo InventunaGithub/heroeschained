@@ -6,41 +6,37 @@ public class TradeManager : MonoBehaviour
 {
     float saleTax = 0f;
     float auctionTax = 0f;
-    float playerGold;
-    GameCharacter playerGameChar;
-    GameCharacter npcGameChar;
 
-    private void Awake()
+    public bool Trade(GameCharacter Buyer, GameCharacter Seller, InventoryItem item)
     {
-        playerGameChar = GetComponent<GamePlayer>().PlayerGameCharacter;
-        npcGameChar = GetComponent<GameNpc>().GameCharacterNpc;
-        playerGold = GetComponent<GamePlayer>().Gold;
-    }
-
-    public bool Trade(GameCharacter Buyer, GameCharacter Seller, InventoryItem item, int index)
-    {
-        if((Buyer == playerGameChar) && (Seller == npcGameChar))
+        if((Buyer is GamePlayer) && (Seller is GameNpc))
         {
-            float tempValue = playerGameChar.GetSellValue(item, index);
+            float tempValue = Buyer.GetSellValue(item);
             tempValue += tempValue * saleTax;
-            if (playerGameChar.AddInventoryItem(item) && (playerGold >= tempValue))
+            if (((GamePlayer)Buyer).Gold >= tempValue)
             {
-                playerGameChar.AddInventoryItem(item);
-                playerGold -= tempValue;
-                return true;
+                if (Buyer.AddInventoryItem(item))
+                {
+                    ((GamePlayer)Buyer).Gold -= tempValue;
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Player hasn't any available item place.");
+                    return false;
+                }
             }
             else
             {
-                Debug.Log("Player hasn't any available item place or gold is insufficient.");
+                Debug.Log("Player's gold is insufficient.");
                 return false;
             }
-        }else if((Buyer == npcGameChar) && (Seller = playerGameChar))
+        }else if((Buyer is GameNpc) && (Seller is GamePlayer))
         {
-            float tempValue = playerGameChar.GetSellValue(item, index);
-            if ((playerGameChar.RemoveInventoryItem(item)) && (playerGameChar.RemoveInventoryItemAt(index)))
+            float tempValue = ((GamePlayer)Seller).GetSellValue(item);
+            if (Seller.RemoveInventoryItem(item))
             {
-                playerGameChar.RemoveInventoryItemAt(index);
-                playerGold += tempValue;
+                ((GamePlayer)Seller).Gold += tempValue;
                 return true;
             }
             else

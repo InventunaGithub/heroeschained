@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GamePlayer : MonoBehaviour
+public class GamePlayer : GameCharacter
 {
     public GameCharacter PlayerGameCharacter;
     Hero[] heroes;

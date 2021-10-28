@@ -36,8 +36,8 @@ public class GameCharacter : MonoBehaviour
         return inventory.GetItem(index);
     }
 
-    public float GetSellValue(InventoryItem item, int index)
+    public float GetSellValue(InventoryItem item)
     {
-        return inventory.ItemSellValue(item, index);
+        return inventory.ItemSellValue(item);
     }
 }

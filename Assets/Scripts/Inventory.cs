@@ -63,17 +63,9 @@ public class Inventory : MonoBehaviour
         return items[index];
     }
 
-    public float ItemSellValue(InventoryItem item, int index)
+    public float ItemSellValue(InventoryItem item)
     {
-        if(item == items[index])
-        {
-            return items[index].SellValue;
-        }
-        else
-        {
-            Debug.Log("Item and index are not compatible");
-            return -1f;
-        }
+        return item.SellValue;
     }
   
 }
