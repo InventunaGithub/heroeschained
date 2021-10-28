@@ -13,7 +13,6 @@ public enum HeroTypes { Mage, Archer, Warrior, Human };
 public class Hero : MonoBehaviour
 {
     private Equipment equipment;
-    private Inventory inventory;
 
     public int HeroID; //Uniq id ?
     public string Name;
@@ -63,7 +62,6 @@ public class Hero : MonoBehaviour
         HeroSkin = heroSkin;
         this.AIType = AIType;
         HeroType = heroType;
-        inventory = GetComponent<Inventory>();
         equipment = GetComponent<Equipment>();
     }
 
@@ -120,33 +118,6 @@ public class Hero : MonoBehaviour
             Health = MaxHealth;
         }
     }
-
-    #region Inventory
-    public int GetInventoryItemCount()
-    {
-        return inventory.ItemCount();
-    }
-
-    public InventoryItem GetInventoryItem(int index)
-    {
-        return inventory.GetItem(index);
-    }
-
-    public bool AddItemToInventory(InventoryItem item)
-    {
-        return inventory.Add(item);
-    }
-
-    public bool RemoveFromInventory(InventoryItem item)
-    {
-        return inventory.RemoveItem(item);
-    }
-
-    public bool RemoveFromInventoryAt(int index)
-    {
-        return inventory.RemoveItemAt(index);
-    }
-    #endregion Inventory
 
     #region Equipment
     public bool WearItem(InventoryItem item)
