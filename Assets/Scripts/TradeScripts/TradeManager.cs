@@ -9,8 +9,8 @@ public class TradeManager : MonoBehaviour
 {
     public float SaleTax = 0f;
     public float AuctionTax = 0f;
-    public int MinArbPer = 10;
-    public int MaxArbPer = 20;
+    public float MinArbPer = .1f;
+    public float MaxArbPer = .2f;
 
     public TradeResponse Trade(GameCharacter buyer, GameCharacter seller, InventoryItem item)
     {
@@ -38,7 +38,7 @@ public class TradeManager : MonoBehaviour
         }else if((buyer is GameNpc) && (seller is GamePlayer))
         {
             float tempSellValue = ((GamePlayer)seller).GetSellValue(item);
-            int randomArb = Random.Range(MinArbPer, MaxArbPer);
+            float randomArb = Random.Range(MinArbPer, MaxArbPer);
             tempSellValue -= tempSellValue * randomArb;
             if (seller.RemoveInventoryItem(item))
             {
