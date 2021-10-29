@@ -34,8 +34,8 @@ public class HeroController : MonoBehaviour
     private bool isRunning = false;
     private bool victory = false;
     public bool SeeingTarget = false;
-    public bool interwal = false;
-    public bool agentEnabled = false;
+    private bool interwal = false;
+    private bool agentEnabled = false;
     public float Distance = 0;
     public GameObject HealthBarGO;
     private GameObject HeroHealthBar;
