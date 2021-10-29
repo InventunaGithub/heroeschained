@@ -49,3 +49,9 @@ public enum EquipmentItemPlaces
     HandLeft, HandRight, FingerLeft1, FingerLeft2, FingerRight1,
     FingerRight2, Waist, Feet
 }
+
+public enum TradeResponse
+{
+    OK, InsufficientFunds, InsufficientInventorySpace,
+    InexistentItem, UnexpectedTradePair
+}

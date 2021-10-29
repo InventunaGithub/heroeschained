@@ -2,53 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Deniz Afşar
+//Date: 28.10.21
+
 public class TradeManager : MonoBehaviour
 {
-    float saleTax = 0f;
-    float auctionTax = 0f;
-    int minArbPer = 10;
-    int maxArbPer = 20;
+    public float SaleTax = 0f;
+    public float AuctionTax = 0f;
+    public int MinArbPer = 10;
+    public int MaxArbPer = 20;
 
-    public bool Trade(GameCharacter buyer, GameCharacter seller, InventoryItem item)
+    public TradeResponse Trade(GameCharacter buyer, GameCharacter seller, InventoryItem item)
     {
         if((buyer is GamePlayer) && (seller is GameNpc))
         {
             float tempSellValue = buyer.GetSellValue(item);
-            int randomArb = Random.Range(minArbPer, maxArbPer);
-            tempSellValue += tempSellValue * randomArb;
             if (((GamePlayer)buyer).Gold >= tempSellValue)
             {
                 if (buyer.AddInventoryItem(item))
                 {
                     ((GamePlayer)buyer).Gold -= tempSellValue;
-                    return true;
+                    return TradeResponse.OK;
                 }
                 else
                 {
                     Debug.Log("Player hasn't any available item place.");
-                    return false;
+                    return TradeResponse.InsufficientInventorySpace;
                 }
             }
             else
             {
                 Debug.Log("Player's gold is insufficient.");
-                return false;
+                return TradeResponse.InsufficientFunds;
             }
         }else if((buyer is GameNpc) && (seller is GamePlayer))
         {
             float tempSellValue = ((GamePlayer)seller).GetSellValue(item);
+            int randomArb = Random.Range(MinArbPer, MaxArbPer);
+            tempSellValue -= tempSellValue * randomArb;
             if (seller.RemoveInventoryItem(item))
             {
                 ((GamePlayer)seller).Gold += tempSellValue;
-                return true;
+                return TradeResponse.OK;
             }
             else
             {
                 Debug.Log("Player hasn't got this item.");
-                return false;
+                return TradeResponse.InexistentItem;
             }
         }
         Debug.Log("Trade is not happened");
-        return false;
+        return TradeResponse.UnexpectedTradePair;
     }
 }
+
