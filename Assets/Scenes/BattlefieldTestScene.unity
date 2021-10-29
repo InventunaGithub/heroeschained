@@ -23598,11 +23598,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
   Characters: {fileID: 968158089}
   HeroPrefab: {fileID: 1941975299658355595, guid: 294ba430819df0c4e87624d0c737ded6, type: 3}
-  ClickedOnHero: 0
+  ReadyButton: {fileID: 1612019727}
   HitGO: {fileID: 0}
   LastGridPos: {fileID: 0}
-  PlacingOnFullGrid: 0
   GC: {fileID: 0}
+  ClickedOnHero: 0
+  PlacingOnFullGrid: 0
+  GameStarted: 0
 --- !u!1 &896131124 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 194992, guid: 52301af46bf2aca4cba80ecf307a7777, type: 3}
@@ -44390,10 +44392,10 @@ RectTransform:
   m_Father: {fileID: 1674997322}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 512.08484}
-  m_SizeDelta: {x: 220.7362, y: 55.8303}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -27.2}
+  m_SizeDelta: {x: 220.7362, y: 55.83029}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1612019729
 MonoBehaviour:
@@ -44439,17 +44441,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 891635081}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 891635083}
+        m_TargetAssemblyTypeName: BattlefieldManager, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1612019730
 MonoBehaviour:

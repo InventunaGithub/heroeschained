@@ -12,13 +12,15 @@ public class BattlefieldManager : MonoBehaviour
     public GameObject HeroPrefab;
     private GameObject gridArea1;
     private GameObject gridArea2;
-    private Ray ray;
-    public bool ClickedOnHero;
+    public GameObject ReadyButton;
     public GameObject HitGO;
+    private Ray ray;
     public Transform LastGridPos;
     private LayerMask heroLayer;
-    public bool PlacingOnFullGrid;
     public GridController GC;
+    public bool ClickedOnHero;
+    public bool PlacingOnFullGrid;
+    public bool GameStarted = false;
     void Awake()
     {
         Characters = GameObject.Find("Characters");
@@ -55,7 +57,13 @@ public class BattlefieldManager : MonoBehaviour
 
     void Update()
     {
-
+        if(GameStarted)
+        {
+            gridArea1.SetActive(false);
+            gridArea2.SetActive(false);
+            ReadyButton.SetActive(false);
+            
+        }
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
         Physics.Raycast(ray, out hitData, 10000000);
@@ -87,5 +95,8 @@ public class BattlefieldManager : MonoBehaviour
         HitGO.transform.position = posRef.position;
     }
 
-
+    public void StartGame(bool game)
+    {
+        GameStarted = game;
+    }
 }

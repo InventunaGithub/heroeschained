@@ -35,7 +35,6 @@ public class HeroController : MonoBehaviour
     private bool victory = false;
     public bool SeeingTarget = false;
     public bool interwal = false;
-    public bool heroActivated = false;
     public bool agentEnabled = false;
     public float Distance = 0;
     public GameObject HealthBarGO;
@@ -79,7 +78,7 @@ public class HeroController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (heroActivated)
+        if (BM.GameStarted)
         {
             if (!agentEnabled)
             {
@@ -428,9 +427,5 @@ public class HeroController : MonoBehaviour
         
     }
 
-    public void ActivateAllHeroes()
-    {
-
-    }
 
 }
