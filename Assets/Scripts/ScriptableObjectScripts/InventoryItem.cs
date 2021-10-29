@@ -25,6 +25,7 @@ public class InventoryItem : ScriptableObject
     public bool AccountBound = false;
 
     public float SellValue;
+    public float BuyValue;
 }
 public enum ItemTypes
 {
@@ -48,4 +49,10 @@ public enum EquipmentItemPlaces
     Head, Chest, Neck, Shoulder, Wrist,
     HandLeft, HandRight, FingerLeft1, FingerLeft2, FingerRight1,
     FingerRight2, Waist, Feet
+}
+
+public enum TradeResponse
+{
+    OK, InsufficientFunds, InsufficientInventorySpace,
+    InexistentItem, UnexpectedTradePair
 }
