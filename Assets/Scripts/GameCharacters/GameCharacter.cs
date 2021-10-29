@@ -43,4 +43,9 @@ public class GameCharacter : MonoBehaviour
     {
         return inventory.ItemSellValue(item);
     }
+
+    public float GetBuyValue(InventoryItem item)
+    {
+        return inventory.ItemBuyValue(item);
+    }
 }

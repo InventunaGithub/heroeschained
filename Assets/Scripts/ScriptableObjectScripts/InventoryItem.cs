@@ -25,6 +25,7 @@ public class InventoryItem : ScriptableObject
     public bool AccountBound = false;
 
     public float SellValue;
+    public float BuyValue;
 }
 public enum ItemTypes
 {

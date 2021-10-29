@@ -67,5 +67,9 @@ public class Inventory : MonoBehaviour
     {
         return item.SellValue;
     }
-  
+
+    public float ItemBuyValue(InventoryItem item)
+    {
+        return item.BuyValue;
+    }
 }

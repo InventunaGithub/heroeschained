@@ -9,19 +9,16 @@ public class TradeManager : MonoBehaviour
 {
     public float SaleTax = 0f;
     public float AuctionTax = 0f;
-    public float MinArbPer = .1f;
-    public float MaxArbPer = .2f;
 
     public TradeResponse Trade(GameCharacter buyer, GameCharacter seller, InventoryItem item)
     {
         if((buyer is GamePlayer) && (seller is GameNpc))
         {
-            float tempSellValue = buyer.GetSellValue(item);
-            if (((GamePlayer)buyer).Gold >= tempSellValue)
+            if (((GamePlayer)buyer).Gold >= buyer.GetBuyValue(item))
             {
                 if (buyer.AddInventoryItem(item))
                 {
-                    ((GamePlayer)buyer).Gold -= tempSellValue;
+                    ((GamePlayer)buyer).Gold -= buyer.GetBuyValue(item);
                     return TradeResponse.OK;
                 }
                 else
@@ -37,12 +34,9 @@ public class TradeManager : MonoBehaviour
             }
         }else if((buyer is GameNpc) && (seller is GamePlayer))
         {
-            float tempSellValue = ((GamePlayer)seller).GetSellValue(item);
-            float randomArb = Random.Range(MinArbPer, MaxArbPer);
-            tempSellValue -= tempSellValue * randomArb;
             if (seller.RemoveInventoryItem(item))
             {
-                ((GamePlayer)seller).Gold += tempSellValue;
+                ((GamePlayer)seller).Gold += buyer.GetSellValue(item);
                 return TradeResponse.OK;
             }
             else
