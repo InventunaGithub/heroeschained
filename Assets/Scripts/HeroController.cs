@@ -188,7 +188,6 @@ public class HeroController : MonoBehaviour
                             agent.isStopped = true;
                             if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking)
                             {
-                                StartCoroutine(Attack(enemyTeam[TargetHero]));
                                 if (TargetHero < enemyTeam.Count)
                                 {
                                     StartCoroutine(Attack(enemyTeam[TargetHero]));
