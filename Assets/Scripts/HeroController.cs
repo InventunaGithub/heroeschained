@@ -289,7 +289,7 @@ public class HeroController : MonoBehaviour
         yield return new WaitForSeconds(travelTime);
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        if(enemyTeam.Count >= TargetHero)
+        if(enemyTeam.Count > TargetHero)
         {
             enemyTeam[TargetHero].Hurt(MainHero.Damage);
         }
