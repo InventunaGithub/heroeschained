@@ -8,7 +8,7 @@ public class BattlefieldManager : MonoBehaviour
     public List<Hero> Team2;
     public List<HeroSO> Team1SO;
     public List<HeroSO> Team2SO;
-    public GameObject Characters;
+    private GameObject characters;
     public GameObject HeroPrefab;
     private GameObject gridArea1;
     private GameObject gridArea2;
@@ -23,16 +23,16 @@ public class BattlefieldManager : MonoBehaviour
     public bool GameStarted = false;
     void Awake()
     {
-        Characters = GameObject.Find("Characters");
+        characters = GameObject.Find("Characters");
         gridArea1 = GameObject.Find("GridArea1");
         gridArea2 = GameObject.Find("GridArea2");
         heroLayer = LayerMask.GetMask("HeroLayer");
-        Physics.IgnoreLayerCollision(9, 9, true);
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), true);
         int index = 0;
         foreach (var Hero in Team1SO)
         {
             GameObject heroGO = Instantiate(HeroPrefab, gridArea1.transform.GetChild(index).transform.position , gridArea1.transform.GetChild(index).transform.rotation);
-            heroGO.transform.SetParent(Characters.transform);
+            heroGO.transform.SetParent(characters.transform);
             heroGO.transform.tag = "Team1";
             GameObject heroSkin = Instantiate(Hero.HeroSkin , heroGO.transform.position, Quaternion.identity);
             heroSkin.transform.SetParent(heroGO.transform);
@@ -44,7 +44,7 @@ public class BattlefieldManager : MonoBehaviour
         foreach (var Hero in Team2SO)
         {
             GameObject heroGO = Instantiate(HeroPrefab, gridArea2.transform.GetChild(index).transform.position, gridArea1.transform.GetChild(index).transform.rotation);
-            heroGO.transform.SetParent(Characters.transform);
+            heroGO.transform.SetParent(characters.transform);
             heroGO.transform.tag = "Team2";
             GameObject heroSkin = Instantiate(Hero.HeroSkin, heroGO.transform.position, Quaternion.identity);
             heroSkin.transform.SetParent(heroGO.transform);

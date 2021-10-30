@@ -41,11 +41,17 @@ public class HeroController : MonoBehaviour
     private GameObject HeroHealthBar;
     private Slider HealthBar;
     private BattlefieldManager BM;
+    private Rigidbody RB;
+    private CapsuleCollider CC;
 
     void Start()
     {
         BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
+        RB = GetComponent<Rigidbody>();
+        CC = GetComponent<CapsuleCollider>();
         MainHero = GetComponent<Hero>();
+        agent = gameObject.GetComponent<NavMeshAgent>();
+        heroAnimator = transform.GetChild(0).GetComponent<Animator>();
         MainHero.HeroObject = this.gameObject;
         if(gameObject.tag == "Team1")
         {
@@ -57,12 +63,9 @@ public class HeroController : MonoBehaviour
             team = BM.Team2;
             enemyTeam = BM.Team1;
         }
-        
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
         HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
-        heroAnimator = transform.GetChild(0).GetComponent<Animator>();
         obstructionMask = LayerMask.GetMask("Obstacle");
-        agent = gameObject.GetComponent<NavMeshAgent>();
         NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
         if (NormalAttackCooldown < 0.7f)
         {
@@ -70,8 +73,8 @@ public class HeroController : MonoBehaviour
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
         HealthBar.maxValue = MainHero.MaxHealth;
-        GetComponent<NavMeshAgent>().enabled = false;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        agent.enabled = false;
+        RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
     }
 
@@ -83,57 +86,59 @@ public class HeroController : MonoBehaviour
             if (!agentEnabled)
             {
                 agentEnabled = true;
-                GetComponent<NavMeshAgent>().enabled = true;
-                Physics.IgnoreLayerCollision(9, 9, false);
+                agent.enabled = true;
+                Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), false);
             }
-            HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
-            HealthBar.value = MainHero.Health;
-            if (MainHero.Health <= 0 && enemyTeam.Count != 0) //Death state
+
+
+            if (MainHero.Health <= 0 && enemyTeam.Count != 0  && !isDead) //Death state
             {
-                if (!isDead)
-                {
-                    isDead = true;
-                    DyingAnimation();
-                }
+                HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+                HealthBar.value = MainHero.Health;
+                isDead = true;
+                DyingAnimation();
                 team.Remove(MainHero);
-                if (GetComponent<NavMeshAgent>().enabled)
+                if (agent.enabled)
                 {
                     agent.isStopped = true;
                 }
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                GetComponent<NavMeshAgent>().enabled = false;
-                GetComponent<CapsuleCollider>().enabled = false;
+                RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                RB.useGravity = false;
+                agent.enabled = false;
+                CC.enabled = false;
+                Debug.Log("Died");
             }
-            else if (enemyTeam.Count == 0 && !isDead) //Victory state
+            else if (enemyTeam.Count == 0 && !victory && !isDead) //Victory state
             {
+                HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+                HealthBar.value = MainHero.Health;
                 if (MainHero.Health == 0)
                 {
                     MainHero.Health = 1;
                 }
-                if (!victory)
-                {
-                    victory = true;
-                    VictoryAnimation();
-                }
-                if (GetComponent<NavMeshAgent>().enabled)
+                victory = true;
+                VictoryAnimation();
+                if (agent.enabled)
                 {
                     agent.isStopped = true;
                 }
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                GetComponent<NavMeshAgent>().enabled = false;
-                GetComponent<CapsuleCollider>().enabled = false;
+                RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                agent.enabled = false;
+                CC.enabled = false;
             }
-            else
+            else if(!victory && !isDead)
             {
+                HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+                HealthBar.value = MainHero.Health;
                 if (isRunning)
                 {
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    RB.constraints = RigidbodyConstraints.None;
+                    RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
                 else
                 {
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
                 if (MainHero.AIType == AITypes.Closest && !interwal)
                 {
@@ -178,7 +183,7 @@ public class HeroController : MonoBehaviour
                         }
                         else
                         {
-                            transform.LookAt(TargetHeroGO.transform);
+                            transform.DOLookAt(TargetHeroGO.transform.position , 0.1f);
                             isRunning = false;
                             agent.isStopped = true;
                             if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking)
@@ -285,10 +290,9 @@ public class HeroController : MonoBehaviour
         yield return new WaitForSeconds(travelTime);
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        if(enemyTeam[TargetHero] != null)
+        if(enemyTeam.Count >= TargetHero)
         {
-            Hero targetHero = enemyTeam[TargetHero];
-            targetHero.Hurt(MainHero.Damage);
+            enemyTeam[TargetHero].Hurt(MainHero.Damage);
         }
         Destroy(splashGO, 0.3f);
         isAttacking = false;

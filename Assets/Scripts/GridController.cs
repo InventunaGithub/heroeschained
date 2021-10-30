@@ -17,10 +17,7 @@ public class GridController : MonoBehaviour
         BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
         gridRenderer = GetComponent<Renderer>();
     }
-    void OnTriggerStay(Collider other)
-    {
-        gridRenderer.material.color = Color.red;
-    }
+ 
     private void OnTriggerEnter(Collider other)
     {   
         if(HeroOnGrid == null)
@@ -31,6 +28,7 @@ public class GridController : MonoBehaviour
         if(!gridFull || HeroOnGrid == BM.HitGO)
         {
             BM.LastGridPos = this.transform;
+            gridRenderer.material.color = Color.red;
         }
 
     }
