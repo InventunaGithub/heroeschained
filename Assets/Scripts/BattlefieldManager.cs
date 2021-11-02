@@ -21,6 +21,7 @@ public class BattlefieldManager : MonoBehaviour
     public bool ClickedOnHero;
     public bool PlacingOnFullGrid;
     public bool GameStarted = false;
+    private Camera mainCam;
     void Awake()
     {
         characters = GameObject.Find("Characters");
@@ -52,6 +53,8 @@ public class BattlefieldManager : MonoBehaviour
             Team2.Add(heroGO.GetComponent<Hero>());
             index += 1;
         }
+
+        mainCam = Camera.main;
         
     }
 
@@ -64,7 +67,7 @@ public class BattlefieldManager : MonoBehaviour
             ReadyButton.SetActive(false);
             
         }
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        ray = mainCam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
         Physics.Raycast(ray, out hitData, 10000000);
         if (Input.GetMouseButtonDown(0) && hitData.transform.tag == "Team1")
