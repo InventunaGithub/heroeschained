@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BattlefieldTestScene.unity
     guid: 54a260bfd459d7f41877c0d6c5e69eae
+  - enabled: 1
+    path: Assets/Scenes/DialogWindowTest.unity
+    guid: 3468cb32f6e2a66479671ff0efdfa147
   m_configObjects: {}

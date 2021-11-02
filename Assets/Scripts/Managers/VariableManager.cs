@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 using CommandTerminal;
@@ -137,6 +138,11 @@ public class VariableManager : MonoBehaviour
             }
 
         }
+    }
+
+    public void GotoScene(int scene)
+    {
+        SceneManager.LoadScene(scene);
     }
 
 }

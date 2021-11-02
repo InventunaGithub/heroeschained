@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 using CommandTerminal;
@@ -13,6 +14,17 @@ using System.IO;
 public class ConsoleManager : MonoBehaviour
 {
     
+    [RegisterCommand(Help = "Resets Current Level")]
+    static void CommandResetLevel(CommandArg[] args)
+    {
+        if (Terminal.IssuedError)
+        {
+            return;// Error will be handled by Terminal
+        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }   
+
+
     [RegisterCommand(Help = "Shows Version")]
     static void CommandVer(CommandArg[] args)
     {

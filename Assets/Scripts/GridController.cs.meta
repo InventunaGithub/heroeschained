@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Scripts/FormationManager.cs.meta
-guid: 6f63df1a50298194bb29aea32b4a21d3
-=======
-guid: ca246ab7acc7143d1a6e570c08f1f3f3
->>>>>>> main:Assets/Scripts/Classes/Hero.cs.meta
+guid: 14bb40935b7035f479e8caca90b287ab
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
