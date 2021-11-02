@@ -43,6 +43,7 @@ public class HeroController : MonoBehaviour
     private BattlefieldManager BM;
     private Rigidbody RB;
     private CapsuleCollider CC;
+    private Camera mainCam;
 
     void Start()
     {
@@ -75,6 +76,7 @@ public class HeroController : MonoBehaviour
         HealthBar.maxValue = MainHero.MaxHealth;
         agent.enabled = false;
         RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        mainCam = Camera.main;
 
     }
 
@@ -93,7 +95,7 @@ public class HeroController : MonoBehaviour
 
             if (MainHero.Health <= 0 && enemyTeam.Count != 0  && !isDead) //Death state
             {
-                HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+                HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
                 isDead = true;
                 DyingAnimation();
@@ -110,7 +112,7 @@ public class HeroController : MonoBehaviour
             }
             else if (enemyTeam.Count == 0 && !victory && !isDead) //Victory state
             {
-                HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+                HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
                 if (MainHero.Health == 0)
                 {
@@ -128,7 +130,7 @@ public class HeroController : MonoBehaviour
             }
             else if(!victory && !isDead)
             {
-                HeroHealthBar.transform.position = Camera.main.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+                HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
                 if (isRunning)
                 {
