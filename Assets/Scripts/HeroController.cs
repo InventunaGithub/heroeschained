@@ -41,6 +41,7 @@ public class HeroController : MonoBehaviour
     private GameObject HeroHealthBar;
     private Slider HealthBar;
     private BattlefieldManager BM;
+    private SpellManager SM;
     private Rigidbody RB;
     private CapsuleCollider CC;
     private Camera mainCam;
@@ -48,6 +49,7 @@ public class HeroController : MonoBehaviour
     void Start()
     {
         BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
+        SM = GameObject.Find("Managers").GetComponent<SpellManager>();
         RB = GetComponent<Rigidbody>();
         CC = GetComponent<CapsuleCollider>();
         MainHero = GetComponent<Hero>();
@@ -192,7 +194,8 @@ public class HeroController : MonoBehaviour
                             {
                                 if (TargetHero < enemyTeam.Count)
                                 {
-                                    StartCoroutine(Attack(enemyTeam[TargetHero]));
+                                    StartCoroutine(CooldownTimer());
+                                    SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , enemyTeam[TargetHero].HeroObject);
                                 }
                             }
                         }
@@ -270,52 +273,11 @@ public class HeroController : MonoBehaviour
         interwal = false;
     }
 
-    IEnumerator Attack(Hero TargetHero)
+    IEnumerator CooldownTimer()
     {
         onCooldown = true;
-        NormalAttackAnimation();
         yield return new WaitForSeconds(NormalAttackCooldown);
         onCooldown = false;
-    }
-
-        
-    IEnumerator ShootProjectile(GameObject projectile , GameObject splash, Transform shootingPosition , Transform targetPosition , Vector3 offset , float travelTime , string animation)
-    {
-        isAttacking = true;
-        while(AnimatorIsPlaying(animation))
-        {
-            yield return new WaitForSeconds(0.01f);
-        }
-        GameObject projectileGO = Instantiate(projectile, offset + shootingPosition.position , shootingPosition.rotation);
-        projectileGO.transform.DOMove(targetPosition.position + offset, 0.5f);
-        yield return new WaitForSeconds(travelTime);
-        Destroy(projectileGO);
-        GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        if(enemyTeam.Count > TargetHero)
-        {
-            enemyTeam[TargetHero].Hurt(MainHero.Damage);
-        }
-        Destroy(splashGO, 0.3f);
-        isAttacking = false;
-    }
-
-    IEnumerator CloseRangeAttack(GameObject splash,Transform targetPosition, Vector3 offset, string animation)
-    {
-        isAttacking = true;
-        while (AnimatorIsPlaying(animation))
-        {
-            yield return new WaitForSeconds(0.01f);
-        }
-        GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
-        Hero targetHero = enemyTeam[TargetHero];
-        targetHero.Hurt(MainHero.Damage);
-        Destroy(splashGO, 0.3f);
-        isAttacking = false;
-    }
-
-    bool AnimatorIsPlaying(string stateName)
-    {
-        return heroAnimator.GetCurrentAnimatorStateInfo(0).length > heroAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && heroAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
     }
 
     public void DyingAnimation()
@@ -383,31 +345,7 @@ public class HeroController : MonoBehaviour
         
     }
 
-    public void NormalAttackAnimation()
-    {
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("SSAttack", 0.1f);
-            StartCoroutine(CloseRangeAttack(Projectiles[4], TargetHeroGO.transform, new Vector3(0, 1, 0) , "SSAttack"));
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("ArrowDraw", 0.1f);
-            StartCoroutine(ShootProjectile(Projectiles[0], Projectiles[1], MainHero.HeroObject.transform, TargetHeroGO.transform , new Vector3(0,1,0), 0.5f , "ArrowDraw"));
-        }
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("MagicCast", 0.1f);
-            StartCoroutine(ShootProjectile(Projectiles[2], Projectiles[3], MainHero.HeroObject.transform, TargetHeroGO.transform, new Vector3(0, 1, 0), 0.5f, "MagicCast"));
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("SSAttack", 0.1f);
-            StartCoroutine(CloseRangeAttack(Projectiles[4], TargetHeroGO.transform, new Vector3(0, 1, 0), "SSAttack"));
-        }
-        
-    }
-
+   
     public void VictoryAnimation()
     {
         isDead = false;
@@ -430,6 +368,11 @@ public class HeroController : MonoBehaviour
             heroAnimator.CrossFade("Victory", 0.1f);
         }
         
+    }
+
+    public void setIsAttacking(bool given)
+    {
+        isAttacking = given;
     }
 
 

@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
+
+public class ArrowShotBlue : Spell
+{
+    Animator casterAnimator;
+    Animator targetAnimator;
+
+    public override void Cast(GameObject caster, GameObject target)
+    {
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
+        casterAnimator = caster.transform.GetChild(0).GetComponent<Animator>();
+        tempHeroController.setIsAttacking(true);
+        GameObject projectileGO = Instantiate(projectile, offset + shootingPosition.position, shootingPosition.rotation);
+        Effects[0].transform.DOMove(targetPosition.position + offset, 0.5f);
+        yield return new WaitForSeconds(travelTime);
+        Destroy(projectileGO);
+        GameObject splashGO = Instantiate(splash, targetPosition.position + offset, targetPosition.rotation);
+        if (enemyTeam.Count > TargetHero)
+        {
+            enemyTeam[TargetHero].Hurt(MainHero.Damage);
+        }
+        Destroy(splashGO, 0.3f);
+        tempHeroController.setIsAttacking(false);
+    }
+
+    IEnumerator travelTime()
+    {
+        yield return new WaitForSeconds(1);
+    }
+    bool AnimatorIsPlaying(string stateName)
+    {
+        return casterAnimator.GetCurrentAnimatorStateInfo(0).length > casterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && casterAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
+    }
+}

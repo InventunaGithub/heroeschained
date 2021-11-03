@@ -114,7 +114,6 @@ MonoBehaviour:
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
   SeeingTarget: 0
-  interwal: 0
   Distance: 0
   HealthBarGO: {fileID: 928425666421249429, guid: 39af5cb212791b247bced8c171ad5af7, type: 3}
 --- !u!195 &1941975299658355593
@@ -131,7 +130,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 0.9
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -192,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f63df1a50298194bb29aea32b4a21d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Skills: 
   RootSO: {fileID: 0}
   HeroID: 0
   Name: 

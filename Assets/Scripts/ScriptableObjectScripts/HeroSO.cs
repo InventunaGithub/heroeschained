@@ -20,6 +20,7 @@ public class HeroSO : ScriptableObject
     public int Damage;
     public int Health;
     public int Range;
+    public List<int> Skills;
     public AITypes AIType;
     public HeroTypes HeroType;
     public GameObject HeroSkin;
