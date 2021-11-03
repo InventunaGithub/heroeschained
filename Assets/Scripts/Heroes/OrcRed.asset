@@ -14,13 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Dwarf Yellow
-  Skills:
-  - CardID: 0
-    Name: Normal Attack
-    Info: 
-    Power: 0
-    Range: 1
-    Used: 0
   BaseHealth: 5
   BaseDamage: 10
   Strength: 0
@@ -30,7 +23,8 @@ MonoBehaviour:
   Armor: 0
   Damage: 0
   Health: 30
-  Range: 3
+  Range: 1
+  Skills: 00000000
   AIType: 1
   HeroType: 2
   HeroSkin: {fileID: 1282194365053980, guid: ee423c1c24aacfc4d83a6289de7ee2da, type: 3}
