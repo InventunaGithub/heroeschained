@@ -14,13 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Melee1
-  Skills:
-  - CardID: 0
-    Name: Normal Attack
-    Info: 
-    Power: 0
-    Range: 0
-    Used: 0
   BaseHealth: 134
   BaseDamage: 5
   Strength: 0
@@ -31,6 +24,7 @@ MonoBehaviour:
   Damage: 0
   Health: 15
   Range: 1
+  Skills: 00000000
   AIType: 0
   HeroType: 2
   HeroSkin: {fileID: 1176535038949150, guid: 851d10f0ef05ed0428bb7e672ca6e4db, type: 3}

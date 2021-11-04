@@ -14,13 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: LongRange2
-  Skills:
-  - CardID: 0
-    Name: Normal Attack
-    Info: 
-    Power: 0
-    Range: 0
-    Used: 0
   BaseHealth: 96
   BaseDamage: 15
   Strength: 0
@@ -31,6 +24,7 @@ MonoBehaviour:
   Damage: 0
   Health: 0
   Range: 20
+  Skills: 01000000
   AIType: 0
   HeroType: 1
   HeroSkin: {fileID: 1011537662448562, guid: 1b38e6745e597ec4c9b81a84e6855b29, type: 3}

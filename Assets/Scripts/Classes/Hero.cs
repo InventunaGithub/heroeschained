@@ -15,6 +15,7 @@ public class Hero : MonoBehaviour
 {
     private Equipment equipment;
     private Inventory inventory;
+    public List<int> Skills;
     public HeroSO RootSO;
     public int HeroID;
     public string Name;
@@ -34,11 +35,6 @@ public class Hero : MonoBehaviour
     public HeroTypes HeroType;
     public GameObject HeroSkin;
 
-    private void Start()
-    {
-        Init(RootSO);
-    }
-
     public void Init(HeroSO rootSO)
     {
         HeroID = rootSO.HeroID;
@@ -57,6 +53,7 @@ public class Hero : MonoBehaviour
         HeroSkin = rootSO.HeroSkin;
         this.AIType = rootSO.AIType;
         HeroType = rootSO.HeroType;
+        Skills = rootSO.Skills;
         inventory = GetComponent<Inventory>();
         equipment = GetComponent<Equipment>();
     }
@@ -76,7 +73,7 @@ public class Hero : MonoBehaviour
         Normalise();
     }
 
-    void Normalise()
+    public void Normalise()
     {
         if (Armor < 0)
         {
