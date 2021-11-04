@@ -29,7 +29,8 @@ public class BloodDrain : Spell
         targetHero.Hurt((int)(Math.Round(casterHero.Damage * 1.3f)));
         casterHero.Health += (int)(Math.Round(casterHero.Damage * 0.5f));
         casterHero.Normalise();
-        GameObject tempEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, caster.transform.rotation);
+        Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+        GameObject tempEffect = Instantiate(Effects[0], caster.transform.position, spawnRotation);
         Destroy(tempEffect, 3);
         GameObject tempEffect2 = Instantiate(Effects[1], target.transform.position + Vector3.up, target.transform.rotation);
         Destroy(tempEffect2, 3);

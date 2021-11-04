@@ -59932,7 +59932,7 @@ PrefabInstance:
     - target: {fileID: 5077114070670159985, guid: feb293b631538764db1ee5707a9118d8, type: 3}
       propertyPath: Effects.Array.data[0]
       value: 
-      objectReference: {fileID: 1147489685934296, guid: 6147d91f74aeee04981630550acc458f, type: 3}
+      objectReference: {fileID: 1883296549405982, guid: 58787be5d7d8ef54f916803a49d320d5, type: 3}
     - target: {fileID: 8783775369470150624, guid: feb293b631538764db1ee5707a9118d8, type: 3}
       propertyPath: m_Name
       value: SwordHit
