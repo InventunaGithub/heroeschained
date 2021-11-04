@@ -37,7 +37,6 @@ public class Bid
     float reserved4;
     string reserved5;
     DateTime givenAt;
-    
 
     public Bid(ObscuredInt pGold, string pOwner, int pOwnerId)
     {
@@ -110,11 +109,7 @@ public class Bid
     {
         return givenAt;
     }
-
-    
     #endregion Gets
-
-    
 }
 
 public class Auction
@@ -220,7 +215,6 @@ public class Auction
     {
         return id;
     }
-
     #endregion Gets
 
     #region Sets
