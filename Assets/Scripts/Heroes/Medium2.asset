@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Medium2
-  BaseHealth: 109
-  BaseDamage: 12
+  BaseHealth: 245
+  BaseDamage: 22
   Strength: 0
   Dexterity: 0
   Intelligence: 0
@@ -24,7 +24,8 @@ MonoBehaviour:
   Damage: 0
   Health: 0
   Range: 10
-  Skills: 02000000
+  MaxEnergy: 0
+  Skills: 0200000003000000
   AIType: 0
   HeroType: 0
   HeroSkin: {fileID: 1475453720705624, guid: 8f9228f2edb4a494b88ead025871460e, type: 3}

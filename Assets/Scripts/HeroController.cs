@@ -190,12 +190,21 @@ public class HeroController : MonoBehaviour
                             transform.DOLookAt(TargetHeroGO.transform.position , 0.1f);
                             isRunning = false;
                             agent.isStopped = true;
-                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking)
+                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < 10)
                             {
                                 if (TargetHero < enemyTeam.Count)
                                 {
-                                    StartCoroutine(CooldownTimer());
+                                    StartCoroutine(CooldownTimer(NormalAttackCooldown));
                                     SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , enemyTeam[TargetHero].HeroObject);
+                                }
+                            }
+                            else if(!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= 10)
+                            {
+                                if (TargetHero < enemyTeam.Count)
+                                {
+                                    StartCoroutine(CooldownTimer(NormalAttackCooldown));
+                                    SM.Cast(MainHero.Skills[1], MainHero.HeroObject, enemyTeam[TargetHero].HeroObject);
+                                    MainHero.Energy -= 10;
                                 }
                             }
                         }
@@ -273,10 +282,10 @@ public class HeroController : MonoBehaviour
         interwal = false;
     }
 
-    IEnumerator CooldownTimer()
+    IEnumerator CooldownTimer(float cooldown)
     {
         onCooldown = true;
-        yield return new WaitForSeconds(NormalAttackCooldown);
+        yield return new WaitForSeconds(cooldown);
         onCooldown = false;
     }
 

@@ -29,10 +29,13 @@ public class SparkAttack : Spell
 
     IEnumerator TravelTime()
     {
+        Hero casterHero = GetCaster().GetComponent<Hero>();
+        Hero targetHero = GetTarget().GetComponent<Hero>();
         yield return new WaitForSeconds(travelTime);
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(Effects[1], GetTarget().transform.position + offset, GetTarget().transform.rotation);
-        GetTarget().GetComponent<Hero>().Hurt(GetCaster().GetComponent<Hero>().Damage);
+        targetHero.Hurt(casterHero.Damage);
+        casterHero.Energy += casterHero.Intelligence + 5;
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
     }

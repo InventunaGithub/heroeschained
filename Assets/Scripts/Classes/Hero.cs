@@ -31,6 +31,8 @@ public class Hero : MonoBehaviour
     public int Health;
     public int MaxHealth;
     public int Range;
+    public int MaxEnergy;
+    public int Energy;
     public AITypes AIType;
     public HeroTypes HeroType;
     public GameObject HeroSkin;
@@ -54,6 +56,8 @@ public class Hero : MonoBehaviour
         this.AIType = rootSO.AIType;
         HeroType = rootSO.HeroType;
         Skills = rootSO.Skills;
+        MaxEnergy = rootSO.MaxEnergy;
+        Energy = 0;
         inventory = GetComponent<Inventory>();
         equipment = GetComponent<Equipment>();
     }
