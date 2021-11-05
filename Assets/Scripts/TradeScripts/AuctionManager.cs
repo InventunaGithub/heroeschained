@@ -10,10 +10,14 @@ using CodeStage.AntiCheat.ObscuredTypes;
 public class AuctionManager : MonoBehaviour
 {
     public List<Auction> AuctionList = new();
-    public float CheckSec = 1.0f;
 
     private void Update()
-    { 
+    {
+        TimeProcess();
+    }
+
+    private void TimeProcess()
+    {
         for (int i = 0; i < AuctionList.Count; i++)
         {
             if (AuctionList[i].GetActive() && AuctionList[i].GetEndsAt() < DateTime.Now)
@@ -23,7 +27,7 @@ public class AuctionManager : MonoBehaviour
             }
             AuctionList[i].AuctionProcess();
         }
-    }  
+    }
 }
 
 public class Bid

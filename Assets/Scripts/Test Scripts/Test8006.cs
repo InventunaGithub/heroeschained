@@ -19,7 +19,6 @@ public class Test8006 : MonoBehaviour
 
     public AuctionManager testManager;
 
-
     private void Start()
     {
         testBid = new(10, "deniz", 1);
@@ -30,8 +29,7 @@ public class Test8006 : MonoBehaviour
 
         testAuction1 = new(testItem1, DateTime.Now + new TimeSpan(0, 0, 2), 1);
         testAuction2 = new(testItem2, DateTime.Now + new TimeSpan(0, 0, 5), 2);
-
-        
+       
         testAuction1.AddBid(testBid);
         testAuction1.AddBid(testBid3);
         testAuction2.AddBid(testBid2);
@@ -40,8 +38,5 @@ public class Test8006 : MonoBehaviour
 
         testManager.AuctionList.Add(testAuction1);
         testManager.AuctionList.Add(testAuction2);
-
-
-
     }
 }
