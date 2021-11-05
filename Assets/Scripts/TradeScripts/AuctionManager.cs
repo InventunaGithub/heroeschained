@@ -22,10 +22,10 @@ public class AuctionManager : MonoBehaviour
         {
             if (AuctionList[i].GetActive() && AuctionList[i].GetEndsAt() < DateTime.Now)
             {
-                AuctionList[i].DisActivate();
+                AuctionList[i].Disactivate();
                 AuctionList[i].OnAuctionEnded = AuctionList[i].CompleteAuction;
-            }
-            AuctionList[i].AuctionProcess();
+                AuctionList[i].AuctionProcess();
+            } 
         }
     }
 }
@@ -228,7 +228,7 @@ public class Auction
         highestBidOwner = pHighestBidOwner;
     }
 
-    public void DisActivate()
+    public void Disactivate()
     {
         active = false;
     }
