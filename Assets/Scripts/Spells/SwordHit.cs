@@ -11,7 +11,7 @@ public class SwordHit : Spell
     {
         HeroController tempHeroController = caster.GetComponent<HeroController>();
         casterAnimator = caster.transform.GetChild(0).GetComponent<Animator>();
-        casterAnimator.CrossFade("SSAttack", 0.1f);
+        casterAnimator.CrossFade("Attack", 0.1f);
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
         tempHeroController.setIsAttacking(true);

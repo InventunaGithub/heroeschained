@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
-  m_Name: LongRange2
+  m_Name: Spider
   m_EditorClassIdentifier: 
-  HeroID: 0
-  Name: LongRange2
-  BaseHealth: 245
-  BaseDamage: 45
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
-  Damage: 0
+  HeroID: 1001
+  Name: Spider
+  BaseHealth: 400
+  BaseDamage: 40
+  Strength: 10
+  Dexterity: 4
+  Intelligence: 5
+  Vitality: 10
+  Armor: 20
+  Damage: 5
   Health: 0
-  Range: 20
-  MaxEnergy: 0
-  Skills: 0100000005000000
+  Range: 2
+  MaxEnergy: 30
+  Skills: 0000000004000000
   AIType: 0
-  HeroType: 1
-  HeroSkin: {fileID: 1011537662448562, guid: 1b38e6745e597ec4c9b81a84e6855b29, type: 3}
+  HeroType: 2
+  HeroSkin: {fileID: 100148, guid: aca06175fb9d86a4ea082e5027692018, type: 3}

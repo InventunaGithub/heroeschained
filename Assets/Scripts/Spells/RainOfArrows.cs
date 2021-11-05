@@ -51,21 +51,25 @@ public class RainOfArrows : Spell
         {
             Vector3 rainStartPos = new Vector3(target.transform.position.x + UnityEngine.Random.Range(-AOErange, AOErange), 5, target.transform.position.z + UnityEngine.Random.Range(-AOErange, AOErange));
             Vector3 rainEndPos = new Vector3(rainStartPos.x, 0, rainStartPos.z);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
             GameObject tempEffect2 = Instantiate(Effects[0], rainStartPos, target.transform.rotation);
             tempEffect2.transform.DOMove(rainEndPos, 0.3f);
-            Destroy(tempEffect2, 0.3f);
-            yield return new WaitForSeconds(0.3f);
-            Vector3 offset = new Vector3(0, 0.5f, 0);
-            GameObject splash = Instantiate(Effects[1], rainEndPos + offset, target.transform.rotation);
-            Debug.Log(rainStartPos + " " + rainEndPos);
-            Destroy(splash, 0.2f);
+            Destroy(tempEffect2, 0.2f);
+            StartCoroutine(Splash(0.2f , rainEndPos , target.transform.rotation));
             if(i == 10)
             {
                 Destroy(AOERing , 0.3f);
             }
         }
 
+    }
+
+    IEnumerator Splash(float seconds , Vector3 rainEndPos , Quaternion targetRot)
+    {
+        yield return new WaitForSeconds(0.2f);
+        Vector3 offset = new Vector3(0, 0.5f, 0);
+        GameObject splash = Instantiate(Effects[1], rainEndPos + offset, targetRot);
+        Destroy(splash, 0.2f);
     }
 
 }

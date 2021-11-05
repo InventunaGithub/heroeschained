@@ -178,7 +178,10 @@ public class HeroController : MonoBehaviour
                         {
                             agent.isStopped = false;
                             agent.SetPath(path);
-                            transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                            if(agent.velocity != Vector3.zero)
+                            {
+                                transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                            }
                             if (!isRunning)
                             {
                                 RunningAnimation();
@@ -293,65 +296,17 @@ public class HeroController : MonoBehaviour
     {
         onCooldown = false;
 
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("SSDeath", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("DeathLeft", 0.1f);
-        }
-
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("DeathLeft", 0.1f);
-        }
-
-        else if(MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("DeathLeft", 0.1f);
-        }       
+        heroAnimator.CrossFade("Death", 0.1f);
     }
 
     public void RunningAnimation()
     {
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("SSRun", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("BowRun", 0.1f);
-        }
-
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("MageRun", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("MageRun", 0.1f);
-        }
+        heroAnimator.CrossFade("Run", 0.1f);
+     
     }
     public void IdleAnimation()
     {
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("WarrIdle", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("BowIdle", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("MageIdle", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("ReadyIdle", 0.1f);
-        }
-        
+        heroAnimator.CrossFade("Idle", 0.1f);
     }
 
    
@@ -359,24 +314,7 @@ public class HeroController : MonoBehaviour
     {
         isDead = false;
         onCooldown = false;
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-        
+        heroAnimator.CrossFade("Victory", 0.1f);
     }
 
     public void setIsAttacking(bool given)

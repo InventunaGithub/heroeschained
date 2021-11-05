@@ -23715,15 +23715,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d7dfaf535a2d1c148a7f70f888f6eb6e, type: 2}
   - {fileID: 11400000, guid: b0eca5467f2c66e41a40a51eb3bbc406, type: 2}
   Team2SO:
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
-  - {fileID: 11400000, guid: 74d34e91c5f130b4d9212fae273bd901, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
+  - {fileID: 11400000, guid: 87d9261cd35cb9342b7e7404f4af9ef0, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
+  - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
   HeroPrefab: {fileID: 1941975299658355595, guid: 294ba430819df0c4e87624d0c737ded6, type: 3}
   ReadyButton: {fileID: 1612019727}
   HitGO: {fileID: 0}
