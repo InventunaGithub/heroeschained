@@ -46,7 +46,6 @@ public class RainOfArrows : Spell
         Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
         GameObject AOERing = Instantiate(Effects[3], target.transform.position, spawnRotation);
         AOERing.transform.DOScale(AOErange, 0.1f);
-        Debug.Log(casterHero.name + " Used RainOfArrows");
         for (int i = 0; i <= 10; i++)
         {
             Vector3 rainStartPos = new Vector3(target.transform.position.x + UnityEngine.Random.Range(-AOErange, AOErange), 5, target.transform.position.z + UnityEngine.Random.Range(-AOErange, AOErange));

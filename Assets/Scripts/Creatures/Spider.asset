@@ -25,7 +25,7 @@ MonoBehaviour:
   Health: 0
   Range: 2
   MaxEnergy: 30
-  Skills: 0000000004000000
+  Skills: 0000000003000000
   AIType: 0
   HeroType: 2
   HeroSkin: {fileID: 100148, guid: aca06175fb9d86a4ea082e5027692018, type: 3}

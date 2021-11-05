@@ -38,8 +38,11 @@ public class HeroController : MonoBehaviour
     private bool agentEnabled = false;
     public float Distance = 0;
     public GameObject HealthBarGO;
+    public GameObject EnergyBarGO;
     private GameObject HeroHealthBar;
+    private GameObject HeroEnergyBar;
     private Slider HealthBar;
+    private Slider EnergyBar;
     private BattlefieldManager BM;
     private SpellManager SM;
     private Rigidbody RB;
@@ -68,6 +71,8 @@ public class HeroController : MonoBehaviour
         }
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
         HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
+        HeroEnergyBar = Instantiate(EnergyBarGO, gameObject.transform.position + -(Vector3.up * 0.1f), gameObject.transform.rotation);
+        HeroEnergyBar.transform.SetParent(GameObject.Find("Canvas").transform);
         obstructionMask = LayerMask.GetMask("Obstacle");
         NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
         if (NormalAttackCooldown < 0.7f)
@@ -76,6 +81,8 @@ public class HeroController : MonoBehaviour
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
         HealthBar.maxValue = MainHero.MaxHealth;
+        EnergyBar = HeroEnergyBar.GetComponent<Slider>();
+        EnergyBar.maxValue = MainHero.MaxEnergy;
         agent.enabled = false;
         RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         mainCam = Camera.main;
@@ -99,6 +106,8 @@ public class HeroController : MonoBehaviour
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
+                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
+                EnergyBar.value = 0;
                 isDead = true;
                 DyingAnimation();
                 team.Remove(MainHero);
@@ -110,12 +119,13 @@ public class HeroController : MonoBehaviour
                 RB.useGravity = false;
                 agent.enabled = false;
                 CC.enabled = false;
-                Debug.Log("Died");
             }
             else if (enemyTeam.Count == 0 && !victory && !isDead) //Victory state
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
+                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
+                EnergyBar.value = MainHero.Energy;
                 if (MainHero.Health == 0)
                 {
                     MainHero.Health = 1;
@@ -134,6 +144,8 @@ public class HeroController : MonoBehaviour
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
+                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + - (Vector3.up * 0.1f));
+                EnergyBar.value = MainHero.Energy;
                 if (isRunning)
                 {
                     RB.constraints = RigidbodyConstraints.None;

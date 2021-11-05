@@ -34,6 +34,5 @@ public class BloodDrain : Spell
         Destroy(tempEffect, 3);
         GameObject tempEffect2 = Instantiate(Effects[1], target.transform.position + Vector3.up, target.transform.rotation);
         Destroy(tempEffect2, 3);
-        Debug.Log(casterHero.name + " Used Blood Drain");
     }
 }

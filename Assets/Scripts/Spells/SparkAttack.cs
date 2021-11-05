@@ -22,7 +22,6 @@ public class SparkAttack : Spell
         tempHeroController.setIsAttacking(true);
         projectileGO = Instantiate(Effects[0], caster.transform.position + offset, caster.transform.rotation);
         projectileGO.transform.DOMove(target.transform.position + offset, travelTime);
-        
         StartCoroutine(TravelTime());
     }
 
@@ -34,7 +33,7 @@ public class SparkAttack : Spell
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(Effects[1], GetTarget().transform.position + offset, GetTarget().transform.rotation);
         targetHero.Hurt(casterHero.Damage);
-        casterHero.Energy += casterHero.Intelligence + 5;
+        casterHero.GainEnergy(casterHero.Intelligence + 5);
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
     }

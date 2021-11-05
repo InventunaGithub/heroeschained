@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Dwarf Yellow
-  BaseHealth: 245
-  BaseDamage: 45
+  BaseHealth: 400
+  BaseDamage: 60
   Strength: 0
   Dexterity: 0
   Intelligence: 0

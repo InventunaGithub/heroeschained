@@ -33,6 +33,5 @@ public class PowerStrike :  Spell
         GameObject tempEffect = Instantiate(Effects[0], target.transform.position+Vector3.up , target.transform.rotation);
         Destroy(tempEffect, 1);
 
-        Debug.Log(casterHero.name + " Used PowerStrike");
     }
 }

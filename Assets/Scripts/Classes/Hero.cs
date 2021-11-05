@@ -64,6 +64,7 @@ public class Hero : MonoBehaviour
 
     public void Hurt(int damage) // this is used for physical attacks , attacks that must pierce armor first.
     {
+        GainEnergy((int)(damage * 0.1));
         if (Armor >= damage)
         {
             Armor -= damage;
@@ -76,7 +77,18 @@ public class Hero : MonoBehaviour
         }
         Normalise();
     }
-
+    public void GainEnergy(int amount)
+    {
+        Energy += amount; 
+        if(Energy >= MaxEnergy)
+        {
+            Energy = MaxEnergy;
+        }
+        if(Energy < 0 )
+        {
+            Energy = 0;
+        }
+    }
     public void Normalise()
     {
         if (Armor < 0)
