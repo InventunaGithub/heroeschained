@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4d5cd0c40c9444792def35d9454c31, type: 3}
+  m_Name: RoyalGuard1
+  m_EditorClassIdentifier: 
+  Id: 9101
+  Question: Welcome stranger. This city is the last hope of all creatures. If the
+    Dark Lord Oblivion conquers this place, all life is done! Now, visit your Guild,
+    clean it up and start growing your army. If the Dark Lord of Oblivion will be
+    destroyed, we have to start from somewhere. Does that make sense?
+  InAnswerText: Royal Guard
+  Reserved1: 0
+  Reserved2: 
+  Reserved3: {fileID: 0}
+  Answers:
+  - {fileID: 11400000, guid: be272fae90e88f5438edecd678190bd4, type: 2}

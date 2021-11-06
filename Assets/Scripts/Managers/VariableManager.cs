@@ -5,41 +5,94 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 using CommandTerminal;
+using CodeStage.AntiCheat.Storage;
 
 //Author: Mert Karavural
 //Date: 14 Oct 2020
 
 public class VariableManager : MonoBehaviour
 {
-    public static VariableManager Instance { get;private set; }
+    public static VariableManager Instance { get; private set; }
     private Dictionary<string, object> Variables = new Dictionary<string, object>();
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
     }
 
-    public void Add(string variableName , object value)
+    public void AddLocal(string variableName, string value)
+    {
+        if (ObscuredPrefs.HasKey(variableName))
+        {
+            throw new Exception("There's already a local with the same name");
+        }
+
+        ObscuredPrefs.Set(variableName, value);
+        ObscuredPrefs.Save();
+    }
+
+    public void AddVariable(string variableName, object value)
     {
         if (Variables.ContainsKey(variableName))
         {
-            throw new Exception("There's already a variable with same name");
+            throw new Exception("There's already a variable with the same name");
         }
 
         Variables.Add(variableName, value);
     }
 
-    public void Set(string variableName, object value)
+    public void SetOrAddLocal(string variableName, string value)
     {
-        if(!Variables.ContainsKey(variableName))
+        AddOrSetLocal(variableName, value);
+    }
+
+    public void SetOrAddVariable(string variableName, object value)
+    {
+        AddOrSetVariable(variableName, value);
+    }
+
+    public void AddOrSetVariable(string variableName, object value)
+    {
+        if (!Variables.ContainsKey(variableName))
+        {
+            AddVariable(variableName, value);
+        }
+        else
+        {
+            SetVariable(variableName, value);
+        }
+    }
+
+    public void AddOrSetLocal(string variableName, string value)
+    {
+        if (!ObscuredPrefs.HasKey(variableName))
+        {
+            AddLocal(variableName, value);
+        }
+        else
+        {
+            SetLocal(variableName, value);
+        }
+    }
+
+    public void SetLocal(string variableName, string value)
+    {
+        if (!ObscuredPrefs.HasKey(variableName))
+        {
+            throw new Exception("Local not found");
+        }
+
+        ObscuredPrefs.Set(variableName, value);
+        ObscuredPrefs.Save();
+    }
+
+    public void SetVariable(string variableName, object value)
+    {
+        if (!Variables.ContainsKey(variableName))
         {
             throw new Exception("Variable not found");
         }
@@ -47,7 +100,7 @@ public class VariableManager : MonoBehaviour
         Variables[variableName] = value;
     }
 
-    public object Get(string variableName)
+    public object GetVariable(string variableName)
     {
         if (!Variables.ContainsKey(variableName))
         {
@@ -57,19 +110,39 @@ public class VariableManager : MonoBehaviour
         return Variables[variableName];
     }
 
-    public bool Exists(string variableName)
+    public string GetLocal(string variableName)
     {
-        if(Variables.ContainsKey(variableName))
+        if (!ObscuredPrefs.HasKey(variableName))
         {
-            return true;
+            throw new Exception("Local not found");
         }
-        else
-        {
-            return false;
-        }
+
+        return ObscuredPrefs.Get<string>(variableName);
     }
 
-    public void Delete(string variableName)
+    public bool VariableExists(string variableName)
+    {
+        return Variables.ContainsKey(variableName);
+    }
+
+    public bool LocalExists(string name)
+    {
+        return ObscuredPrefs.HasKey(name);
+    }
+
+
+    public void DeleteLocal(string variableName)
+    {
+        if (!ObscuredPrefs.HasKey(variableName))
+        {
+            throw new Exception("Local not found");
+        }
+
+        ObscuredPrefs.DeleteKey(variableName);
+        ObscuredPrefs.Save();
+    }
+
+    public void DeleteVariable(string variableName)
     {
         if (!Variables.ContainsKey(variableName))
         {
@@ -79,70 +152,41 @@ public class VariableManager : MonoBehaviour
         Variables.Remove(variableName);
     }
 
-    public void Reset()
+    public void ResetVariables()
     {
-      
+
         Variables.Clear();
     }
 
-    public List<string> ListAll()
+    public void ResetLocals()
+    {
+
+        ObscuredPrefs.DeleteAll();
+        ObscuredPrefs.Set("List", "");
+        ObscuredPrefs.Save();
+    }
+
+    /*public string[] ListLocals()
+    {
+        return ObscuredPrefs.Get<string>("List").Split('~');
+    }*/
+
+    public List<string> ListVariables()
     {
         List<string> temp = new List<string>();
         foreach (KeyValuePair<string, object> p in Variables)
         {
-            temp.Add(p.Key.ToString() +" - "+ p.Value.ToString());
+            temp.Add(p.Key.ToString() + ": " + p.Value.ToString());
         }
+
         return temp;
     }
-
-    // fps display
-
-    public Text Display;
-    public bool Detailed = false;
-    public bool ShowFPS = false;
-    public float Frequency = 0.25f;
-
-    // Start is called before the first frame update
-    float totalFps = 0;
-    int totalRead = 0;
     void Start()
     {
-        StartCoroutine(DisplayFPS());
-        Display.gameObject.SetActive(ShowFPS);
-    }
-
-    IEnumerator DisplayFPS()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(Frequency);
-
-            float fps = (1.0f / Time.deltaTime);
-            totalFps += fps;
-            totalRead += 1;
-            if (ShowFPS)
-            {
-                Display.gameObject.SetActive(ShowFPS);
-                if (Detailed)
-                {
-                    Display.text = "FPS: " + fps.ToString("N0") + " (Avg: " + (totalFps / totalRead).ToString("N0") + ")";
-                }
-                else
-                {
-                    Display.text = "FPS: " + (totalFps / totalRead).ToString("N0");
-                }
-            }
-            else
-            {
-                Display.gameObject.SetActive(ShowFPS);
-            }
-
-        }
     }
 
     public void GotoScene(int scene)
     {
         SceneManager.LoadScene(scene);
     }
-
 }
