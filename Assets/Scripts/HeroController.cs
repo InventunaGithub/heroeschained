@@ -16,6 +16,7 @@ public class HeroController : MonoBehaviour
 
     public Hero MainHero;
     public int TargetHero;
+    public int SkillEnergyCost;
     private List<Hero> enemyTeam;
     private List<Hero> team;
     private NavMeshAgent agent;
@@ -38,8 +39,11 @@ public class HeroController : MonoBehaviour
     private bool agentEnabled = false;
     public float Distance = 0;
     public GameObject HealthBarGO;
+    public GameObject EnergyBarGO;
     private GameObject HeroHealthBar;
+    private GameObject HeroEnergyBar;
     private Slider HealthBar;
+    private Slider EnergyBar;
     private BattlefieldManager BM;
     private SpellManager SM;
     private Rigidbody RB;
@@ -68,6 +72,8 @@ public class HeroController : MonoBehaviour
         }
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
         HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
+        HeroEnergyBar = Instantiate(EnergyBarGO, gameObject.transform.position + -(Vector3.up * 0.1f), gameObject.transform.rotation);
+        HeroEnergyBar.transform.SetParent(GameObject.Find("Canvas").transform);
         obstructionMask = LayerMask.GetMask("Obstacle");
         NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
         if (NormalAttackCooldown < 0.7f)
@@ -76,6 +82,8 @@ public class HeroController : MonoBehaviour
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
         HealthBar.maxValue = MainHero.MaxHealth;
+        EnergyBar = HeroEnergyBar.GetComponent<Slider>();
+        EnergyBar.maxValue = MainHero.MaxEnergy;
         agent.enabled = false;
         RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         mainCam = Camera.main;
@@ -99,6 +107,8 @@ public class HeroController : MonoBehaviour
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
+                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
+                EnergyBar.value = 0;
                 isDead = true;
                 DyingAnimation();
                 team.Remove(MainHero);
@@ -110,12 +120,13 @@ public class HeroController : MonoBehaviour
                 RB.useGravity = false;
                 agent.enabled = false;
                 CC.enabled = false;
-                Debug.Log("Died");
             }
             else if (enemyTeam.Count == 0 && !victory && !isDead) //Victory state
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
+                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
+                EnergyBar.value = MainHero.Energy;
                 if (MainHero.Health == 0)
                 {
                     MainHero.Health = 1;
@@ -134,6 +145,8 @@ public class HeroController : MonoBehaviour
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
+                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + - (Vector3.up * 0.1f));
+                EnergyBar.value = MainHero.Energy;
                 if (isRunning)
                 {
                     RB.constraints = RigidbodyConstraints.None;
@@ -178,7 +191,10 @@ public class HeroController : MonoBehaviour
                         {
                             agent.isStopped = false;
                             agent.SetPath(path);
-                            transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                            if(agent.velocity != Vector3.zero)
+                            {
+                                transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                            }
                             if (!isRunning)
                             {
                                 RunningAnimation();
@@ -190,12 +206,21 @@ public class HeroController : MonoBehaviour
                             transform.DOLookAt(TargetHeroGO.transform.position , 0.1f);
                             isRunning = false;
                             agent.isStopped = true;
-                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking)
+                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < SkillEnergyCost)
                             {
                                 if (TargetHero < enemyTeam.Count)
                                 {
-                                    StartCoroutine(CooldownTimer());
+                                    StartCoroutine(CooldownTimer(NormalAttackCooldown));
                                     SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , enemyTeam[TargetHero].HeroObject);
+                                }
+                            }
+                            else if(!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= SkillEnergyCost)
+                            {
+                                if (TargetHero < enemyTeam.Count)
+                                {
+                                    StartCoroutine(CooldownTimer(NormalAttackCooldown));
+                                    SM.Cast(MainHero.Skills[1], MainHero.HeroObject, enemyTeam[TargetHero].HeroObject);
+                                    MainHero.Energy -= 10;
                                 }
                             }
                         }
@@ -273,10 +298,10 @@ public class HeroController : MonoBehaviour
         interwal = false;
     }
 
-    IEnumerator CooldownTimer()
+    IEnumerator CooldownTimer(float cooldown)
     {
         onCooldown = true;
-        yield return new WaitForSeconds(NormalAttackCooldown);
+        yield return new WaitForSeconds(cooldown);
         onCooldown = false;
     }
 
@@ -284,65 +309,17 @@ public class HeroController : MonoBehaviour
     {
         onCooldown = false;
 
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("SSDeath", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("DeathLeft", 0.1f);
-        }
-
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("DeathLeft", 0.1f);
-        }
-
-        else if(MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("DeathLeft", 0.1f);
-        }       
+        heroAnimator.CrossFade("Death", 0.1f);
     }
 
     public void RunningAnimation()
     {
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("SSRun", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("BowRun", 0.1f);
-        }
-
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("MageRun", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("MageRun", 0.1f);
-        }
+        heroAnimator.CrossFade("Run", 0.1f);
+     
     }
     public void IdleAnimation()
     {
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("WarrIdle", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("BowIdle", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("MageIdle", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("ReadyIdle", 0.1f);
-        }
-        
+        heroAnimator.CrossFade("Idle", 0.1f);
     }
 
    
@@ -350,24 +327,7 @@ public class HeroController : MonoBehaviour
     {
         isDead = false;
         onCooldown = false;
-        if (MainHero.HeroType == HeroTypes.Warrior)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Archer)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-
-        else if (MainHero.HeroType == HeroTypes.Mage)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-        else if (MainHero.HeroType == HeroTypes.Human)
-        {
-            heroAnimator.CrossFade("Victory", 0.1f);
-        }
-        
+        heroAnimator.CrossFade("Victory", 0.1f);
     }
 
     public void setIsAttacking(bool given)

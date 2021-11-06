@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Melee1
-  BaseHealth: 134
-  BaseDamage: 5
+  BaseHealth: 400
+  BaseDamage: 60
   Strength: 0
   Dexterity: 0
   Intelligence: 0
@@ -24,7 +24,8 @@ MonoBehaviour:
   Damage: 0
   Health: 15
   Range: 1
-  Skills: 00000000
+  MaxEnergy: 0
+  Skills: 0000000004000000
   AIType: 0
   HeroType: 2
   HeroSkin: {fileID: 1176535038949150, guid: 851d10f0ef05ed0428bb7e672ca6e4db, type: 3}

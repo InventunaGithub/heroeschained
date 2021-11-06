@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: LongRange1
-  BaseHealth: 96
-  BaseDamage: 14
+  BaseHealth: 400
+  BaseDamage: 60
   Strength: 0
   Dexterity: 0
   Intelligence: 0
@@ -24,7 +24,8 @@ MonoBehaviour:
   Damage: 2
   Health: 0
   Range: 20
-  Skills: 01000000
+  MaxEnergy: 0
+  Skills: 0100000005000000
   AIType: 0
   HeroType: 1
   HeroSkin: {fileID: 1798490320975608, guid: 392d9512b2513d642804ffd2cd79c275, type: 3}
