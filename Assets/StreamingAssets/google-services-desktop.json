@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "998498302866",
+    "firebase_url": "https://heroeschained-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "heroeschained",
+    "storage_bucket": "heroeschained.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998498302866:android:97aa1cc608fdc3c7e81f4b",
+        "android_client_info": {
+          "package_name": "com.chainedgames.heroeschained"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "998498302866-dchpfc7c1k2asorcidejvuhi0jfmedg1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCzrPoueN71UnoZgm4ttsKA0xSbIuuNt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "998498302866-dchpfc7c1k2asorcidejvuhi0jfmedg1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

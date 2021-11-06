@@ -31,7 +31,7 @@ Shader "Azure[Sky]/BuiltIn/Unlit/Transparent"
 			#include "UnityCG.cginc"
 
 			// Azure[Sky] Start
-			#include "Assets/Azure[Sky] Dynamic Skybox/Shaders/Transparent/AzureFogCore.cginc"
+			#include "Assets/ImportedGoods/Azure[Sky] Dynamic Skybox/Shaders/Transparent/AzureFogCore.cginc"
 			// Azure[Sky] End
 			
 			sampler2D _MainTex;
