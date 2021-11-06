@@ -16,6 +16,7 @@ public class HeroController : MonoBehaviour
 
     public Hero MainHero;
     public int TargetHero;
+    public int SkillEnergyCost;
     private List<Hero> enemyTeam;
     private List<Hero> team;
     private NavMeshAgent agent;
@@ -205,7 +206,7 @@ public class HeroController : MonoBehaviour
                             transform.DOLookAt(TargetHeroGO.transform.position , 0.1f);
                             isRunning = false;
                             agent.isStopped = true;
-                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < 10)
+                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < SkillEnergyCost)
                             {
                                 if (TargetHero < enemyTeam.Count)
                                 {
@@ -213,7 +214,7 @@ public class HeroController : MonoBehaviour
                                     SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , enemyTeam[TargetHero].HeroObject);
                                 }
                             }
-                            else if(!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= 10)
+                            else if(!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= SkillEnergyCost)
                             {
                                 if (TargetHero < enemyTeam.Count)
                                 {
