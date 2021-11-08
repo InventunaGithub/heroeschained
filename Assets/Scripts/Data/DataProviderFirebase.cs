@@ -79,6 +79,30 @@ public class DataProviderFirebase : DataProvider
 
         [FirestoreProperty]
         public bool guildTavernOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildSmithOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildGarageOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildScoutOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildCourtOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildAdvisorOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildHealingOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildTrainingGroundsOpen { get; set; }
+
+        [FirestoreProperty]
+        public bool guildPetOpen { get; set; }
     }
 
     FirebaseFirestore firebase;
@@ -104,6 +128,11 @@ public class DataProviderFirebase : DataProvider
 
     public override void CreateUser(DOUser user, OnCompletionDelegate onComplete)
     {
+        StartCoroutine(CreateUserNow(user, onComplete));
+    }
+
+    IEnumerator CreateUserNow(DOUser user, OnCompletionDelegate onComplete)
+    {
         FirebaseUser fbUser = new FirebaseUser
         {
             userId = user.ID,
@@ -114,36 +143,45 @@ public class DataProviderFirebase : DataProvider
             restrictionReason = ""
         };
 
-        firebase.Collection("users").AddAsync(fbUser).ContinueWith(task =>
+        var userAddTask = firebase.Collection("users").AddAsync(fbUser);
+        yield return new WaitUntil(() => userAddTask.IsCompleted);
+        
+        DocumentReference doc = userAddTask.Result;
+
+        FirebaseUserGame game = new FirebaseUserGame
         {
-            DocumentReference doc = task.Result;
+            gameId = this.gameId,
+            gameName = "Heroes Chained",
+            firstVisit = true,
+            firstVisitedAt = DateTime.Now,
+            restrictedUntil = DateTime.MinValue,
+            restrictionReason = "",
+            lastVisitedAt = DateTime.MinValue,
+            connectdWallet = "",
 
-            FirebaseUserGame game = new FirebaseUserGame
-            {
-                gameId = this.gameId,
-                gameName = "Heroes Chained",
-                firstVisit = true,
-                firstVisitedAt = DateTime.Now,
-                restrictedUntil = DateTime.MinValue,
-                restrictionReason = "",
-                lastVisitedAt = DateTime.MinValue,
-                connectdWallet = "",
+            cityArenaOpen = false,
+            cityGateOpen = false,
+            cityMarketOpen = false,
+            cityRoyalPalaceOpen = false,
+            citySlumsOpen = false,
+            cityTavernOpen = false,
+            guildTavernOpen = false,
+            guildAdvisorOpen = false,
+            guildCourtOpen = false,
+            guildGarageOpen = false,
+            guildHealingOpen = false,
+            guildPetOpen = false,
+            guildScoutOpen = false,
+            guildSmithOpen = false,
+            guildTrainingGroundsOpen = false
+        };
 
-                cityArenaOpen = false,
-                cityGateOpen = false,
-                cityMarketOpen = false,
-                cityRoyalPalaceOpen = false,
-                citySlumsOpen = false,
-                cityTavernOpen = false,
-                guildTavernOpen = false
-            };
+        Debug.Log("Firebase: User created");
+        var addTask = doc.Collection("games").AddAsync(game);
+        yield return new WaitUntil(() => addTask.IsCompleted);
 
-            Debug.Log("Firebase: User created");
-            doc.Collection("games").AddAsync(game).ContinueWith(taskGame => {
-                Debug.Log("Firebase: Game has been added to user's document");
-                onComplete?.Invoke();
-            });
-        });
+        Debug.Log("Firebase: Game has been added to user's document");
+        onComplete?.Invoke();
     }
 
     public override void GetUser(string userId, OnQueryUserCompletionDelegate onComplete)
@@ -191,7 +229,15 @@ public class DataProviderFirebase : DataProvider
                 user.CityRoyalPalaceOpen = data.ContainsKey("cityRoyalPalaceOpen") ? (bool)data["cityRoyalPalaceOpen"] : false;
                 user.CitySlumsOpen = data.ContainsKey("citySlumsOpen") ? (bool)data["citySlumsOpen"] : false;
                 user.CityTavernOpen = data.ContainsKey("cityTavernOpen") ? (bool)data["cityTavernOpen"] : false;
+
                 user.GuildTavernOpen = data.ContainsKey("guildTavernOpen") ? (bool)data["guildTavernOpen"] : false;
+                user.GuildCourtOpen = data.ContainsKey("guildCourtOpen") ? (bool)data["guildCourtOpen"] : false;
+                user.GuildGarageOpen = data.ContainsKey("guildGarageOpen") ? (bool)data["guildGarageOpen"] : false;
+                user.GuildHealingOpen = data.ContainsKey("guildHealingOpen") ? (bool)data["guildHealingOpen"] : false;
+                user.GuildPetOpen = data.ContainsKey("guildPetOpen") ? (bool)data["guildPetOpen"] : false;
+                user.GuildScoutOpen = data.ContainsKey("guildScoutOpen") ? (bool)data["guildScoutOpen"] : false;
+                user.GuildSmithOpen = data.ContainsKey("guildSmithOpen") ? (bool)data["guildSmithOpen"] : false;
+                user.GuildTrainingGroundsOpen = data.ContainsKey("guildTrainingGroundsOpen") ? (bool)data["guildTrainingGroundsOpen"] : false;
 
                 task = ds.Reference.Collection("games").WhereEqualTo("gameId", gameId).GetSnapshotAsync();
                 yield return new WaitUntil(() => task.IsCompleted);

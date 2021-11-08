@@ -35,6 +35,13 @@ public class DOUser : DataObject
     public bool CitySlumsOpen = false;
     public bool CityGateOpen = false;
     public bool GuildTavernOpen = false;
+    public bool GuildCourtOpen = false;
+    public bool GuildGarageOpen = false;
+    public bool GuildHealingOpen = false;
+    public bool GuildPetOpen = false;
+    public bool GuildScoutOpen = false;
+    public bool GuildSmithOpen = false;
+    public bool GuildTrainingGroundsOpen = false;
 
     public List<DOUserGameMatch> Games = new List<DOUserGameMatch>();
 
