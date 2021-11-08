@@ -5,6 +5,8 @@ using System;
 using DG.Tweening;
 public class BloodDrain : Spell
 {
+    Animator casterAnimator;
+    Animator targetAnimator;
     public override void Cast(GameObject caster , GameObject target)
     {
         SetCaster(caster);
