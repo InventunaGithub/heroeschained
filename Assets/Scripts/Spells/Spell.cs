@@ -9,7 +9,12 @@ public class Spell : MonoBehaviour
     GameObject target;
     public List<GameObject> Effects;
     public float CastTime;
-    public virtual void Cast(GameObject caster , GameObject target)
+    public virtual void Cast(GameObject caster, GameObject target)
+    {
+
+    }
+
+    public virtual void CastWithPosition(Vector3 position)
     {
 
     }

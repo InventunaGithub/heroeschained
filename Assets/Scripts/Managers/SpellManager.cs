@@ -16,4 +16,14 @@ public class SpellManager : MonoBehaviour
             }
         }
     }
+    public void CastWithPosition(int spellID, Vector3 position)
+    {
+        foreach (GameObject spell in Spells)
+        {
+            if (spell.GetComponent<Spell>().ID == spellID)
+            {
+                spell.GetComponent<Spell>().CastWithPosition(position);
+            }
+        }
+    }
 }
