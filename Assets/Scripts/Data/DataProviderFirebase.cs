@@ -363,6 +363,12 @@ public class DataProviderFirebase : DataProvider
             break;
         }
 
+        if(string.IsNullOrEmpty(topUserId))
+        {
+            onRestriction?.Invoke(DateTime.MinValue, "");
+            yield break;
+        }
+
         var task = firebase.Collection("users").Document(topUserId).Collection("games").WhereEqualTo("gameId", gameId).GetSnapshotAsync();
 
         yield return new WaitUntil(() => task.IsCompleted);
