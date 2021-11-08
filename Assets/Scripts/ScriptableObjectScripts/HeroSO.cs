@@ -5,7 +5,7 @@ using UnityEngine;
 //Author: Mert Karavural
 //Date: 15 Sep 2020
 
-[CreateAssetMenu(fileName = "New Hero", menuName = "Inventuna/HeroesChained/Hero")]
+[CreateAssetMenu(fileName = "New Hero", menuName = "Inventuna/Heroes Chained/Hero")]
 public class HeroSO : ScriptableObject
 {
     public int HeroID; 

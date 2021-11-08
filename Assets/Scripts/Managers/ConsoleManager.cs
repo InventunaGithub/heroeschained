@@ -47,6 +47,12 @@ public class ConsoleManager : MonoBehaviour
     [RegisterCommand(Name = "Variables", Help = "Variables command", MinArgCount = 1, MaxArgCount = 3)]
     static void CommandVariables(CommandArg[] args)
     {
+        if(args.Length == 0)
+        {
+            Terminal.Log("Not enough arguments");
+            return;
+        }
+
         string command = args[0].String;
         if(command.ToLower() == "add")
         {
@@ -233,6 +239,12 @@ public class ConsoleManager : MonoBehaviour
     [RegisterCommand(Name = "Locals", Help = "Locals command", MinArgCount = 1, MaxArgCount = 3)]
     static void CommandLocals(CommandArg[] args)
     {
+        if (args.Length == 0)
+        {
+            Terminal.Log("Not enough arguments");
+            return;
+        }
+
         string command = args[0].String;
         if (command.ToLower() == "add")
         {
@@ -382,8 +394,14 @@ public class ConsoleManager : MonoBehaviour
         //This is just for the help page
     }
 
-    [RegisterCommand(Name = "Locals Set", Help = "Sets a local with the given value (locals add VarName Value)", MinArgCount = 2, MaxArgCount = 2)]
+    [RegisterCommand(Name = "Locals Set", Help = "Sets a local with the given value (locals set VarName Value)", MinArgCount = 2, MaxArgCount = 2)]
     static void CommandLocalsSet(CommandArg[] args)
+    {
+        //This is just for the help page
+    }
+
+    [RegisterCommand(Name = "Locals Get", Help = "Gets a local with the given value (locals get VarName)", MinArgCount = 2, MaxArgCount = 2)]
+    static void CommandLocalsGet(CommandArg[] args)
     {
         //This is just for the help page
     }
@@ -406,50 +424,42 @@ public class ConsoleManager : MonoBehaviour
         Debug.Break();
     }
 
-    [RegisterCommand(Name = "fps.on", Help = "Shows FPS counter")]
+    [RegisterCommand(Name = "fps", Help = "Toggles FPS counter")]
     static void CommandFpsOn(CommandArg[] args)
     {
+        if (args.Length == 0)
+        {
+            Terminal.Log("Not enough arguments");
+            return;
+        }
+
         GUIFPSDisplayer gui = FindObjectOfType<GUIFPSDisplayer>();
 
         if (gui != null)
         {
-            gui.Enabled = true;
-            
-            if (Terminal.IssuedError)
+            if (args.Length == 0)
             {
-                return;
-            }
 
-            Terminal.Log("FPS meter opened");
+            }
+            else
+            {
+                string command = args[0].String;
+                gui.Enabled = command == "on";
+
+                if (Terminal.IssuedError)
+                {
+                    return;
+                }
+
+                Terminal.Log("FPS meter " + (command == "on" ? "opened" : "closed"));
+            }
         } else
         {
             Terminal.Log("No FPS displays found");
         }
     }
 
-    [RegisterCommand(Name = "fps.off", Help = "Hides FPS counter")]
-    static void CommandFpsOff(CommandArg[] args)
-    {
-        GUIFPSDisplayer gui = FindObjectOfType<GUIFPSDisplayer>();
-
-        if (gui != null)
-        {
-            gui.Enabled = false;
-
-            if (Terminal.IssuedError)
-            {
-                return;
-            }
-
-            Terminal.Log("FPS meter closed");
-        }
-        else
-        {
-            Terminal.Log("No FPS displays found");
-        }
-    }
-
-    [RegisterCommand(Name = "os", Help = "Outputs operating system and platform.")]
+    [RegisterCommand(Name = "os", Help = "Outputs operating system and platform")]
     static void CommandOs(CommandArg[] args)
     {
         if (Terminal.IssuedError)
@@ -458,6 +468,64 @@ public class ConsoleManager : MonoBehaviour
         }
 
         Terminal.Log(SystemInfo.operatingSystem);
+    }
+
+    [RegisterCommand(Name = "building", Help = "Enables/disables city or guild buildings")]
+    static void CommandBuilding(CommandArg[] args)
+    {
+        if (args.Length <= 1)
+        {
+            Terminal.Log("Not enough arguments");
+            return;
+        }
+
+        string command = args[0].String;
+        string parameter = args[1].String;
+        switch (command)
+        {
+            case "tavern_city":
+            case "city_tavern":
+                VariableManager.Instance.SetOrAddVariable("city_tavern_open", parameter == "enable");
+                break;
+            case "tavern_guild":
+            case "guild_tavern":
+                VariableManager.Instance.SetOrAddVariable("guild_tavern_open", parameter == "enable");
+                break;
+            case "city_arena":
+            case "arena":
+                VariableManager.Instance.SetOrAddVariable("city_arena_open", parameter == "enable");
+                break;
+            case "city_market":
+            case "market":
+                VariableManager.Instance.SetOrAddVariable("city_market_open", parameter == "enable");
+                break;
+            case "city_palace":
+            case "city_royal_palace":
+            case "city_royalpalace":
+            case "palace":
+            case "royal_palace":
+            case "royalpalace":
+                VariableManager.Instance.SetOrAddVariable("city_royal_palace_open", parameter == "enable");
+                break;
+            case "city_slums":
+            case "slums":
+                VariableManager.Instance.SetOrAddVariable("city_slums_open", parameter == "enable");
+                break;
+            case "city_gate":
+            case "gate":
+                VariableManager.Instance.SetOrAddVariable("city_gate_open", parameter == "enable");
+                break;
+            default:
+                Terminal.Log("Warning: No such building could be found");
+                return;
+        }
+
+        if (Terminal.IssuedError)
+        {
+            return;
+        }
+
+        Terminal.Log("Building status has been altered");
     }
     #endregion
 

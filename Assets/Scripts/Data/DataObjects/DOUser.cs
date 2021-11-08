@@ -28,6 +28,14 @@ public class DOUser : DataObject
     public float Reserved4;
     public float Reserved5;
 
+    public bool CityTavernOpen = false;
+    public bool CityArenaOpen = false;
+    public bool CityMarketOpen = false;
+    public bool CityRoyalPalaceOpen = false;
+    public bool CitySlumsOpen = false;
+    public bool CityGateOpen = false;
+    public bool GuildTavernOpen = false;
+
     public List<DOUserGameMatch> Games = new List<DOUserGameMatch>();
 
     public DOUser(string id)

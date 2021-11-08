@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public abstract class DataProvider : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public abstract class DataProvider : MonoBehaviour
     public delegate void OnCreateRecordDelegate(string userId);
     public delegate void OnCompletionDelegate();
     public delegate void OnQueryUserCompletionDelegate(DOUser user);
+    public delegate void OnRestrictionDelegate(DateTime restrictedUntil, string restrictionResult);
 
     public string GameId
     {
@@ -31,5 +33,6 @@ public abstract class DataProvider : MonoBehaviour
     public abstract void SetUserFirstVisitProperty(string userId);
     public abstract void SetUserFirstVisitDate(string userId);
     public abstract void SetUserLastVisitDate(string userId);
+    public abstract void GetUserRestricted(string userId, OnRestrictionDelegate onRestriction);
 
 }

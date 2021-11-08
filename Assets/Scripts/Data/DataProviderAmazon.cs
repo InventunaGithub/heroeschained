@@ -46,8 +46,13 @@ public class DataProviderAmazon : DataProvider
         throw new System.NotImplementedException();
     }
 
+    public override void GetUserRestricted(string userId, OnRestrictionDelegate onRestriction)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override string Vendor()
     {
-        return "Amazon";
+        return "Amazon AWS";
     }
 }

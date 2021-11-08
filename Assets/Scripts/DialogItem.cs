@@ -6,7 +6,7 @@ using UnityEngine;
 //Date: 11 Oct 2020
 
 
-[CreateAssetMenu(fileName = "DialogItem", menuName = "Inventuna/HeroesChained/DialogItem", order = 1)]
+[CreateAssetMenu(fileName = "DialogItem", menuName = "Inventuna/Heroes Chained/Dialog Item", order = 1)]
 public class DialogItem : ScriptableObject
 {
     public int Id;
