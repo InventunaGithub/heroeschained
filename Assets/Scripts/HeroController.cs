@@ -10,7 +10,6 @@ using DG.Tweening;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(Animator))]
 public class HeroController : MonoBehaviour
 {
 
