@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Auth : MonoBehaviour
 {
@@ -66,7 +67,8 @@ public class Auth : MonoBehaviour
                     VariableManager.Instance.AddOrSetLocal("password", password);
 
                     // save additional user data
-                    Data.GetProvider().CreateUser(new DOUser(elements[0], elements[1]), () => {
+                    var provider = Data.GetProvider();
+                    provider.CreateUser(new DOUser(elements[0], elements[1]), () => {
                         StartCoroutine(PostLoginSequence());
                     });
                 }
@@ -87,7 +89,8 @@ public class Auth : MonoBehaviour
             authProvider.OnLoginCompleted = (succeeded, message) => {
                 if(!succeeded)
                 {
-                    GUI.NotifyError("LOGIN FAILED", message);
+                    //GUI.NotifyError("LOGIN FAILED", message);
+                    GUI.DisplayMessage("LOGIN FAILED", message);
                     StartCoroutine(BackToLoginSequence());
                 }
                 else
@@ -129,16 +132,48 @@ public class Auth : MonoBehaviour
         yield return new WaitForSeconds(GUI.TransitionTime);
 
         GUI.DisplayLoading("Loading user settings...");
-        Data.GetProvider().SetUserLastVisitDate(VariableManager.Instance.GetLocal("userid").ToString());
-        Data.GetProvider().GetUser(VariableManager.Instance.GetLocal("userid"), (user) =>
+        Data.GetProvider().GetUserRestricted(VariableManager.Instance.GetLocal("userid").ToString(), (restrictedUntil, restrictionReason) =>
         {
-            if (user == null)
+            if(restrictedUntil < DateTime.Now)
             {
-                StartCoroutine(PostLoginFailed());
-            }
-            else
+                // NOT restricted
+                Data.GetProvider().SetUserLastVisitDate(VariableManager.Instance.GetLocal("userid").ToString());
+                Data.GetProvider().GetUser(VariableManager.Instance.GetLocal("userid"), (user) =>
+                {
+                    if (user == null)
+                    {
+                        StartCoroutine(PostLoginFailed());
+                    }
+                    else
+                    {
+                        VariableManager.Instance.SetOrAddVariable("nickname", user.NickName);
+                        VariableManager.Instance.SetOrAddVariable("userid", VariableManager.Instance.GetLocal("userid"));
+
+                        VariableManager.Instance.SetOrAddVariable("city_tavern_open", user.CityTavernOpen);
+                        VariableManager.Instance.SetOrAddVariable("city_arena_open", user.CityArenaOpen);
+                        VariableManager.Instance.SetOrAddVariable("city_market_open", user.CityMarketOpen);
+                        VariableManager.Instance.SetOrAddVariable("city_royal_palace_open", user.CityRoyalPalaceOpen);
+                        VariableManager.Instance.SetOrAddVariable("city_slums_open", user.CitySlumsOpen);
+                        VariableManager.Instance.SetOrAddVariable("city_gate_open", user.CityGateOpen);
+
+                        VariableManager.Instance.SetOrAddVariable("guild_tavern_open", user.GuildTavernOpen);
+                        VariableManager.Instance.SetOrAddVariable("guild_court_open", user.GuildCourtOpen);
+                        VariableManager.Instance.SetOrAddVariable("guild_garage_open", user.GuildGarageOpen);
+                        VariableManager.Instance.SetOrAddVariable("guild_healing_open", user.GuildHealingOpen);
+                        VariableManager.Instance.SetOrAddVariable("guild_pet_open", user.GuildPetOpen);
+                        VariableManager.Instance.SetOrAddVariable("guild_scout_open", user.GuildScoutOpen);
+                        VariableManager.Instance.SetOrAddVariable("guild_smith_open", user.GuildSmithOpen);
+                        VariableManager.Instance.SetOrAddVariable("guild_training_grounds_open", user.GuildTrainingGroundsOpen);
+
+                        StartCoroutine(PostLoginSucceeded(user));
+                    }
+                });
+            } else
             {
-                StartCoroutine(PostLoginSucceeded(user));
+                GUI.DisplayMessage("USER RESTRICTED", "You account has been restricted from Inventuna network until " + restrictedUntil.ToShortDateString() + " due to the following reason: " + restrictionReason, () =>
+                {
+                    StartCoroutine(PostLoginFailed());
+                });
             }
         });
     }

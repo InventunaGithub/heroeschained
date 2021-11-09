@@ -5,7 +5,7 @@ using UnityEngine;
 //Author: Deniz Afşar
 //Date: 19.10.2021
 
-[CreateAssetMenu(fileName = "Inventory Item", menuName = "Inventuna/HeroesChained/Inventory Item")]
+[CreateAssetMenu(fileName = "Inventory Item", menuName = "Inventuna/Heroes Chained/Inventory Item")]
 public class InventoryItem : ScriptableObject
 {
     public int Id;
