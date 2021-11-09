@@ -45,7 +45,6 @@ public class CardManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && clickedOn)
         {
             SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
-            guildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
             clickedOn = false;
             Debug.Log("Button Up");
             AOEIndicator.SetActive(false);
@@ -54,9 +53,10 @@ public class CardManager : MonoBehaviour
     
     public void useCard(GameObject usedCard)
     {
+        usingCard = usedCard.GetComponent<Card>();
         if (guildEnergy >= SM.FindSpell(usingCard.SpellID).EnergyCost)
         {
-            usingCard = usedCard.GetComponent<Card>();
+            guildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             if (AOEIndicator == null)
             {
