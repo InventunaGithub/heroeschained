@@ -10,6 +10,7 @@ public class Spell : MonoBehaviour
     public List<GameObject> Effects;
     public float CastTime;
     public float AOERange;
+    public int EnergyCost;
     public virtual void Cast(GameObject caster, GameObject target)
     {
 
