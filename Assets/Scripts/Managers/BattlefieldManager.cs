@@ -23,6 +23,7 @@ public class BattlefieldManager : MonoBehaviour
     public bool GameStarted = false;
     private bool lockOn = false;
     private Camera mainCam;
+    public float scaleFloat;
     void Awake()
     {
         characters = GameObject.Find("Characters");
@@ -35,8 +36,10 @@ public class BattlefieldManager : MonoBehaviour
         {
             GameObject heroGO = Instantiate(HeroPrefab, gridArea1.transform.GetChild(index).transform.position , gridArea1.transform.GetChild(index).transform.rotation);
             heroGO.transform.SetParent(characters.transform);
+            heroGO.transform.localScale = Vector3.one * scaleFloat;
             heroGO.transform.tag = "Team1";
             GameObject heroSkin = Instantiate(Hero.HeroSkin , heroGO.transform.position, Quaternion.identity);
+            heroSkin.transform.localScale = Vector3.one * scaleFloat;
             heroSkin.transform.SetParent(heroGO.transform);
             heroGO.GetComponent<Hero>().Init(Hero);
             Team1.Add(heroGO.GetComponent<Hero>());
@@ -47,8 +50,10 @@ public class BattlefieldManager : MonoBehaviour
         {
             GameObject heroGO = Instantiate(HeroPrefab, gridArea2.transform.GetChild(index).transform.position, gridArea1.transform.GetChild(index).transform.rotation);
             heroGO.transform.SetParent(characters.transform);
+            heroGO.transform.localScale = Vector3.one * scaleFloat;
             heroGO.transform.tag = "Team2";
             GameObject heroSkin = Instantiate(Hero.HeroSkin, heroGO.transform.position, Quaternion.identity);
+            heroSkin.transform.localScale = Vector3.one * scaleFloat;
             heroSkin.transform.SetParent(heroGO.transform);
             heroGO.GetComponent<Hero>().Init(Hero);
             Team2.Add(heroGO.GetComponent<Hero>());
