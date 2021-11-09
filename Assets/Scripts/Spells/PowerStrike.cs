@@ -5,6 +5,8 @@ using System;
 using DG.Tweening;
 public class PowerStrike :  Spell
 {
+    Animator casterAnimator;
+    Animator targetAnimator;
     public override void Cast(GameObject caster, GameObject target)
     {
         SetCaster(caster);
@@ -27,11 +29,12 @@ public class PowerStrike :  Spell
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
         yield return new WaitForSeconds(CastTime);
+        casterAnimator = caster.transform.GetComponentInChildren<Animator>(); ;
+        casterAnimator.CrossFade("Attack", 0.1f);
         targetHero.Hurt((int)(Math.Round(casterHero.Damage * 1.3f)));
         casterHero.Health += (int)(Math.Round(casterHero.Damage * 0.5f));
         casterHero.Normalise();
         GameObject tempEffect = Instantiate(Effects[0], target.transform.position+Vector3.up , target.transform.rotation);
         Destroy(tempEffect, 1);
-
     }
 }
