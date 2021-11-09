@@ -21,6 +21,7 @@ public class BattlefieldManager : MonoBehaviour
     public bool ClickedOnHero;
     public bool PlacingOnFullGrid;
     public bool GameStarted = false;
+    private bool lockOn = false;
     private Camera mainCam;
     void Awake()
     {
@@ -60,36 +61,39 @@ public class BattlefieldManager : MonoBehaviour
 
     void Update()
     {
-        if(GameStarted)
+        if(GameStarted && !lockOn)
         {
             gridArea1.SetActive(false);
             gridArea2.SetActive(false);
             ReadyButton.SetActive(false);
-            
+            lockOn = true;
         }
-        ray = mainCam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitData;
-        Physics.Raycast(ray, out hitData, 10000000);
-        if (Input.GetMouseButtonDown(0) && hitData.transform.tag == "Team1")
-        {
-            ClickedOnHero = true;
-            HitGO = hitData.transform.gameObject;
-        }
-
-        if (Input.GetMouseButton(0) && ClickedOnHero)
-        {
-            if (Physics.Raycast(ray, out hitData, 1000, ~heroLayer))
+        if(!lockOn)
+        { 
+            ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitData;
+            Physics.Raycast(ray, out hitData, 10000000);
+            if (Input.GetMouseButtonDown(0) && hitData.transform.tag == "Team1")
             {
-                HitGO.transform.position = hitData.point;
+                ClickedOnHero = true;
+                HitGO = hitData.transform.gameObject;
             }
 
-        }
+            if (Input.GetMouseButton(0) && ClickedOnHero)
+            {
+                if (Physics.Raycast(ray, out hitData, 1000, ~heroLayer))
+                {
+                    HitGO.transform.position = hitData.point;
+                }
 
-        if (Input.GetMouseButtonUp(0) && ClickedOnHero)
-        {
-            SetPos(LastGridPos);
-            ClickedOnHero = false;
-            HitGO = null;
+            }
+
+            if (Input.GetMouseButtonUp(0) && ClickedOnHero)
+            {
+                SetPos(LastGridPos);
+                ClickedOnHero = false;
+                HitGO = null;
+            }
         }
 
     }

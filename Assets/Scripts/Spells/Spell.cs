@@ -9,6 +9,7 @@ public class Spell : MonoBehaviour
     GameObject target;
     public List<GameObject> Effects;
     public float CastTime;
+    public float AOERange;
     public virtual void Cast(GameObject caster, GameObject target)
     {
 
@@ -26,6 +27,7 @@ public class Spell : MonoBehaviour
     {
         this.target = target;
     }
+
     public virtual GameObject GetCaster()
     {
         return caster;

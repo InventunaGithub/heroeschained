@@ -33,32 +33,34 @@ public class CardManager : MonoBehaviour
         {
             if (Physics.Raycast(ray, out hitData, 1000 , ~heroLayer))
             {
-                AOEIndicator.transform.position = hitData.point;
+                AOEIndicator.transform.position = hitData.point + (Vector3.up * 0.1f);
             }
 
         }
         if (Input.GetMouseButtonDown(0) && clickedOn)
         {
-            SM.CastWithPosition(usingCard.ID, hitData.point);
+            SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
             clickedOn = false;
             Debug.Log("Button Up");
             AOEIndicator.SetActive(false);
         }
     }
+    
     public void useCard(GameObject usedCard)
     {
         usingCard = usedCard.GetComponent<Card>();
-        Debug.Log("onClick Worked");
-        if(AOEIndicator == null)
+        Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+        if (AOEIndicator == null)
         {
-            AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, Quaternion.identity);
-            AOEIndicator.transform.localScale = Vector3.one * usingCard.SpellRange;
+            AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, spawnRotation);
+            
         }
         else if(!AOEIndicator.activeSelf)
         {
             AOEIndicator.SetActive(true);
             AOEIndicator.transform.position = usedCard.transform.position;
         }
+        AOEIndicator.transform.localScale = Vector3.one * 0.4f * SM.FindSpell(usingCard.SpellID).AOERange;
         clickedOn = true;
     }
 }

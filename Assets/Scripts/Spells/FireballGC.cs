@@ -1,21 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class FireballGC : Spell
 {
-    public float AOErange;
     public int Damage;
     public override void CastWithPosition(Vector3 positionToCast)
     {
-        Collider[] inAOE = Physics.OverlapSphere(positionToCast, AOErange);
+        GameObject projectile = Instantiate(Effects[1], positionToCast + (Vector3.up * 5) +Vector3.forward * -3, Quaternion.identity);
+        projectile.transform.localScale = Vector3.one *0.4f* AOERange;
+        projectile.transform.DOMove(positionToCast, 0.49f);
+        Destroy(projectile, 0.5f);
+        StartCoroutine(CastingLag(positionToCast));
+    }
+    IEnumerator CastingLag(Vector3 positionToCast)
+    {
+        yield return new WaitForSeconds(0.4f);
+        GameObject splash = Instantiate(Effects[0], positionToCast, Quaternion.identity);
+        splash.transform.localScale = Vector3.one * 0.4f *  AOERange;
+        Destroy(splash, 0.5f);
+        Collider[] inAOE = Physics.OverlapSphere(positionToCast, AOERange);
         foreach (Collider hero in inAOE)
         {
-            hero.GetComponent<Renderer>().material.color = Color.red;
             if (hero.transform.tag == "Team2")
             {
                 hero.GetComponent<Hero>().Hurt(Damage);
-                Debug.Log("Got Hurt");
             }
         }
     }

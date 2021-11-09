@@ -103,6 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainHero: {fileID: 0}
   TargetHero: 0
+  SkillEnergyCost: 15
   NormalAttackCooldown: 0
   Radius: 25
   angle: 180
