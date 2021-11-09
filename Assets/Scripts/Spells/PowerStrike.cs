@@ -29,7 +29,7 @@ public class PowerStrike :  Spell
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
         yield return new WaitForSeconds(CastTime);
-        casterAnimator = caster.transform.GetChild(0).GetComponent<Animator>();
+        casterAnimator = caster.transform.GetComponentInChildren<Animator>(); ;
         casterAnimator.CrossFade("Attack", 0.1f);
         targetHero.Hurt((int)(Math.Round(casterHero.Damage * 1.3f)));
         casterHero.Health += (int)(Math.Round(casterHero.Damage * 0.5f));
