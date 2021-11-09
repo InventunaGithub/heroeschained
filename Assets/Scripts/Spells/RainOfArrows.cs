@@ -7,6 +7,8 @@ using DG.Tweening;
 public class RainOfArrows : Spell
 {
     public float AOErange;
+    Animator casterAnimator;
+    Animator targetAnimator;
     public override void Cast(GameObject caster, GameObject target)
     {
         SetCaster(caster);
