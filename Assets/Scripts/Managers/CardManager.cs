@@ -54,9 +54,9 @@ public class CardManager : MonoBehaviour
     
     public void useCard(GameObject usedCard)
     {
+        usingCard = usedCard.GetComponent<Card>();
         if (guildEnergy >= SM.FindSpell(usingCard.SpellID).EnergyCost)
         {
-            usingCard = usedCard.GetComponent<Card>();
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             if (AOEIndicator == null)
             {
