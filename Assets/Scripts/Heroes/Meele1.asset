@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Melee1
-  BaseHealth: 4000
+  BaseHealth: 400
   BaseDamage: 60
   Strength: 0
   Dexterity: 0
