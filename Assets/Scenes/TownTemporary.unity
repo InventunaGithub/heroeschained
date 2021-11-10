@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19314155, g: 0.15595898, b: 0.18595156, a: 1}
+  m_IndirectSpecularColor: {r: 0.30598646, g: 0.1866053, b: 0.1808251, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2740,7 +2740,7 @@ MonoBehaviour:
   MaxHeight: 0.5
   SmallTerminalRatio: 0.33
   ToggleSpeed: 560
-  ToggleHotkey: '`'
+  ToggleHotkey: '"'
   ToggleFullHotkey: '#`'
   BufferSize: 128
   ConsoleFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
@@ -4303,7 +4303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5124030956565940982, guid: 73ed3b67345d2134d8cafdaa09f5aa44, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7856819012477898915, guid: 73ed3b67345d2134d8cafdaa09f5aa44, type: 3}
       propertyPath: m_AnchorMax.y
@@ -10993,7 +10993,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1184937858
 Light:
   m_ObjectHideFlags: 0
@@ -21275,7 +21275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2124347816
 MonoBehaviour:
   m_ObjectHideFlags: 0

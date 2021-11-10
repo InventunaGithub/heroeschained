@@ -25,3 +25,5 @@ MonoBehaviour:
   Consumable: 0
   AccountBound: 0
   SellValue: 0
+  BuyValue: 0
+  Icon: {fileID: 21300000, guid: cb38ed43e87ec3f4e9bcf5557c767bb0, type: 3}
