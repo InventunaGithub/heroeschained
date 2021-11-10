@@ -34,14 +34,17 @@ public class BloodDrain : Spell
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero ,GameObject caster , GameObject target)
     {
         yield return new WaitForSeconds(CastTime);
-        CasterAnimator.CrossFade("Attack", 0.1f);
-        targetHero.Hurt((int)(Math.Round(casterHero.Damage * 1.3f)));
-        casterHero.Health += (int)(Math.Round(casterHero.Damage * 0.5f));
-        casterHero.Normalise();
-        Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
-        GameObject tempEffect = Instantiate(Effects[0], caster.transform.position, spawnRotation);
-        Destroy(tempEffect, 3);
-        GameObject tempEffect2 = Instantiate(Effects[1], target.transform.position + Vector3.up, target.transform.rotation);
-        Destroy(tempEffect2, 3);
+        if(casterHero.Health > 0)
+        {
+            CasterAnimator.CrossFade("Attack", 0.1f);
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * 1.3f)));
+            casterHero.Health += (int)(Math.Round(casterHero.Damage * 0.5f));
+            casterHero.Normalise();
+            Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+            GameObject tempEffect = Instantiate(Effects[0], caster.transform.position, spawnRotation);
+            Destroy(tempEffect, 3);
+            GameObject tempEffect2 = Instantiate(Effects[1], target.transform.position + Vector3.up, target.transform.rotation);
+            Destroy(tempEffect2, 3);
+        }
     }
 }
