@@ -23,7 +23,7 @@ public class CardManager : MonoBehaviour
     public float GuildEnergyRefreshPerSecond;
     public Slider GuildEnergyBar;
     public GameObject CardArea;
-    public float maxGuildEnergy;
+    public float MaxGuildEnergy;
 
     //TODO : Placing cards and drawing them from the deck. Also deck mechanic.
     //DOING : Firing up a skill when its clicked.
@@ -32,7 +32,7 @@ public class CardManager : MonoBehaviour
         mainCam = Camera.main;
         heroLayer = LayerMask.GetMask("HeroLayer");
         SM = GetComponent<SpellManager>();
-        GuildEnergyBar.maxValue = maxGuildEnergy;
+        GuildEnergyBar.maxValue = MaxGuildEnergy;
         StartCoroutine(RestoreEnergy());
         for (int i = 0; i < 4; i++)
         {
@@ -107,9 +107,9 @@ public class CardManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.01f);
             guildEnergy += GuildEnergyRefreshPerSecond / 100;
-            if(guildEnergy > maxGuildEnergy)
+            if(guildEnergy > MaxGuildEnergy)
             {
-                guildEnergy = maxGuildEnergy;
+                guildEnergy = MaxGuildEnergy;
             }
         }
 
