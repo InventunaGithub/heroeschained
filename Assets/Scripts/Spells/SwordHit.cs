@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Mert Karavural
+//Date: 5.11.2021
 public class SwordHit : Spell
 {
     Animator casterAnimator; 

@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using DG.Tweening;
 
+//Author: Mert Karavural
+//Date: 5.11.2021
 public class RainOfArrows : Spell
 {
     public override void Cast(GameObject caster, GameObject target)

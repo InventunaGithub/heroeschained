@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Author: Mert Karavural
+//Date: 8.11.2021
 public class CardManager : MonoBehaviour
 {
     public List<GameObject> Hand;

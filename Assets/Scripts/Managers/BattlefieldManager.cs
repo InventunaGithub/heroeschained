@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Mert Karavural
+//Date: 3.11.2021
 public class BattlefieldManager : MonoBehaviour
 {
     public List<Hero> Team1;

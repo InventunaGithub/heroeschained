@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+//Author: Mert Karavural
+//Date: 9.11.2021
 public class FireballGC : Spell
 {
     public int Damage;

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using DG.Tweening;
+
+//Author: Mert Karavural
+//Date: 4.11.2021
+
 public class BloodDrain : Spell
 {
     Animator casterAnimator;
