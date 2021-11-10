@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //Author: Mert Karavural
-//Date: 8.11.2021
+//Date: 11.2021
 public class CardManager : MonoBehaviour
 {
     public List<int> Hand;
@@ -62,16 +62,13 @@ public class CardManager : MonoBehaviour
             SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
             guildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
             clickedOn = false;
-            Debug.Log("Activated Card");
             AOEIndicator.SetActive(false);
-            //UI Change Here ! used skill
             StartCoroutine(PullCardFromDeck());
         }
         if (Input.GetMouseButtonDown(1) && clickedOn)
         {
             clickedOn = false;
             AOEIndicator.SetActive(false);
-            Debug.Log("Deactivated Card");
         }
     }
     
@@ -139,24 +136,20 @@ public class CardManager : MonoBehaviour
         RealignCards();
         Deck.RemoveAt(Deck.Count - 1);
         Deck.Add(usingCard.ID);
-        Deck = Fisher_Yates_CardDeck_Shuffle(Deck);
+        Deck = FisherYatesCardDeckShuffle(Deck);
     }
-    public static List<int> Fisher_Yates_CardDeck_Shuffle(List<int> aList)
+    public static List<int> FisherYatesCardDeckShuffle(List<int> aList)
     {
-
-        System.Random _random = new System.Random();
-
         int myInt;
-
         int n = aList.Count;
         for (int i = 0; i < n; i++)
         {
-            int r = i + (int)(_random.NextDouble() * (n - i));
+            int r = i + (int)(Random.Range(0,100000) * (n - i));
+            r = r % n;
             myInt = aList[r];
             aList[r] = aList[i];
             aList[i] = myInt;
         }
-
         return aList;
     }
     public void RealignCards()

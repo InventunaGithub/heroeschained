@@ -8,7 +8,7 @@ using DG.Tweening;
 //Date: 4.11.2021
 public class PowerStrike :  Spell
 {
-   
+    public float PrimaryDamageMultiplier;
     public override void Cast(GameObject caster, GameObject target)
     {
         SetCaster(caster);
@@ -35,9 +35,8 @@ public class PowerStrike :  Spell
         if (casterHero.Health > 0)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * 1.3f)));
-            casterHero.Health += (int)(Math.Round(casterHero.Damage * 0.5f));
-            casterHero.Normalise();
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * PrimaryDamageMultiplier)));
+            targetHero.Normalise();
             GameObject tempEffect = Instantiate(Effects[0], target.transform.position + Vector3.up, target.transform.rotation);
             Destroy(tempEffect, 1);
         }

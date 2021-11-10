@@ -7,7 +7,9 @@ using DG.Tweening;
 //Author: Mert Karavural
 //Date: 5.11.2021
 public class RainOfArrows : Spell
-{
+{   
+    public float PrimaryDamageMultiplier ; 
+    public float SecondaryDamageMultiplier; 
     public override void Cast(GameObject caster, GameObject target)
     {
         SetCaster(caster);
@@ -41,14 +43,13 @@ public class RainOfArrows : Spell
                 {
                     if (hero != targetHero)
                     {
-                        hero.GetComponent<Hero>().Hurt((int)(casterHero.Damage * 0.6f));
+                        hero.GetComponent<Hero>().Hurt((int)(casterHero.Damage * SecondaryDamageMultiplier));
                     }
 
                 }
             }
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * 1.3f)));
-            casterHero.Health += (int)(Math.Round(casterHero.Damage * 0.5f));
-            casterHero.Normalise();
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * PrimaryDamageMultiplier)));
+            targetHero.Normalise();
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             GameObject AOERing = Instantiate(Effects[3], target.transform.position, spawnRotation);
             AOERing.transform.DOScale(AOERange, 0.1f);
