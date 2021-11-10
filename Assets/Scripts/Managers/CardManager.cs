@@ -50,8 +50,8 @@ public class CardManager : MonoBehaviour
             AOEIndicator.SetActive(false);
         }
     }
-    
-    public void useCard(GameObject usedCard)
+
+    public void UseCard(GameObject usedCard)
     {
         usingCard = usedCard.GetComponent<Card>();
         if (guildEnergy >= SM.FindSpell(usingCard.SpellID).EnergyCost)

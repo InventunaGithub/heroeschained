@@ -37,8 +37,4 @@ public class SparkAttack : Spell
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
     }
-    bool AnimatorIsPlaying(string stateName)
-    {
-        return casterAnimator.GetCurrentAnimatorStateInfo(0).length > casterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && casterAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
-    }
 }
