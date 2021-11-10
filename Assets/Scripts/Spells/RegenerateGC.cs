@@ -7,7 +7,7 @@ using DG.Tweening;
 //Date: 11.2021
 public class RegenerateGC : Spell
 {
-    public int HealAmount;
+    public float HealAmountMultiplier;
     public override void CastWithPosition(Vector3 positionToCast)
     {
         Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
@@ -21,17 +21,22 @@ public class RegenerateGC : Spell
         yield return new WaitForSeconds(0.4f);
         
         Collider[] inAOE = Physics.OverlapSphere(positionToCast, AOERange);
-        foreach (Collider hero in inAOE)
+        for (int i = 0; i < 5; i++)
         {
-            if (hero.transform.tag == "Team1")
+            yield return new WaitForSeconds(1);
+            foreach (Collider hero in inAOE)
             {
-                Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
-                GameObject splash = Instantiate(Effects[0], hero.transform.position , spawnRotation);
-                splash.transform.localScale = Vector3.one * 0.4f * AOERange;
-                Destroy(splash, 0.5f);
-                hero.GetComponent<Hero>().Health += HealAmount;
-                hero.GetComponent<Hero>().Normalise();
+                if (hero.transform.tag == "Team1")
+                {
+                    Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+                    GameObject splash = Instantiate(Effects[0], hero.transform.position, spawnRotation);
+                    splash.transform.localScale = Vector3.one * 0.4f * AOERange;
+                    Destroy(splash, 0.5f);
+                    hero.GetComponent<Hero>().Health += (int)(hero.GetComponent<Hero>().Health * HealAmountMultiplier);
+                    hero.GetComponent<Hero>().Normalise();
+                }
             }
         }
+        
     }
 }

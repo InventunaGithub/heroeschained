@@ -53,4 +53,4 @@ MonoBehaviour:
   EnergyCost: 20
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
-  HealAmount: 50
+  HealAmountMultiplier: 0.15
