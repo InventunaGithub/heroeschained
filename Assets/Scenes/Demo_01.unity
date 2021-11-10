@@ -48309,7 +48309,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1027577764}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1618661345}
@@ -50104,7 +50104,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1027577764}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1678053694}
@@ -53533,7 +53533,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1027577764}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1803417325}
@@ -55596,7 +55596,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1027577764}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1862480432}

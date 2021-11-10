@@ -7091,7 +7091,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 891635085}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 236137327}
@@ -23377,7 +23377,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 891635085}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 873443979}
@@ -23678,6 +23678,7 @@ MonoBehaviour:
   ClickedOnHero: 0
   PlacingOnFullGrid: 0
   GameStarted: 0
+  scaleFloat: 1.2
 --- !u!114 &891635084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32561,7 +32562,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 891635085}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1186083380}
@@ -35644,7 +35645,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 891635085}
         m_TargetAssemblyTypeName: CardManager, Assembly-CSharp
-        m_MethodName: useCard
+        m_MethodName: UseCard
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1308636378}
