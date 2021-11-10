@@ -11,6 +11,8 @@ public class Spell : MonoBehaviour
     public float CastTime;
     public float AOERange;
     public int EnergyCost;
+    [HideInInspector] public Animator CasterAnimator;
+    [HideInInspector] public Animator TargetAnimator;
     public virtual void Cast(GameObject caster, GameObject target)
     {
 
