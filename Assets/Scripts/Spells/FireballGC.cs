@@ -12,7 +12,7 @@ public class FireballGC : Spell
     {
         GameObject projectile = Instantiate(Effects[1], positionToCast + (Vector3.up * 5) +Vector3.forward * -3, Quaternion.identity);
         projectile.transform.localScale = Vector3.one *0.4f* AOERange;
-        projectile.transform.DOMove(positionToCast, 0.49f);
+        projectile.transform.DOMove(positionToCast, 0.4f);
         Destroy(projectile, 0.5f);
         StartCoroutine(CastingLag(positionToCast));
     }
