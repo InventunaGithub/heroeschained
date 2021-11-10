@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Mert Karavural
+//Date: 3.11.2021
 public class BattlefieldManager : MonoBehaviour
 {
     public List<Hero> Team1;
@@ -31,6 +33,8 @@ public class BattlefieldManager : MonoBehaviour
         heroLayer = LayerMask.GetMask("HeroLayer");
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), true);
         int index = 0;
+
+        //TODO : Make here similiar like Spell system. You can store all the SO's in 1 list and itearate through that list with given team 1 and team2 ID's
         foreach (var Hero in Team1SO)
         {
             GameObject heroGO = Instantiate(HeroPrefab, gridArea1.transform.GetChild(index).transform.position , gridArea1.transform.GetChild(index).transform.rotation);

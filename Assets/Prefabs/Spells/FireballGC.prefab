@@ -47,6 +47,10 @@ MonoBehaviour:
   ID: 6
   Effects:
   - {fileID: 180702, guid: a7c694f0877ea874fa57e033221095c3, type: 3}
+  - {fileID: 147436, guid: 3b671081e44be1c4aa4355e8ba6e8a5e, type: 3}
   CastTime: 0
-  AOERange: 1
-  Damage: 20
+  AOERange: 2.4
+  EnergyCost: 20
+  CasterAnimator: {fileID: 0}
+  TargetAnimator: {fileID: 0}
+  Damage: 57

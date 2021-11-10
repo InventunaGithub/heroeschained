@@ -44,5 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ea856ccf0ecb443aff70308e71166e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Effects: []
-  ID: 0
+  ID: 4
+  Effects:
+  - {fileID: 107336, guid: 3547e5e490f502041ae6e8a59042e4bd, type: 3}
+  - {fileID: 162722, guid: 1fc71432c1bd537489e1be6246b56973, type: 3}
+  CastTime: 1
+  AOERange: 0
+  EnergyCost: 15
+  CasterAnimator: {fileID: 0}
+  TargetAnimator: {fileID: 0}
+  PrimaryDamageMultiplier: 1.3
