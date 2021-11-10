@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1941975299658355594}
   - component: {fileID: 1941975299658355597}
   - component: {fileID: 1941975299658355598}
-  - component: {fileID: 1941975299658355599}
   - component: {fileID: 1941975299658355592}
   - component: {fileID: 1941975299658355593}
   - component: {fileID: 4912175429042658950}
@@ -69,26 +68,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!95 &1941975299658355599
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941975299658355595}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1941975299658355592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +82,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainHero: {fileID: 0}
   TargetHero: 0
-  SkillEnergyCost: 20
+  SkillEnergyCost: 15
   NormalAttackCooldown: 0
   Radius: 25
   angle: 180

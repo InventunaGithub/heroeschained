@@ -24,7 +24,7 @@ MonoBehaviour:
   Damage: 0
   Health: 0
   Range: 20
-  MaxEnergy: 0
+  MaxEnergy: 50
   Skills: 0100000005000000
   AIType: 0
   HeroType: 1

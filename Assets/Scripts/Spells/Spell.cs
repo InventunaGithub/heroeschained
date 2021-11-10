@@ -9,7 +9,16 @@ public class Spell : MonoBehaviour
     GameObject target;
     public List<GameObject> Effects;
     public float CastTime;
-    public virtual void Cast(GameObject caster , GameObject target)
+    public float AOERange;
+    public int EnergyCost;
+    [HideInInspector] public Animator CasterAnimator;
+    [HideInInspector] public Animator TargetAnimator;
+    public virtual void Cast(GameObject caster, GameObject target)
+    {
+
+    }
+
+    public virtual void CastWithPosition(Vector3 position)
     {
 
     }
@@ -21,6 +30,7 @@ public class Spell : MonoBehaviour
     {
         this.target = target;
     }
+
     public virtual GameObject GetCaster()
     {
         return caster;

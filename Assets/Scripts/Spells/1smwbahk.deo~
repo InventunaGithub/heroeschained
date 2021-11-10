@@ -1,0 +1,23 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FireballGC : Spell
+{
+    public float AOErange;
+    public override void Cast(GameObject caster = null, GameObject target = null, Vector3 positionToCast = default)
+    {
+        Collider[] inAOE = Physics.OverlapSphere(positionToCast, AOErange);
+        foreach (Collider hero in inAOE)
+        {
+            if (hero.transform.tag == targetHero.HeroObject.transform.tag)
+            {
+                if (hero != targetHero)
+                {
+                    hero.GetComponent<Hero>().Hurt((int)(casterHero.Damage * 0.6f));
+                }
+
+            }
+        }
+    }
+}
