@@ -12,14 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b0b7e5528004e2fa1f2bbec4855d53, type: 3}
   m_Name: Market
   m_EditorClassIdentifier: 
-  items:
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
-  - {fileID: 11400000, guid: a6fbbbcb94e3f4cbd9c9613adc5c7486, type: 2}
+  InventoryItems: []
+  MarketItems: []

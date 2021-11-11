@@ -12,13 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b0b7e5528004e2fa1f2bbec4855d53, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  items:
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
-  - {fileID: 11400000, guid: 6d607aa96ec7d4e7b9a4638f533295cb, type: 2}
+  PlayerItems:
+  - {fileID: 0}
+  MarketItems: []
