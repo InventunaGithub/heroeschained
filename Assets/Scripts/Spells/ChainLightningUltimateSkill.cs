@@ -46,55 +46,51 @@ public class ChainLightningUltimateSkill : Spell
             CasterAnimator.CrossFade("Attack", 0.1f);
             GameObject projectile = Instantiate(Effects[1], caster.transform.position + Vector3.up, Quaternion.identity);
             List<Hero> tempList = new List<Hero>(tempHeroController.EnemyTeam);
-            float travelTime = 0; 
+            float travelTime = 0.1f; 
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                travelTime = Vector3.Distance(caster.transform.position, targetGO.transform.position) * 0.05f;
                 projectile.transform.DOMove(targetGO.transform.position ,  travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 TemptargetGO = targetGO;
-                GameObject splash = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
-                Destroy(splash, 0.5f);
+                GameObject splash1 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
+                Destroy(splash1, 0.5f);
             }
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                travelTime = Vector3.Distance(TemptargetGO.transform.position, targetGO.transform.position) * 0.05f;
                 projectile.transform.DOMove(targetGO.transform.position, travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * SecondaryDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 TemptargetGO = targetGO;
-                GameObject splash = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
-                Destroy(splash, 0.5f);
+                GameObject splash2 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
+                Destroy(splash2, 0.5f);
             }
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                travelTime = Vector3.Distance(TemptargetGO.transform.position, targetGO.transform.position) * 0.05f;
                 projectile.transform.DOMove(targetGO.transform.position, travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * ThirdDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 TemptargetGO = targetGO;
-                GameObject splash = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
-                Destroy(splash, 0.5f);
+                GameObject splash3 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
+                Destroy(splash3, 0.5f);
             }
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                travelTime = Vector3.Distance(TemptargetGO.transform.position, targetGO.transform.position) * 0.05f;
                 projectile.transform.DOMove(targetGO.transform.position, travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * FourthDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 TemptargetGO = targetGO;
                 Destroy(projectile , 0.3f);
-                GameObject splash = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
-                Destroy(splash, 0.5f);
+                GameObject splash4 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
+                Destroy(splash4, 0.5f);
             }
         }
         tempHeroController.setIsAttacking(false);
