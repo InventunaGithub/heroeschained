@@ -34,6 +34,7 @@ public class HeroController : MonoBehaviour
     private bool isRunning = false;
     private bool victory = false;
     public bool SeeingTarget = false;
+    public bool UltimateSkillPulled = false;
     private bool interwal = false;
     private bool agentEnabled = false;
     public float Distance = 0;
@@ -45,14 +46,17 @@ public class HeroController : MonoBehaviour
     private Slider EnergyBar;
     private BattlefieldManager BM;
     private SpellManager SM;
+    private CardManager CM;
     private Rigidbody RB;
     private CapsuleCollider CC;
     private Camera mainCam;
+    private GameObject UltimateSkillCardGO;
 
     void Start()
     {
         BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
         SM = GameObject.Find("Managers").GetComponent<SpellManager>();
+        CM = GameObject.Find("Managers").GetComponent<CardManager>();
         RB = GetComponent<Rigidbody>();
         CC = GetComponent<CapsuleCollider>();
         MainHero = GetComponent<Hero>();
@@ -89,7 +93,6 @@ public class HeroController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (BM.GameStarted)
@@ -104,6 +107,7 @@ public class HeroController : MonoBehaviour
 
             if (MainHero.Health <= 0 && enemyTeam.Count != 0  && !isDead) //Death state
             {
+                Destroy(UltimateSkillCardGO);
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
                 HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
@@ -146,6 +150,15 @@ public class HeroController : MonoBehaviour
                 HealthBar.value = MainHero.Health;
                 HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + - (Vector3.up * 0.1f));
                 EnergyBar.value = MainHero.Energy;
+                if(MainHero.UltimateEnergy == MainHero.MaxUltimateEnergy && MainHero.MaxUltimateEnergy != 0)
+                {
+                    if(!UltimateSkillPulled)
+                    {
+                        UltimateSkillCardGO = CM.PullUltimateSkillCard(MainHero.HeroObject);
+                        UltimateSkillPulled = true;
+                    }
+                }
+
                 if (isRunning)
                 {
                     RB.constraints = RigidbodyConstraints.None;
@@ -229,6 +242,20 @@ public class HeroController : MonoBehaviour
         }
     }
 
+    public void CastUltimateSkill(GameObject usingCard)
+    {
+        if (CM.GuildEnergy >= SM.FindSpell(usingCard.GetComponent<Card>().SpellID).EnergyCost)
+        {
+            StartCoroutine(CM.DestroyCardRitual(usingCard));
+            MainHero.UltimateEnergy = 0;
+            UltimateSkillPulled = false;
+            SM.Cast(MainHero.UltimateSkill, MainHero.HeroObject, enemyTeam[TargetHero].HeroObject);
+        }
+        else
+        {
+            Debug.Log("Not Enough GuildEnergy");
+        }
+    }
     public GameObject ClosestEnemy()
     {
         float closestTargetDistance = float.MaxValue;

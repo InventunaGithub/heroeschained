@@ -21,7 +21,10 @@ public class HeroSO : ScriptableObject
     public int Health;
     public int Range;
     public int MaxEnergy;
+    public int MaxUltimateEnergy;
     public List<int> Skills;
+    public int UltimateSkill;
+    public int UltimateSkillCardID;
     public AITypes AIType;
     public HeroTypes HeroType;
     public GameObject HeroSkin;

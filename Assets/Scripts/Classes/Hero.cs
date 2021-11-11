@@ -16,6 +16,8 @@ public class Hero : MonoBehaviour
     private Equipment equipment;
     private Inventory inventory;
     public List<int> Skills;
+    public int UltimateSkill;
+    public int UltimateSkillCardID;
     public HeroSO RootSO;
     public int HeroID;
     public string Name;
@@ -32,7 +34,9 @@ public class Hero : MonoBehaviour
     public int MaxHealth;
     public int Range;
     public int MaxEnergy;
+    public int MaxUltimateEnergy;
     public int Energy;
+    public int UltimateEnergy;
     public AITypes AIType;
     public HeroTypes HeroType;
     public GameObject HeroSkin;
@@ -57,6 +61,10 @@ public class Hero : MonoBehaviour
         HeroType = rootSO.HeroType;
         Skills = rootSO.Skills;
         MaxEnergy = rootSO.MaxEnergy;
+        MaxUltimateEnergy = rootSO.MaxUltimateEnergy;
+        UltimateSkill = rootSO.UltimateSkill;
+        UltimateSkillCardID = rootSO.UltimateSkillCardID;
+        UltimateEnergy = 0;
         Energy = 0;
         inventory = GetComponent<Inventory>();
         equipment = GetComponent<Equipment>();
@@ -87,6 +95,16 @@ public class Hero : MonoBehaviour
         if(Energy < 0 )
         {
             Energy = 0;
+        }
+
+        UltimateEnergy += amount;
+        if (UltimateEnergy >= MaxUltimateEnergy)
+        {
+            UltimateEnergy = MaxUltimateEnergy;
+        }
+        if (UltimateEnergy < 0)
+        {
+            UltimateEnergy = 0;
         }
     }
     public void Normalise()

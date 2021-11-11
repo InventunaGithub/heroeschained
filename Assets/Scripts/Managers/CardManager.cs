@@ -19,56 +19,60 @@ public class CardManager : MonoBehaviour
     private Card usingCard;
     private GameObject usingCardGO;
     private SpellManager SM;
-    private float guildEnergy;
+    private BattlefieldManager BM;
+    [HideInInspector] public float GuildEnergy;
     public float GuildEnergyRefreshPerSecond;
     public Slider GuildEnergyBar;
-    public GameObject CardArea;
+    [HideInInspector] public GameObject CardArea;
     public float MaxGuildEnergy;
-
-    //TODO : Placing cards and drawing them from the deck. Also deck mechanic.
-    //DOING : Firing up a skill when its clicked.
     void Start()
     {
         mainCam = Camera.main;
         heroLayer = LayerMask.GetMask("HeroLayer");
+        CardArea = GameObject.Find("CardArea");
         SM = GetComponent<SpellManager>();
+        BM = GetComponent<BattlefieldManager>();
         GuildEnergyBar.maxValue = MaxGuildEnergy;
         StartCoroutine(RestoreEnergy());
         for (int i = 0; i < 4; i++)
         {
             Hand.Add(Deck[Deck.Count - 1]);
             GameObject tempCardGO = Instantiate(FindCard(Deck[Deck.Count - 1]), Vector3.zero, Quaternion.identity);
-            tempCardGO.transform.SetParent(GameObject.Find("CardArea").transform);
+            tempCardGO.transform.SetParent(CardArea.transform);
             Deck.RemoveAt(Deck.Count - 1);
         }
         RealignCards();
     }
     void Update()
     {
-        ray = mainCam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitData;
-        Physics.Raycast(ray, out hitData, 1000, ~heroLayer);
-        GuildEnergyBar.value = guildEnergy;
-        if (clickedOn)
+        RealignCards();
+        if (BM.GameStarted)
         {
-            if (Physics.Raycast(ray, out hitData, 1000 , ~heroLayer))
+            ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitData;
+            Physics.Raycast(ray, out hitData, 1000, ~heroLayer);
+            GuildEnergyBar.value = GuildEnergy;
+            if (clickedOn)
             {
-                AOEIndicator.transform.position = hitData.point + (Vector3.up * 0.1f);
-            }
+                if (Physics.Raycast(ray, out hitData, 1000 , ~heroLayer))
+                {
+                    AOEIndicator.transform.position = hitData.point + (Vector3.up * 0.1f);
+                }
 
-        }
-        if (Input.GetMouseButtonUp(0) && clickedOn)
-        {
-            SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
-            guildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
-            clickedOn = false;
-            AOEIndicator.SetActive(false);
-            StartCoroutine(PullCardFromDeck());
-        }
-        if (Input.GetMouseButtonDown(1) && clickedOn)
-        {
-            clickedOn = false;
-            AOEIndicator.SetActive(false);
+            }
+            if (Input.GetMouseButtonUp(0) && clickedOn)
+            {
+                SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
+                GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
+                clickedOn = false;
+                AOEIndicator.SetActive(false);
+                StartCoroutine(PullCardFromDeck());
+            }
+            if (Input.GetMouseButtonDown(1) && clickedOn)
+            {
+                clickedOn = false;
+                AOEIndicator.SetActive(false);
+            }
         }
     }
     
@@ -76,7 +80,7 @@ public class CardManager : MonoBehaviour
     {
         usingCardGO = usedCard;
         usingCard = usedCard.GetComponent<Card>();
-        if (guildEnergy >= SM.FindSpell(usingCard.SpellID).EnergyCost)
+        if (GuildEnergy >= SM.FindSpell(usingCard.SpellID).EnergyCost)
         {
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             if (AOEIndicator == null)
@@ -103,10 +107,10 @@ public class CardManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.01f);
-            guildEnergy += GuildEnergyRefreshPerSecond / 100;
-            if(guildEnergy > MaxGuildEnergy)
+            GuildEnergy += GuildEnergyRefreshPerSecond / 100;
+            if(GuildEnergy > MaxGuildEnergy)
             {
-                guildEnergy = MaxGuildEnergy;
+                GuildEnergy = MaxGuildEnergy;
             }
         }
 
@@ -132,10 +136,10 @@ public class CardManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         Hand.Add(Deck[Deck.Count-1]);
         GameObject tempCardGO = Instantiate(FindCard(Deck[Deck.Count - 1]) , Vector3.zero , Quaternion.identity);
-        tempCardGO.transform.SetParent(GameObject.Find("CardArea").transform);
-        RealignCards();
+        tempCardGO.transform.SetParent(CardArea.transform);
         Deck.RemoveAt(Deck.Count - 1);
         Deck.Add(usingCard.ID);
+        RealignCards();
         Deck = FisherYatesCardDeckShuffle(Deck);
     }
     public static List<int> FisherYatesCardDeckShuffle(List<int> aList)
@@ -161,4 +165,21 @@ public class CardManager : MonoBehaviour
             pos += 1;
         }
     }
+
+    public GameObject PullUltimateSkillCard(GameObject hero)
+    {
+        GameObject tempCardGO = Instantiate(FindCard(hero.GetComponent<Hero>().UltimateSkillCardID), Vector3.zero, Quaternion.identity);
+        tempCardGO.transform.SetParent(CardArea.transform);
+        tempCardGO.GetComponent<Button>().onClick.AddListener(delegate { hero.GetComponent<HeroController>().CastUltimateSkill(tempCardGO); });
+        RealignCards();
+        return tempCardGO;
+    }
+
+    public IEnumerator DestroyCardRitual(GameObject cardToBeDestroyed)
+    {
+        Destroy(cardToBeDestroyed);
+        yield return new WaitForSeconds(0.1f);
+        RealignCards();
+    }
+
 }
