@@ -28,7 +28,7 @@ MonoBehaviour:
   MaxUltimateEnergy: 10
   Skills: 0000000004000000
   UltimateSkill: 3
-  UltimateSkillCardID: 2
+  UltimateSkillCardID: 3
   AIType: 0
   HeroType: 2
   HeroSkin: {fileID: 1176535038949150, guid: 851d10f0ef05ed0428bb7e672ca6e4db, type: 3}

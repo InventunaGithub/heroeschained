@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 302941829808218880}
   - component: {fileID: -1716758534816787587}
   m_Layer: 5
-  m_Name: Regenerate
+  m_Name: EarthShattererUltimateCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.21568628, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.972549, g: 0.5254902, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -91,11 +91,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cb7ed1bee50c5b42bb9904cca6da939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
+  ID: 3
   Energy: 20
-  SpellID: 7
-  Name: Regenerate
-  Description: Heals friendly heroes in area
+  SpellID: 9
+  Name: EarthShatterer
+  Description: 'With all his might they slam their weapon on the ground making it
+    crumble, does 150% damage to all enemies in a cone and reducing their attack
+    speed by 20%    '
 --- !u!114 &302941829808218880
 MonoBehaviour:
   m_ObjectHideFlags: 0

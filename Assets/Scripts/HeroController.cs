@@ -16,9 +16,9 @@ public class HeroController : MonoBehaviour
     public Hero MainHero;
     public int TargetHero;
     public int SkillEnergyCost;
-    private List<Hero> enemyTeam;
+    public List<Hero> EnemyTeam;
     private List<Hero> team;
-    private NavMeshAgent agent;
+    public NavMeshAgent Agent;
     public float NormalAttackCooldown;
     private bool onCooldown = false;
     public float Radius = 25.0f; //This is sight Radius
@@ -60,18 +60,18 @@ public class HeroController : MonoBehaviour
         RB = GetComponent<Rigidbody>();
         CC = GetComponent<CapsuleCollider>();
         MainHero = GetComponent<Hero>();
-        agent = gameObject.GetComponent<NavMeshAgent>();
+        Agent = gameObject.GetComponent<NavMeshAgent>();
         heroAnimator = transform.GetChild(0).GetComponent<Animator>();
         MainHero.HeroObject = this.gameObject;
         if(gameObject.tag == "Team1")
         {
             team = BM.Team1;
-            enemyTeam = BM.Team2;
+            EnemyTeam = BM.Team2;
         }
         else if(gameObject.tag == "Team2")
         {
             team = BM.Team2;
-            enemyTeam = BM.Team1;
+            EnemyTeam = BM.Team1;
         }
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
         HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
@@ -87,7 +87,7 @@ public class HeroController : MonoBehaviour
         HealthBar.maxValue = MainHero.MaxHealth;
         EnergyBar = HeroEnergyBar.GetComponent<Slider>();
         EnergyBar.maxValue = MainHero.MaxEnergy;
-        agent.enabled = false;
+        Agent.enabled = false;
         RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         mainCam = Camera.main;
 
@@ -100,12 +100,12 @@ public class HeroController : MonoBehaviour
             if (!agentEnabled)
             {
                 agentEnabled = true;
-                agent.enabled = true;
+                Agent.enabled = true;
                 Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), false);
             }
 
 
-            if (MainHero.Health <= 0 && enemyTeam.Count != 0  && !isDead) //Death state
+            if (MainHero.Health <= 0 && EnemyTeam.Count != 0  && !isDead) //Death state
             {
                 Destroy(UltimateSkillCardGO);
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
@@ -115,16 +115,16 @@ public class HeroController : MonoBehaviour
                 isDead = true;
                 DyingAnimation();
                 team.Remove(MainHero);
-                if (agent.enabled)
+                if (Agent.enabled)
                 {
-                    agent.isStopped = true;
+                    Agent.isStopped = true;
                 }
                 RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
                 RB.useGravity = false;
-                agent.enabled = false;
+                Agent.enabled = false;
                 CC.enabled = false;
             }
-            else if (enemyTeam.Count == 0 && !victory && !isDead) //Victory state
+            else if (EnemyTeam.Count == 0 && !victory && !isDead) //Victory state
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
@@ -136,12 +136,12 @@ public class HeroController : MonoBehaviour
                 }
                 victory = true;
                 VictoryAnimation();
-                if (agent.enabled)
+                if (Agent.enabled)
                 {
-                    agent.isStopped = true;
+                    Agent.isStopped = true;
                 }
                 RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                agent.enabled = false;
+                Agent.enabled = false;
                 CC.enabled = false;
             }
             else if(!victory && !isDead)
@@ -177,13 +177,13 @@ public class HeroController : MonoBehaviour
                 {
                     if (TargetHeroGO == null)
                     {
-                        TargetHeroGO = ClosestEnemy();
+                        TargetHeroGO = ClosestEnemy(EnemyTeam);
                     }
                     else
                     {
                         if (TargetHeroGO.GetComponent<HeroController>().MainHero.Health <= 0)
                         {
-                            TargetHeroGO = ClosestEnemy();
+                            TargetHeroGO = ClosestEnemy(EnemyTeam);
                         }
                     }
                 }
@@ -191,7 +191,7 @@ public class HeroController : MonoBehaviour
                 if (TargetHeroGO != null)
                 {
                     SeeingTarget = CanSeeTarget(TargetHeroGO);
-                    if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, agent.areaMask, path))
+                    if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, Agent.areaMask, path))
                     {
                         float distance = Vector3.Distance(transform.position, path.corners[0]);
                         for (int j = 1; j < path.corners.Length; j++)
@@ -199,13 +199,13 @@ public class HeroController : MonoBehaviour
                             distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
                         }
                         Distance = distance;
-                        if ((distance > MainHero.Range && distance > agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
+                        if ((distance > MainHero.Range && distance > Agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
                         {
-                            agent.isStopped = false;
-                            agent.SetPath(path);
-                            if(agent.velocity != Vector3.zero)
+                            Agent.isStopped = false;
+                            Agent.SetPath(path);
+                            if(Agent.velocity != Vector3.zero)
                             {
-                                transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                                transform.rotation = Quaternion.LookRotation(Agent.velocity, Vector3.up);
                             }
                             if (!isRunning)
                             {
@@ -217,21 +217,21 @@ public class HeroController : MonoBehaviour
                         {
                             transform.DOLookAt(TargetHeroGO.transform.position , 0.1f);
                             isRunning = false;
-                            agent.isStopped = true;
-                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < SkillEnergyCost)
+                            Agent.isStopped = true;
+                            if (!onCooldown && EnemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < SkillEnergyCost)
                             {
-                                if (TargetHero < enemyTeam.Count)
+                                if (TargetHero < EnemyTeam.Count)
                                 {
                                     StartCoroutine(CooldownTimer(NormalAttackCooldown));
-                                    SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , enemyTeam[TargetHero].HeroObject);
+                                    SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , EnemyTeam[TargetHero].HeroObject);
                                 }
                             }
-                            else if(!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= SkillEnergyCost)
+                            else if(!onCooldown && EnemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= SkillEnergyCost)
                             {
-                                if (TargetHero < enemyTeam.Count)
+                                if (TargetHero < EnemyTeam.Count)
                                 {
                                     StartCoroutine(CooldownTimer(NormalAttackCooldown));
-                                    SM.Cast(MainHero.Skills[1], MainHero.HeroObject, enemyTeam[TargetHero].HeroObject);
+                                    SM.Cast(MainHero.Skills[1], MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
                                     MainHero.Energy -= 10;
                                 }
                             }
@@ -249,14 +249,14 @@ public class HeroController : MonoBehaviour
             StartCoroutine(CM.DestroyCardRitual(usingCard));
             MainHero.UltimateEnergy = 0;
             UltimateSkillPulled = false;
-            SM.Cast(MainHero.UltimateSkill, MainHero.HeroObject, enemyTeam[TargetHero].HeroObject);
+            SM.Cast(MainHero.UltimateSkill, MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
         }
         else
         {
             Debug.Log("Not Enough GuildEnergy");
         }
     }
-    public GameObject ClosestEnemy()
+    public GameObject ClosestEnemy(List<Hero> enemyTeam)
     {
         float closestTargetDistance = float.MaxValue;
         NavMeshPath path = null;
@@ -271,7 +271,7 @@ public class HeroController : MonoBehaviour
             }
             path = new NavMeshPath();
 
-            if (NavMesh.CalculatePath(transform.position, enemyTeam[i].HeroObject.transform.position, agent.areaMask, path))
+            if (NavMesh.CalculatePath(transform.position, enemyTeam[i].HeroObject.transform.position, Agent.areaMask, path))
             {
                 float distance = Vector3.Distance(transform.position, path.corners[0]);
 
@@ -319,7 +319,7 @@ public class HeroController : MonoBehaviour
     IEnumerator SelectClosestEnemy()
     {
         interwal = true;
-        TargetHeroGO = ClosestEnemy();
+        TargetHeroGO = ClosestEnemy(EnemyTeam);
         yield return new WaitForSeconds(1);
         interwal = false;
     }
