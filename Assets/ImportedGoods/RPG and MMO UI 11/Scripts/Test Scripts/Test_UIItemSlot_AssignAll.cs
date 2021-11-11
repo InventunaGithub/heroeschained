@@ -30,8 +30,11 @@ namespace DuloGames.UI
 
                 if (playerSlots.Length > 0 && playerItemInfo.Count > 0)
                 {
-                    foreach (UIItemSlot slot in playerSlots)
+                    for (int i = 0; i < playerSlots.Length; i++)
+                    {
+                        UIItemSlot slot = playerSlots[i];
                         slot.Assign(playerItemInfo[Random.Range(0, playerItemInfo.Count)]);
+                    }
                 }
             }
             else if (this.gameObject.CompareTag("MarketItem"))
@@ -47,8 +50,11 @@ namespace DuloGames.UI
 
                 if (marketSlots.Length > 0 && marketItemInfo.Count > 0)
                 {
-                    foreach (UIItemSlot slot in marketSlots)
+                    for (int i = 0; i < marketSlots.Length; i++)
+                    {
+                        UIItemSlot slot = marketSlots[i];
                         slot.Assign(marketItemInfo[Random.Range(0, marketItemInfo.Count)]);
+                    }
                 }
             }
             this.Destruct();
