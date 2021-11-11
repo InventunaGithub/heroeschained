@@ -1484,7 +1484,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3
   m_Range: 35.17
   m_SpotAngle: 30
@@ -16560,7 +16560,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -21343,7 +21343,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3
   m_Range: 35.17
   m_SpotAngle: 30
@@ -23212,7 +23212,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3
   m_Range: 35.17
   m_SpotAngle: 30
@@ -23868,7 +23868,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -31448,6 +31448,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 337170806}
     m_Modifications:
+    - target: {fileID: -1716758534816787587, guid: 785b39f0c28ee374eb01db62c4aaf51f, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 891635085}
+    - target: {fileID: 302941829808218880, guid: 785b39f0c28ee374eb01db62c4aaf51f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 302941829808218880, guid: 785b39f0c28ee374eb01db62c4aaf51f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -32663,7 +32671,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -33854,7 +33862,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -38309,7 +38317,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -38770,7 +38778,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3
   m_Range: 35.17
   m_SpotAngle: 30
@@ -43707,6 +43715,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 302941829808218880, guid: 74a51e42ea914f849934fa3354c48d63, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 302941829808218880, guid: 74a51e42ea914f849934fa3354c48d63, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 891635085}
@@ -43814,6 +43826,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.21960784
       objectReference: {fileID: 0}
+    - target: {fileID: 1748207922111226182, guid: 74a51e42ea914f849934fa3354c48d63, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 891635085}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74a51e42ea914f849934fa3354c48d63, type: 3}
 --- !u!1 &1607808161 stripped
@@ -47785,7 +47801,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -53631,18 +53647,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 337170806}
     m_Modifications:
-    - target: {fileID: 302941829808218880, guid: 5b87a239ef9baae4a9a6b51e5b823896, type: 3}
-      propertyPath: m_Colors.m_NormalColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 302941829808218880, guid: 5b87a239ef9baae4a9a6b51e5b823896, type: 3}
-      propertyPath: m_Colors.m_NormalColor.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 302941829808218880, guid: 5b87a239ef9baae4a9a6b51e5b823896, type: 3}
-      propertyPath: m_Colors.m_NormalColor.r
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: -252689819466490624, guid: 5b87a239ef9baae4a9a6b51e5b823896, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 891635085}
     - target: {fileID: 302941829808218880, guid: 5b87a239ef9baae4a9a6b51e5b823896, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -58199,7 +58207,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.7238497, b: 0.20247412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3
   m_Range: 35.17
   m_SpotAngle: 30

@@ -57,7 +57,7 @@ public class CardManager : MonoBehaviour
             }
 
         }
-        if (Input.GetMouseButtonDown(0) && clickedOn)
+        if (Input.GetMouseButtonUp(0) && clickedOn)
         {
             SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
             guildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
