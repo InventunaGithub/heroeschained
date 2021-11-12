@@ -7,8 +7,6 @@ using DG.Tweening;
 public class EarthShattererUltimateSkill : Spell
 {
     //With all his might they slam their weapon on the ground making it crumble, does 150% damage to all enemies in a cone and reducing their attack speed by 20%
-    Animator casterAnimator;
-    Animator targetAnimator;
     public float PrimaryDamageMultiplier;
     public float HealAmountMultiplier;
     public float DistanceOfCone;
@@ -29,8 +27,7 @@ public class EarthShattererUltimateSkill : Spell
         CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
         CasterAnimator.CrossFade("Idle", 0.1f);
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
-        Destroy(castingEffect, CastTime); 
-        Debug.Log("Casting Spell");
+        Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, caster , direction));
     }
     IEnumerator CastSpellLag(Hero casterHero, GameObject caster, Vector3 direction)
@@ -63,7 +60,10 @@ public class EarthShattererUltimateSkill : Spell
                 if(inCone.transform.tag == "Team2")
                 {
                     Hero tempHero = inCone.transform.GetComponent<Hero>();
-                    Debug.Log(tempHero.Name);
+                    GameObject splash = Instantiate(Effects[2], tempHero.transform.position + Vector3.up, Quaternion.identity);
+                    Destroy(splash, 0.3f);
+                    tempHero.Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
+                    //TODO Reducing attack damage 
                 }
             }
 

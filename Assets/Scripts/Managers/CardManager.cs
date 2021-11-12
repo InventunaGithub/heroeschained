@@ -20,7 +20,7 @@ public class CardManager : MonoBehaviour
     private GameObject AOEIndicator;
     private GameObject AOEIndicatorCone;
     private Card usingCard;
-    private GameObject usingHero;
+    private GameObject usingHeroGO;
     private GameObject usingCardGO;
     private SpellManager SM;
     private BattlefieldManager BM;
@@ -94,17 +94,17 @@ public class CardManager : MonoBehaviour
                 }
                 else if (usingCard.CardType == CardTypes.PickADirectionUlti)
                 {
-                    SM.CastWithDirection(usingHero.GetComponent<Hero>().UltimateSkill, hitData.point, usingHero );
+                    SM.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, hitData.point, usingHeroGO );
                     AOEIndicatorCone.SetActive(false);
                 }
                 else if (usingCard.CardType == CardTypes.CastUlti)
                 {
-                    HeroController HC = usingHero.GetComponent<HeroController>();
+                    HeroController HC = usingHeroGO.GetComponent<HeroController>();
                     if (HC.TargetHero < HC.EnemyTeam.Count)
                     {
                         StartCoroutine(SlowTime(0.5f));
                         StartCoroutine(DestroyCardRitual(usingCardGO));
-                        GuildEnergy -= SM.FindSpell(usingCard.GetComponent<Card>().SpellID).EnergyCost;
+                        GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
                         HC.MainHero.UltimateEnergy = 0;
                         HC.UltimateSkillPulled = false;
                         SM.Cast(HC.MainHero.UltimateSkill, HC.MainHero.HeroObject, HC.EnemyTeam[HC.TargetHero].HeroObject);
@@ -153,25 +153,25 @@ public class CardManager : MonoBehaviour
             }
             else if(usingCard.CardType == CardTypes.DraggableUlti)
             {
-                this.usingHero = usedCard.GetComponent<Card>().UsingHero;
+                this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
             }
             else if (usingCard.CardType == CardTypes.PickADirectionUlti)
             {
                 Quaternion spawnRotation = Quaternion.Euler(0, 0, 0);
-                this.usingHero = usedCard.GetComponent<Card>().UsingHero;
+                this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
                 if (AOEIndicatorCone == null)
                 {
-                    AOEIndicatorCone = Instantiate(AOEIndicatorConePrefab, usingHero.transform.position, spawnRotation);
+                    AOEIndicatorCone = Instantiate(AOEIndicatorConePrefab, usingHeroGO.transform.position, spawnRotation);
                 }
                 else if (!AOEIndicatorCone.activeSelf)
                 {
                     AOEIndicatorCone.SetActive(true);
-                    AOEIndicatorCone.transform.position = usingHero.transform.position;
+                    AOEIndicatorCone.transform.position = usingHeroGO.transform.position;
                 }
             }
             else if (usingCard.CardType == CardTypes.CastUlti)
             {
-                this.usingHero = usedCard.GetComponent<Card>().UsingHero;
+                this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
             }
             clickedOn = true;
 
