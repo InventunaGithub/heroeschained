@@ -23338,9 +23338,9 @@ MonoBehaviour:
   Team1: []
   Team2: []
   Team1SO:
+  - {fileID: 11400000, guid: d7dfaf535a2d1c148a7f70f888f6eb6e, type: 2}
   - {fileID: 11400000, guid: 3a7483d081d63d44bada919d00dd0dda, type: 2}
-  - {fileID: 11400000, guid: 3a7483d081d63d44bada919d00dd0dda, type: 2}
-  - {fileID: 11400000, guid: 3a7483d081d63d44bada919d00dd0dda, type: 2}
+  - {fileID: 11400000, guid: b36c757d1e72dbb408fac5ee5eefc867, type: 2}
   Team2SO:
   - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}
   - {fileID: 11400000, guid: 01c81bcf93e778b48b3d90a34689244d, type: 2}

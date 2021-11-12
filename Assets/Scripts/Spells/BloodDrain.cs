@@ -9,8 +9,6 @@ using DG.Tweening;
 
 public class BloodDrain : Spell
 {
-    Animator casterAnimator;
-    Animator targetAnimator;
     public float PrimaryDamageMultiplier;
     public float HealAmountMultiplier;
     public override void Cast(GameObject caster , GameObject target)

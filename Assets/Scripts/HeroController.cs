@@ -150,6 +150,7 @@ public class HeroController : MonoBehaviour
                 HealthBar.value = MainHero.Health;
                 HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + - (Vector3.up * 0.1f));
                 EnergyBar.value = MainHero.Energy;
+
                 if(MainHero.UltimateEnergy == MainHero.MaxUltimateEnergy && MainHero.MaxUltimateEnergy != 0)
                 {
                     if(!UltimateSkillPulled)
@@ -247,6 +248,7 @@ public class HeroController : MonoBehaviour
         if (CM.GuildEnergy >= SM.FindSpell(usingCard.GetComponent<Card>().SpellID).EnergyCost)
         {
             StartCoroutine(CM.DestroyCardRitual(usingCard));
+            CM.GuildEnergy -= SM.FindSpell(usingCard.GetComponent<Card>().SpellID).EnergyCost;
             MainHero.UltimateEnergy = 0;
             UltimateSkillPulled = false;
             SM.Cast(MainHero.UltimateSkill, MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
