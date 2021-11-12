@@ -23404,8 +23404,9 @@ MonoBehaviour:
   - {fileID: 1143630440}
   - {fileID: 1918485186}
   AOEIndicatorPrefab: {fileID: 1899250594192068, guid: 6561be0bdcabd634da8ca71c49c14153, type: 3}
+  AOEIndicatorConePrefab: {fileID: 149964, guid: 3328d5d74c357064087a925505b79caf, type: 3}
   GuildEnergy: 0
-  GuildEnergyRefreshPerSecond: 100
+  GuildEnergyRefreshPerSecond: 10
   GuildEnergyBar: {fileID: 1946862829}
   CardArea: {fileID: 976377565}
   MaxGuildEnergy: 100
@@ -29662,6 +29663,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 337170806}
     m_Modifications:
+    - target: {fileID: -1716758534816787587, guid: f81971e7fd42f094181ea0ad26de66ea, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 891635085}
+    - target: {fileID: -1716758534816787587, guid: f81971e7fd42f094181ea0ad26de66ea, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UseCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 302941829808218880, guid: f81971e7fd42f094181ea0ad26de66ea, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 302941829808218907, guid: f81971e7fd42f094181ea0ad26de66ea, type: 3}
       propertyPath: m_Name
       value: EarthShattererUltimateCard
@@ -31466,6 +31479,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 337170806}
     m_Modifications:
+    - target: {fileID: -1716758534816787587, guid: 0c55ddeffcdeaec4baab355df3aeeee1, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 891635085}
+    - target: {fileID: -1716758534816787587, guid: 0c55ddeffcdeaec4baab355df3aeeee1, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UseCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 302941829808218880, guid: 0c55ddeffcdeaec4baab355df3aeeee1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 302941829808218907, guid: 0c55ddeffcdeaec4baab355df3aeeee1, type: 3}
       propertyPath: m_Name
       value: ChainLightningUltimateCard
@@ -33724,7 +33749,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220352888}
   m_LocalRotation: {x: 0.11170767, y: -0.63591653, z: 0.093733855, w: 0.75785595}
-  m_LocalPosition: {x: 12.26, y: 3.92, z: 15.46}
+  m_LocalPosition: {x: 11, y: 3.54, z: 15.68}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53357,6 +53382,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 337170806}
     m_Modifications:
+    - target: {fileID: -1716758534816787587, guid: 34f5019c0c1e9dc4d8b50ac4f9973afb, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 891635085}
+    - target: {fileID: 302941829808218880, guid: 34f5019c0c1e9dc4d8b50ac4f9973afb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 302941829808218907, guid: 34f5019c0c1e9dc4d8b50ac4f9973afb, type: 3}
       propertyPath: m_Name
       value: RainOfArrowsUltimateCard
@@ -60166,6 +60199,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 595877796}
     m_Modifications:
     - target: {fileID: 1528799548028383367, guid: 0f99b1c32a8015e4a80fd21c7b78db4c, type: 3}
+      propertyPath: AOERange
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528799548028383367, guid: 0f99b1c32a8015e4a80fd21c7b78db4c, type: 3}
+      propertyPath: EnergyCost
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528799548028383367, guid: 0f99b1c32a8015e4a80fd21c7b78db4c, type: 3}
       propertyPath: PrimaryDamage
       value: 1.3
       objectReference: {fileID: 0}
@@ -60568,6 +60609,10 @@ PrefabInstance:
       propertyPath: AOErange
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5619197298863768618, guid: 2ff7c6e19864924488742dcb938b56d9, type: 3}
+      propertyPath: EnergyCost
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ff7c6e19864924488742dcb938b56d9, type: 3}
 --- !u!1001 &7631996193578933019
@@ -60677,6 +60722,10 @@ PrefabInstance:
     - target: {fileID: 7960179504473833254, guid: 3349482b4bf71674b81017ea7f07fb62, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7960179504473833255, guid: 3349482b4bf71674b81017ea7f07fb62, type: 3}
+      propertyPath: EnergyCost
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7960179504473833257, guid: 3349482b4bf71674b81017ea7f07fb62, type: 3}
       propertyPath: m_Name

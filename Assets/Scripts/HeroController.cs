@@ -78,13 +78,13 @@ public class HeroController : MonoBehaviour
         HeroEnergyBar = Instantiate(EnergyBarGO, gameObject.transform.position + -(Vector3.up * 0.1f), gameObject.transform.rotation);
         HeroEnergyBar.transform.SetParent(GameObject.Find("Canvas").transform);
         obstructionMask = LayerMask.GetMask("Obstacle");
-        NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
+        NormalAttackCooldown = 2 - (0.5f);
         if (NormalAttackCooldown < 0.7f)
         {
             NormalAttackCooldown = 0.7f;
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
-        HealthBar.maxValue = MainHero.MaxHealth;
+        HealthBar.maxValue = MainHero.BaseHealth;
         EnergyBar = HeroEnergyBar.GetComponent<Slider>();
         EnergyBar.maxValue = MainHero.MaxEnergy;
         Agent.enabled = false;
@@ -170,11 +170,12 @@ public class HeroController : MonoBehaviour
                     RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
                     RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
-                if (MainHero.AIType == AITypes.Closest && !interwal)
+                if (MainHero.AIType == AITypes.Closest && !interwal && !isAttacking)
                 {
                     StartCoroutine(SelectClosestEnemy());
+                    transform.DOLookAt(TargetHeroGO.transform.position, 0.1f);
                 }
-                else if (MainHero.AIType == AITypes.Lockon)
+                else if (MainHero.AIType == AITypes.Lockon && !isAttacking)
                 {
                     if (TargetHeroGO == null)
                     {
@@ -187,6 +188,7 @@ public class HeroController : MonoBehaviour
                             TargetHeroGO = ClosestEnemy(EnemyTeam);
                         }
                     }
+                    transform.DOLookAt(TargetHeroGO.transform.position, 0.1f);
                 }
                 NavMeshPath path = new NavMeshPath();
                 if (TargetHeroGO != null)
@@ -216,7 +218,6 @@ public class HeroController : MonoBehaviour
                         }
                         else
                         {
-                            transform.DOLookAt(TargetHeroGO.transform.position , 0.1f);
                             isRunning = false;
                             Agent.isStopped = true;
                             if (!onCooldown && EnemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < SkillEnergyCost)
@@ -240,22 +241,6 @@ public class HeroController : MonoBehaviour
                     }
                 }
             }
-        }
-    }
-
-    public void CastUltimateSkill(GameObject usingCard)
-    {
-        if (CM.GuildEnergy >= SM.FindSpell(usingCard.GetComponent<Card>().SpellID).EnergyCost)
-        {
-            StartCoroutine(CM.DestroyCardRitual(usingCard));
-            CM.GuildEnergy -= SM.FindSpell(usingCard.GetComponent<Card>().SpellID).EnergyCost;
-            MainHero.UltimateEnergy = 0;
-            UltimateSkillPulled = false;
-            SM.Cast(MainHero.UltimateSkill, MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
-        }
-        else
-        {
-            Debug.Log("Not Enough GuildEnergy");
         }
     }
     public GameObject ClosestEnemy(List<Hero> enemyTeam)

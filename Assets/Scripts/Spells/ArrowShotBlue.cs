@@ -36,7 +36,7 @@ public class ArrowShotBlue : Spell
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(Effects[1], GetTarget().transform.position + offset, GetTarget().transform.rotation);
         targetHero.Hurt(casterHero.Damage);
-        casterHero.GainEnergy(casterHero.Intelligence + 5);
+        casterHero.GainEnergy(5);
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
     }

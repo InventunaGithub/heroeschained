@@ -14,13 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Spiderling
-  BaseHealth: 100
+  BaseHealth: 500
+  BaseDefence: 0
   BaseDamage: 5
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
+  Defence: 0
   Damage: 0
   Health: 0
   Range: 1

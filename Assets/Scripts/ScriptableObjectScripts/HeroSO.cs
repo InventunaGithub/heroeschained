@@ -11,12 +11,9 @@ public class HeroSO : ScriptableObject
     public int HeroID; 
     public string Name;
     public int BaseHealth;
-    public int BaseDamage = 5;
-    public int Strength;
-    public int Dexterity;
-    public int Intelligence;
-    public int Vitality;
-    public int Armor;
+    public int BaseDefence;
+    public int BaseDamage;
+    public int Defence;
     public int Damage;
     public int Health;
     public int Range;

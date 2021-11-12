@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class EarthShattererUltimateSkill : Spell
 {
@@ -10,44 +11,66 @@ public class EarthShattererUltimateSkill : Spell
     Animator targetAnimator;
     public float PrimaryDamageMultiplier;
     public float HealAmountMultiplier;
+    public float DistanceOfCone;
+    public float RadiusOfCone;
+    public float AngleOfCone;
     HeroController tempHeroController;
-    public override void Cast(GameObject caster, GameObject target)
+
+    public override void CastWithDirection(GameObject caster, Vector3 direction)
     {
         tempHeroController = caster.GetComponent<HeroController>();
         tempHeroController.setIsAttacking(true);
         SetCaster(caster);
-        SetTarget(target);
-        if (GetTarget() == null)
-        {
-            throw new Exception("No target is selected");
-        }
         if (GetCaster() == null)
         {
             throw new Exception("No caster is selected");
         }
         Hero casterHero = caster.GetComponent<Hero>();
-        Hero targetHero = target.GetComponent<Hero>();
         CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
         CasterAnimator.CrossFade("Idle", 0.1f);
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
-        Destroy(castingEffect, CastTime);
-        //StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
+        Destroy(castingEffect, CastTime); 
+        Debug.Log("Casting Spell");
+        StartCoroutine(CastSpellLag(casterHero, caster , direction));
     }
-    IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
+    IEnumerator CastSpellLag(Hero casterHero, GameObject caster, Vector3 direction)
     {
         yield return new WaitForSeconds(CastTime);
         if (casterHero.Health > 0)
         {
+            RaycastHit[] sphereCastHits = Physics.SphereCastAll(caster.transform.position - new Vector3(0, 0, RadiusOfCone), RadiusOfCone, direction, DistanceOfCone);
+            List<RaycastHit> coneCastHitList = new List<RaycastHit>();
+
+            if (sphereCastHits.Length > 0)
+            {
+                for (int i = 0; i < sphereCastHits.Length; i++)
+                {
+                    Vector3 hitPoint = sphereCastHits[i].point;
+                    Vector3 directionToHit = hitPoint - caster.transform.position;
+                    float angleToHit = Vector3.Angle(direction, directionToHit);
+                    if (angleToHit < AngleOfCone)
+                    {
+                        coneCastHitList.Add(sphereCastHits[i]);
+                    }
+                }
+            }
+
+            RaycastHit[] coneCastHits = new RaycastHit[coneCastHitList.Count];
+            coneCastHits = coneCastHitList.ToArray();
+
+            foreach(var inCone in coneCastHits)
+            {
+                if(inCone.transform.tag == "Team2")
+                {
+                    Hero tempHero = inCone.transform.GetComponent<Hero>();
+                    Debug.Log(tempHero.Name);
+                }
+            }
+
             CasterAnimator.CrossFade("Attack", 0.1f);
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * PrimaryDamageMultiplier)));
-            casterHero.Health += (int)(Math.Round(casterHero.Damage * HealAmountMultiplier));
-            casterHero.Normalise();
-            Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
-            GameObject tempEffect = Instantiate(Effects[0], caster.transform.position, spawnRotation);
-            Destroy(tempEffect, 3);
-            GameObject tempEffect2 = Instantiate(Effects[1], target.transform.position + Vector3.up, target.transform.rotation);
-            Destroy(tempEffect2, 3);
         }
         tempHeroController.setIsAttacking(false);
     }
+
+    
 }

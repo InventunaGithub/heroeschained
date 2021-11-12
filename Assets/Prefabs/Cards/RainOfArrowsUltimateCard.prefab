@@ -92,11 +92,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 4
-  Energy: 20
   SpellID: 10
   Name: RainOfArrows
   Description: Shoots 3 arrows of light into the sky that multiply and hit all enemies
     3 times for 100% damage while reduce their def by 10% per hit for (x)secs
+  CardType: 3
+  UsingHero: {fileID: 0}
 --- !u!114 &302941829808218880
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 //Author: Mert Karavural
 //Date: 11.2021
@@ -15,8 +16,11 @@ public class CardManager : MonoBehaviour
     private bool clickedOn;
     private LayerMask heroLayer;
     public GameObject AOEIndicatorPrefab;
+    public GameObject AOEIndicatorConePrefab;
     private GameObject AOEIndicator;
+    private GameObject AOEIndicatorCone;
     private Card usingCard;
+    private GameObject usingHero;
     private GameObject usingCardGO;
     private SpellManager SM;
     private BattlefieldManager BM;
@@ -25,6 +29,7 @@ public class CardManager : MonoBehaviour
     public Slider GuildEnergyBar;
     [HideInInspector] public GameObject CardArea;
     public float MaxGuildEnergy;
+    Quaternion transRot;
     void Start()
     {
         mainCam = Camera.main;
@@ -54,19 +59,63 @@ public class CardManager : MonoBehaviour
             GuildEnergyBar.value = GuildEnergy;
             if (clickedOn)
             {
-                if (Physics.Raycast(ray, out hitData, 1000 , ~heroLayer))
+                if (usingCard.CardType == CardTypes.GuildCard)
                 {
-                    AOEIndicator.transform.position = hitData.point + (Vector3.up * 0.1f);
+                    if (Physics.Raycast(ray, out hitData, 1000, ~heroLayer))
+                    {
+                        AOEIndicator.transform.position = hitData.point + (Vector3.up * 0.1f);
+                    }
                 }
+                else if (usingCard.CardType == CardTypes.DraggableUlti)
+                {
 
+                }
+                else if (usingCard.CardType == CardTypes.PickADirectionUlti)
+                {
+                    if (Physics.Raycast(ray, out hitData, 1000, ~heroLayer))
+                    {
+                        AOEIndicatorCone.transform.DOLookAt(hitData.point , 0.01f);
+                    }
+                }
             }
             if (Input.GetMouseButtonUp(0) && clickedOn)
             {
-                SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
-                GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
-                clickedOn = false;
-                AOEIndicator.SetActive(false);
-                StartCoroutine(PullCardFromDeck());
+                if(usingCard.CardType == CardTypes.GuildCard)
+                { 
+                    SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
+                    GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
+                    clickedOn = false;
+                    AOEIndicator.SetActive(false);
+                    StartCoroutine(PullCardFromDeck());
+                }
+                else if (usingCard.CardType == CardTypes.DraggableUlti)
+                {
+                    //slow time here
+                }
+                else if (usingCard.CardType == CardTypes.PickADirectionUlti)
+                {
+                    SM.CastWithDirection(usingHero.GetComponent<Hero>().UltimateSkill, hitData.point, usingHero );
+                    AOEIndicatorCone.SetActive(false);
+                }
+                else if (usingCard.CardType == CardTypes.CastUlti)
+                {
+                    HeroController HC = usingHero.GetComponent<HeroController>();
+                    if (HC.TargetHero < HC.EnemyTeam.Count)
+                    {
+                        StartCoroutine(SlowTime(0.5f));
+                        StartCoroutine(DestroyCardRitual(usingCardGO));
+                        GuildEnergy -= SM.FindSpell(usingCard.GetComponent<Card>().SpellID).EnergyCost;
+                        HC.MainHero.UltimateEnergy = 0;
+                        HC.UltimateSkillPulled = false;
+                        SM.Cast(HC.MainHero.UltimateSkill, HC.MainHero.HeroObject, HC.EnemyTeam[HC.TargetHero].HeroObject);
+                    }
+                    else
+                    {
+                        Debug.Log("All Enemies are dead");
+                    }
+                    clickedOn = false;
+                }
+
             }
             if (Input.GetMouseButtonDown(1) && clickedOn)
             {
@@ -75,26 +124,57 @@ public class CardManager : MonoBehaviour
             }
         }
     }
-    
+
+    IEnumerator SlowTime(float time)
+    {
+        Time.timeScale = 0.3f;
+        yield return new WaitForSeconds(time);
+        Time.timeScale = 1;
+    }
     public void UseCard(GameObject usedCard)
     {
         usingCardGO = usedCard;
-        usingCard = usedCard.GetComponent<Card>();
+        usingCard = usedCard.GetComponent<Card>(); 
         if (GuildEnergy >= SM.FindSpell(usingCard.SpellID).EnergyCost)
         {
-            Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
-            if (AOEIndicator == null)
+            if (usingCard.CardType == CardTypes.GuildCard)
             {
-                AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, spawnRotation);
-
+                Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+                if (AOEIndicator == null)
+                {
+                    AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, spawnRotation);
+                }
+                else if (!AOEIndicator.activeSelf)
+                {
+                    AOEIndicator.SetActive(true);
+                    AOEIndicator.transform.position = usedCard.transform.position;
+                }
+                AOEIndicator.transform.localScale = Vector3.one * 0.4f * SM.FindSpell(usingCard.SpellID).AOERange;
             }
-            else if (!AOEIndicator.activeSelf)
+            else if(usingCard.CardType == CardTypes.DraggableUlti)
             {
-                AOEIndicator.SetActive(true);
-                AOEIndicator.transform.position = usedCard.transform.position;
+                this.usingHero = usedCard.GetComponent<Card>().UsingHero;
             }
-            AOEIndicator.transform.localScale = Vector3.one * 0.4f * SM.FindSpell(usingCard.SpellID).AOERange;
+            else if (usingCard.CardType == CardTypes.PickADirectionUlti)
+            {
+                Quaternion spawnRotation = Quaternion.Euler(0, 0, 0);
+                this.usingHero = usedCard.GetComponent<Card>().UsingHero;
+                if (AOEIndicatorCone == null)
+                {
+                    AOEIndicatorCone = Instantiate(AOEIndicatorConePrefab, usingHero.transform.position, spawnRotation);
+                }
+                else if (!AOEIndicatorCone.activeSelf)
+                {
+                    AOEIndicatorCone.SetActive(true);
+                    AOEIndicatorCone.transform.position = usingHero.transform.position;
+                }
+            }
+            else if (usingCard.CardType == CardTypes.CastUlti)
+            {
+                this.usingHero = usedCard.GetComponent<Card>().UsingHero;
+            }
             clickedOn = true;
+
         }
         else
         {
@@ -170,7 +250,7 @@ public class CardManager : MonoBehaviour
     {
         GameObject tempCardGO = Instantiate(FindCard(hero.GetComponent<Hero>().UltimateSkillCardID), Vector3.zero, Quaternion.identity);
         tempCardGO.transform.SetParent(CardArea.transform);
-        tempCardGO.GetComponent<Button>().onClick.AddListener(delegate { hero.GetComponent<HeroController>().CastUltimateSkill(tempCardGO); });
+        tempCardGO.GetComponent<Card>().UsingHero = hero;
         RealignCards();
         return tempCardGO;
     }

@@ -15,12 +15,9 @@ MonoBehaviour:
   HeroID: 0
   Name: Medium1
   BaseHealth: 400
+  BaseDefence: 10
   BaseDamage: 60
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
+  Defence: 0
   Damage: 0
   Health: 0
   Range: 10

@@ -92,11 +92,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 2
-  Energy: 20
   SpellID: 8
   Name: ChainLightning
   Description: Hit the closet enemy for 160% damage and then the next closet enemy
     for 120% damage then 80%, 40%
+  CardType: 3
+  UsingHero: {fileID: 0}
 --- !u!114 &302941829808218880
 MonoBehaviour:
   m_ObjectHideFlags: 0

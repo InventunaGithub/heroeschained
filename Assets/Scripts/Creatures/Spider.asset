@@ -14,13 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 1001
   Name: Spider
-  BaseHealth: 1500
+  BaseHealth: 2500
+  BaseDefence: 0
   BaseDamage: 40
-  Strength: 10
-  Dexterity: 4
-  Intelligence: 5
-  Vitality: 10
-  Armor: 20
+  Defence: 0
   Damage: 5
   Health: 0
   Range: 2

@@ -51,8 +51,10 @@ MonoBehaviour:
   - {fileID: 185492, guid: ab277be0b43f1824090ab10e4ce64cef, type: 3}
   CastTime: 1
   AOERange: 0
-  EnergyCost: 0
+  EnergyCost: 20
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
-  PrimaryDamageMultiplier: 0
-  HealAmountMultiplier: 0
+  PrimaryDamageMultiplier: 1
+  ReduceDefMultiplier: 0.1
+  HitEachEnemyWithAmount: 3
+  ReduceDefSeconds: 10

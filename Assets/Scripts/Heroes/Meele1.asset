@@ -15,19 +15,16 @@ MonoBehaviour:
   HeroID: 0
   Name: Melee1
   BaseHealth: 400
+  BaseDefence: 10
   BaseDamage: 60
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
+  Defence: 0
   Damage: 0
-  Health: 15
+  Health: 0
   Range: 1
   MaxEnergy: 50
   MaxUltimateEnergy: 10
   Skills: 0000000004000000
-  UltimateSkill: 3
+  UltimateSkill: 9
   UltimateSkillCardID: 3
   AIType: 0
   HeroType: 2

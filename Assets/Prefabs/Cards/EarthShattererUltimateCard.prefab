@@ -92,12 +92,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 3
-  Energy: 20
   SpellID: 9
   Name: EarthShatterer
   Description: 'With all his might they slam their weapon on the ground making it
     crumble, does 150% damage to all enemies in a cone and reducing their attack
     speed by 20%    '
+  CardType: 2
+  UsingHero: {fileID: 0}
 --- !u!114 &302941829808218880
 MonoBehaviour:
   m_ObjectHideFlags: 0

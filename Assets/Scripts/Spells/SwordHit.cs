@@ -19,7 +19,7 @@ public class SwordHit : Spell
         tempHeroController.setIsAttacking(true);
         GameObject splashGO = Instantiate(Effects[0], target.transform.position + offset , target.transform.rotation);
         targetHero.Hurt(casterHero.Damage);
-        casterHero.GainEnergy(casterHero.Intelligence + 5);
+        casterHero.GainEnergy(5);
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
     }

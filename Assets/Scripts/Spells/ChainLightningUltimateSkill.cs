@@ -44,11 +44,11 @@ public class ChainLightningUltimateSkill : Spell
             GameObject projectile = Instantiate(Effects[1], caster.transform.position + Vector3.up, Quaternion.identity);
             projectile.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             List<Hero> tempList = new List<Hero>(tempHeroController.EnemyTeam);
-            float travelTime = 0.1f;
+            float travelTime = 0.3f;
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                projectile.transform.DOMove(targetGO.transform.position ,  travelTime);
+                projectile.transform.DOMove(targetGO.transform.position + Vector3.up ,  travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
@@ -58,7 +58,7 @@ public class ChainLightningUltimateSkill : Spell
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                projectile.transform.DOMove(targetGO.transform.position, travelTime);
+                projectile.transform.DOMove(targetGO.transform.position + Vector3.up, travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * SecondaryDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
@@ -68,7 +68,7 @@ public class ChainLightningUltimateSkill : Spell
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                projectile.transform.DOMove(targetGO.transform.position, travelTime);
+                projectile.transform.DOMove(targetGO.transform.position + Vector3.up, travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * ThirdDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
@@ -78,7 +78,7 @@ public class ChainLightningUltimateSkill : Spell
             if (tempList.Count > 0)
             {
                 targetGO = tempHeroController.ClosestEnemy(tempList);
-                projectile.transform.DOMove(targetGO.transform.position, travelTime);
+                projectile.transform.DOMove(targetGO.transform.position + Vector3.up, travelTime);
                 yield return new WaitForSeconds(travelTime);
                 targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * FourthDamageMultiplier));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());

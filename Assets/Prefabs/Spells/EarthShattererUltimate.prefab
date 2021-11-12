@@ -50,9 +50,12 @@ MonoBehaviour:
   - {fileID: 105310, guid: e6ea0c2b13012484ba2f5dc1054e6d75, type: 3}
   - {fileID: 1212038522573524, guid: d773d301d86b3254180a6887af308eef, type: 3}
   CastTime: 1
-  AOERange: 0
-  EnergyCost: 0
+  AOERange: 3
+  EnergyCost: 20
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
   PrimaryDamageMultiplier: 0
   HealAmountMultiplier: 0
+  DistanceOfCone: 3
+  RadiusOfCone: 3
+  AngleOfCone: 45

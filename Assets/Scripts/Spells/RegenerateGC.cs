@@ -32,7 +32,7 @@ public class RegenerateGC : Spell
                     GameObject splash = Instantiate(Effects[0], hero.transform.position, spawnRotation);
                     splash.transform.localScale = Vector3.one * 0.4f * AOERange;
                     Destroy(splash, 0.5f);
-                    hero.GetComponent<Hero>().Health += (int)(hero.GetComponent<Hero>().MaxHealth * HealAmountMultiplier);
+                    hero.GetComponent<Hero>().Health += (int)(hero.GetComponent<Hero>().BaseHealth * HealAmountMultiplier);
                     hero.GetComponent<Hero>().Normalise();
                 }
             }

@@ -24,14 +24,11 @@ public class Hero : MonoBehaviour
     public GameObject HeroObject;
     public int BaseHealth;
     public int BaseDamage;
-    public int Strength;
-    public int Dexterity;
-    public int Intelligence;
-    public int Vitality;
+    public int BaseDefence;
     public int Armor;
     public int Damage;
+    public int Defence;
     public int Health;
-    public int MaxHealth;
     public int Range;
     public int MaxEnergy;
     public int MaxUltimateEnergy;
@@ -46,15 +43,10 @@ public class Hero : MonoBehaviour
         HeroID = rootSO.HeroID;
         Name = rootSO.Name;
         BaseHealth = rootSO.BaseHealth;
-        Strength = rootSO.Strength;
-        Dexterity = rootSO.Dexterity;
-        Intelligence = rootSO.Intelligence;
-        Vitality = rootSO.Vitality;
         Range = rootSO.Range;
         BaseDamage = rootSO.BaseDamage;
-        Health = this.BaseHealth + (this.Vitality * 2);
-        MaxHealth = Health;
-        Damage = BaseDamage + (this.Strength * 2);
+        Health = BaseHealth;
+        Damage = BaseDamage;
         Armor = 10;
         HeroSkin = rootSO.HeroSkin;
         this.AIType = rootSO.AIType;
@@ -70,34 +62,49 @@ public class Hero : MonoBehaviour
         equipment = GetComponent<Equipment>();
     }
 
-    public void Hurt(int damage) // this is used for physical attacks , attacks that must pierce armor first.
+    public void Hurt(int damage) //
     {
         GainEnergy((int)(damage * 0.1));
-        if (Armor >= damage)
+        damage -= Defence;
+        if(damage < 0)
         {
-            Armor -= damage;
+            damage = 0;
         }
-        else
-        {
-            damage -= Armor;
-            Armor = 0;
-            Health -= damage;
-        }
+        Health -= damage;
         Normalise();
     }
     public void GainEnergy(int amount)
     {
         Energy += amount; 
-        if(Energy >= MaxEnergy)
+        UltimateEnergy += amount;
+        Normalise();
+    }
+    public void Normalise()
+    {
+        if (Defence < 0)
+        {
+            Defence = 0;
+        }
+        if (Health < 0)
+        {
+            Health = 0;
+        }
+        if (Damage < 0)
+        {
+            Damage = 0;
+        }
+        if (Health > BaseHealth)
+        {
+            Health = BaseHealth;
+        }
+        if (Energy >= MaxEnergy)
         {
             Energy = MaxEnergy;
         }
-        if(Energy < 0 )
+        if (Energy < 0)
         {
             Energy = 0;
         }
-
-        UltimateEnergy += amount;
         if (UltimateEnergy >= MaxUltimateEnergy)
         {
             UltimateEnergy = MaxUltimateEnergy;
@@ -105,29 +112,6 @@ public class Hero : MonoBehaviour
         if (UltimateEnergy < 0)
         {
             UltimateEnergy = 0;
-        }
-    }
-    public void Normalise()
-    {
-        if (Armor < 0)
-        {
-            Armor = 0;
-        }
-        if (Health < 0)
-        {
-            Health = 0;
-        }
-        if (Dexterity < 0)
-        {
-            Dexterity = 0;
-        }
-        if (Damage < 0)
-        {
-            Damage = 0;
-        }
-        if (Health > MaxHealth)
-        {
-            Health = MaxHealth;
         }
     }
 

@@ -15,19 +15,16 @@ MonoBehaviour:
   HeroID: 0
   Name: LongRange2
   BaseHealth: 400
+  BaseDefence: 10
   BaseDamage: 60
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
+  Defence: 0
   Damage: 0
   Health: 0
   Range: 20
   MaxEnergy: 50
   MaxUltimateEnergy: 10
   Skills: 0100000005000000
-  UltimateSkill: 3
+  UltimateSkill: 10
   UltimateSkillCardID: 4
   AIType: 0
   HeroType: 1
