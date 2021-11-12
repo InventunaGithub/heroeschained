@@ -11,25 +11,42 @@ public class UIInventoryItemDatabase : ScriptableObject
         get
         {
             if (m_Instance == null)
-                m_Instance = Resources.Load("TestUI/Player") as UIInventoryItemDatabase;
-
+            {
+                m_Instance = Resources.Load("TestUI/Test") as UIInventoryItemDatabase;
+            }  
             return m_Instance;
         }
     }
+    
+    public InventoryItem[] PlayerItems;
+    public InventoryItem[] MarketItems;
 
-    public InventoryItem[] items;
-
-    public InventoryItem Get(int index)
+    public InventoryItem GetPlayerItems(int index)
     {
-        return (this.items[index]);
+        return (this.PlayerItems[index]);
     }
 
-    public InventoryItem GetByID(int ID)
+    public InventoryItem GetPlayerItemsById(int ID)
     {
-        for (int i = 0; i < this.items.Length; i++)
+        for (int i = 0; i < this.PlayerItems.Length; i++)
         {
-            if (this.items[i].Id == ID)
-                return this.items[i];
+            if (this.PlayerItems[i].Id == ID)
+                return this.PlayerItems[i];
+        }
+        return null;
+    }
+
+    public InventoryItem GetMarketItems(int index)
+    {
+        return (this.MarketItems[index]);
+    }
+
+    public InventoryItem GetMarketItemsById(int ID)
+    {
+        for (int i = 0; i < this.MarketItems.Length; i++)
+        {
+            if (this.MarketItems[i].Id == ID)
+                return this.MarketItems[i];
         }
         return null;
     }

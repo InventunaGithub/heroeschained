@@ -9,31 +9,54 @@ namespace DuloGames.UI
         [SerializeField] private Transform m_Container;
         #pragma warning restore 0649
 
-        
-
         void Start()
         {
             if (this.m_Container == null || UIInventoryItemDatabase.Instance == null)
             {
                 this.Destruct();
                 return;
-            }
+            }      
 
-            UIItemSlot[] slots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
-            InventoryItem[] playerInventoryItems = UIInventoryItemDatabase.Instance.items;
-            List<UIItemInfo> playerItemInfoItems = new();
-
-            for (int i = 0; i < playerInventoryItems.Length; i++)
+            if (this.gameObject.CompareTag("PlayerItem"))
             {
-                playerItemInfoItems.Add(InventoryItemConventer.Instance.Conventer(playerInventoryItems[i]));
-            }
+                UIItemSlot[] playerSlots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
+                List<UIItemInfo> playerItemInfo = new();
+                InventoryItem[] playerInventoryItem = UIInventoryItemDatabase.Instance.PlayerItems;
 
-            if (slots.Length > 0 && playerItemInfoItems.Count > 0)
+                for (int i = 0; i < playerInventoryItem.Length; i++)
+                {
+                    playerItemInfo.Add(InventoryItemConventer.Instance.Conventer(playerInventoryItem[i]));
+                }
+
+                if (playerSlots.Length > 0 && playerItemInfo.Count > 0)
+                {
+                    for (int i = 0; i < playerSlots.Length; i++)
+                    {
+                        UIItemSlot slot = playerSlots[i];
+                        slot.Assign(playerItemInfo[Random.Range(0, playerItemInfo.Count)]);
+                    }
+                }
+            }
+            else if (this.gameObject.CompareTag("MarketItem"))
             {
-                foreach (UIItemSlot slot in slots)
-                    slot.Assign(playerItemInfoItems[Random.Range(0, playerItemInfoItems.Count)]);
-            }
+                UIItemSlot[] marketSlots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
+                List<UIItemInfo> marketItemInfo = new();
+                InventoryItem[] marketInventoryItem = UIInventoryItemDatabase.Instance.MarketItems;
 
+                for (int i = 0; i < marketInventoryItem.Length; i++)
+                {
+                    marketItemInfo.Add(InventoryItemConventer.Instance.Conventer(marketInventoryItem[i]));
+                }
+
+                if (marketSlots.Length > 0 && marketItemInfo.Count > 0)
+                {
+                    for (int i = 0; i < marketSlots.Length; i++)
+                    {
+                        UIItemSlot slot = marketSlots[i];
+                        slot.Assign(marketItemInfo[Random.Range(0, marketItemInfo.Count)]);
+                    }
+                }
+            }
             this.Destruct();
         }
 
