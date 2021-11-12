@@ -25,7 +25,6 @@ public class AuthProviderFirebase : AuthProvider
             {
                 //If they are avalible Initialize Firebase
                 InitializeFirebase();
-
             }
             else
             {
@@ -144,5 +143,10 @@ public class AuthProviderFirebase : AuthProvider
     void createPlayer(string userId)
     {
         // adjust palyer specific settings
+    }
+
+    public override void Logout()
+    {
+        auth.SignOut();
     }
 }

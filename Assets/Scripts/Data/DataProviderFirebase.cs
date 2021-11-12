@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using static MessagingManager;
 
 public class DataProviderFirebase : DataProvider
 {
@@ -105,6 +106,31 @@ public class DataProviderFirebase : DataProvider
         public bool guildPetOpen { get; set; }
     }
 
+    [FirestoreData]
+    class FirebaseUserMessage
+    {
+        [FirestoreProperty]
+        public string title { get; set; }
+
+        [FirestoreProperty]
+        public string senderId { get; set; }
+
+        [FirestoreProperty]
+        public string senderUserName { get; set; }
+
+        [FirestoreProperty]
+        public string senderName { get; set; }
+
+        [FirestoreProperty]
+        public string content { get; set; }
+
+        [FirestoreProperty]
+        public DateTime sentAt { get; set; }
+
+        [FirestoreProperty]
+        public DateTime readAt { get; set; }
+    }
+
     FirebaseFirestore firebase;
 
     // abstract method implementations
@@ -145,7 +171,7 @@ public class DataProviderFirebase : DataProvider
 
         var userAddTask = firebase.Collection("users").AddAsync(fbUser);
         yield return new WaitUntil(() => userAddTask.IsCompleted);
-        
+
         DocumentReference doc = userAddTask.Result;
 
         FirebaseUserGame game = new FirebaseUserGame
@@ -176,8 +202,22 @@ public class DataProviderFirebase : DataProvider
             guildTrainingGroundsOpen = false
         };
 
+        FirebaseUserMessage welcomeMessage = new FirebaseUserMessage
+        {
+            readAt = DateTime.MinValue,
+            senderId = "0",
+            senderUserName = "system",
+            senderName = "System",
+            sentAt = DateTime.Now,
+            title = "Welcome to Heroes Chained!",
+            content = "Hey new player, welcome to the world of Inventuna Games! We hope you enjoy Heroes Chained"
+        };
+
         Debug.Log("Firebase: User created");
         var addTask = doc.Collection("games").AddAsync(game);
+        yield return new WaitUntil(() => addTask.IsCompleted);
+
+        addTask = doc.Collection("messages").AddAsync(welcomeMessage);
         yield return new WaitUntil(() => addTask.IsCompleted);
 
         Debug.Log("Firebase: Game has been added to user's document");
@@ -217,6 +257,7 @@ public class DataProviderFirebase : DataProvider
                 data = ds.ToDictionary();
 
                 user = new DOUser(userId);
+                user.UserName = data["userName"].ToString();
                 user.NickName = data["nickName"].ToString();
                 user.CustodialWalletId = data["custodialWalletId"].ToString();
                 user.RestrictedUntil = DateTime.Parse(data["restrictedUntil"].ToString().Substring(11));
@@ -327,14 +368,53 @@ public class DataProviderFirebase : DataProvider
             }
         }
     }
+
     public override void SetUserLastVisitDate(string userId)
     {
-        var updates = new Dictionary<FieldPath, object>
-        {
-            { new FieldPath("lasstVisitedAt"), DateTime.Now }
-        };
+        StartCoroutine(SetUserLastVisitDateNow(userId));
+    }
 
-        firebase.Collection("users").Document(userId).Collection("games").Document(gameId).UpdateAsync(updates);
+    IEnumerator SetUserLastVisitDateNow(string userId)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("games").WhereEqualTo("gameId", gameId).GetSnapshotAsync();
+
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        if (task.IsFaulted)
+        {
+            Debug.Log("Fault 114");
+            // REAL ERROR HANDLING INSTEAD
+        }
+        else
+        {
+            var snapshot = task.Result;
+
+            if (snapshot != null && snapshot.Count > 0)
+            {
+                foreach (DocumentSnapshot dsg in task.Result.Documents)
+                {
+                    var gameData = dsg.ToDictionary();
+                    var updates = new Dictionary<FieldPath, object>
+                    {
+                        { new FieldPath("lastVisitedAt"), DateTime.Now }
+                    };
+
+                    string subGameId = dsg.Id;
+                    firebase.Collection("users").Document(topUserId).Collection("games").Document(subGameId).UpdateAsync(updates);
+                    break;
+                }
+            }
+        }
     }
 
     public override void GetUserRestricted(string userId, OnRestrictionDelegate onRestriction)
@@ -363,7 +443,7 @@ public class DataProviderFirebase : DataProvider
             break;
         }
 
-        if(string.IsNullOrEmpty(topUserId))
+        if (string.IsNullOrEmpty(topUserId))
         {
             onRestriction?.Invoke(DateTime.MinValue, "");
             yield break;
@@ -384,9 +464,10 @@ public class DataProviderFirebase : DataProvider
 
             if (snapshot != null && snapshot.Count > 0)
             {
+                Dictionary<string, object> gameData;
                 foreach (DocumentSnapshot dsg in task.Result.Documents)
                 {
-                    var gameData = dsg.ToDictionary();
+                    gameData = dsg.ToDictionary();
                     if (gameData.ContainsKey("restrictedUntil"))
                     {
                         string dateStr = gameData["restrictedUntil"].ToString().Replace("Timestamp:", "").Trim();
@@ -415,5 +496,333 @@ public class DataProviderFirebase : DataProvider
     public override string Vendor()
     {
         return "Google Firestore";
+    }
+
+    public override void GetNewMessageCount(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetNewMessageCountNow(userId, onComplete));
+    }
+
+    IEnumerator GetNewMessageCountNow(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("messages").WhereEqualTo("readAt", DateTime.MinValue).GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        if (task.IsFaulted)
+        {
+            Debug.Log("Fault 111");
+            onComplete?.Invoke(0);
+        }
+        else
+        {
+            var snapshot = task.Result;
+            if (snapshot != null)
+            {
+                onComplete?.Invoke(snapshot.Count);
+            } else
+            {
+                onComplete?.Invoke(0);
+            }
+        }
+
+    }
+
+    public override void GetMessageCount(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetMessageCountNow(userId, onComplete));
+    }
+
+    IEnumerator GetMessageCountNow(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("messages").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        if (task.IsFaulted)
+        {
+            Debug.Log("Fault 112");
+            onComplete?.Invoke(0);
+        }
+        else
+        {
+            var snapshot = task.Result;
+            if (snapshot != null)
+            {
+                onComplete?.Invoke(snapshot.Count);
+            }
+            else
+            {
+                onComplete?.Invoke(0);
+            }
+        }
+    }
+
+    public override void GetMessageHeaders(string userId, int messageCount, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetMessageHeadersNow(userId, messageCount, onComplete));
+    }
+
+    IEnumerator GetMessageHeadersNow(string userId, int messageCount, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("messages").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        if (task.IsFaulted)
+        {
+            Debug.Log("Fault 113");
+            onComplete?.Invoke(null);
+        }
+        else
+        {
+            var snapshot = task.Result;
+            if (snapshot != null)
+            {
+                List<InGameMessage> result = new List<InGameMessage>();
+                Dictionary<string, object> gameData;
+                InGameMessage header;
+                int index = 0;
+
+                foreach (DocumentSnapshot dsg in task.Result.Documents)
+                {
+                    if (++index > messageCount)
+                    {
+                        break;
+                    }
+
+                    gameData = dsg.ToDictionary();
+                    header = new InGameMessage(dsg.Id, gameData["title"].ToString(), gameData["senderId"].ToString(), (!gameData.ContainsKey("senderUserName") || gameData["senderUserName"] == null) ? "" : gameData["senderUserName"].ToString(), gameData["senderName"].ToString(), DateTime.Parse(gameData["sentAt"].ToString().Replace("Timestamp:", "").Trim()));
+
+                    result.Add(header);
+                }
+
+                onComplete?.Invoke(result.ToArray());
+            }
+            else
+            {
+                onComplete?.Invoke(null);
+            }
+        }
+    }
+
+    public override void GetSentMessageHeaders(string userId, int messageCount, OnCompletionDelegateWithParameter onComplete)
+    {
+    }
+
+    public override void SendMessage(string from, string senderName, string to, string title, string content)
+    {
+        StartCoroutine(SendMessageNow(from, senderName, to, title, content));
+    }
+
+    IEnumerator SendMessageNow(string from, string senderName, string to, string title, string content)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userName", to).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        FirebaseUserMessage newMessage = new FirebaseUserMessage
+        {
+            readAt = DateTime.MinValue,
+            senderId = from,
+            senderUserName = VariableManager.Instance.GetVariable("username").ToString(),
+            senderName = senderName,
+            sentAt = DateTime.Now,
+            title = title,
+            content = content
+        };
+
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var addTask = dsg.Reference.Collection("messages").AddAsync(newMessage);
+            yield return new WaitUntil(() => addTask.IsCompleted);
+
+            Debug.Log("Firebase: Message has been delivered");
+            break;
+        }
+    }
+
+    public override void DeleteMessage(string sentTo, string messageId, OnCompletionDelegate onComplete)
+    {
+        StartCoroutine(DeleteMessageNow(sentTo, messageId, onComplete));
+    }
+
+    IEnumerator DeleteMessageNow(string sentTo, string messageId, OnCompletionDelegate onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", sentTo).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("messages").Document(messageId);
+        task.DeleteAsync().ContinueWithOnMainThread(task =>
+        {
+            onComplete?.Invoke();
+        });
+    }
+    public override void GetMessageBody(string sentTo, string messageId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetMessageBodyNow(sentTo, messageId, onComplete));
+    }
+
+    IEnumerator GetMessageBodyNow(string sentTo, string messageId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", sentTo).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("messages").Document(messageId).GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        DocumentSnapshot ds = task.Result;
+        if (ds != null)
+        {
+            var messageData = ds.ToDictionary();
+
+            onComplete?.Invoke(messageData["content"].ToString());
+        }
+        else
+        {
+            onComplete?.Invoke(null);
+        }
+    }
+
+    public override void MarkMessageAsRead(string sentTo, string messageId)
+    {
+        StartCoroutine(MarkMessageAsReadNow(sentTo, messageId));
+    }
+
+    IEnumerator MarkMessageAsReadNow(string sentTo, string messageId)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", sentTo).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var updates = new Dictionary<FieldPath, object>
+        {
+            { new FieldPath("readAt"), DateTime.Now }
+        };
+
+        firebase.Collection("users").Document(topUserId).Collection("messages").Document(messageId).UpdateAsync(updates);
+    }
+
+    public override void TestIfUserNameExists(string userName, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(TestIfUserNameExistsNow(userName, onComplete));
+
+    }
+
+    IEnumerator TestIfUserNameExistsNow(string userName, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userName", userName).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        int totalUsers = 0;
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            totalUsers += 1;
+            break;
+        }
+
+        onComplete?.Invoke(totalUsers != 0);
+    }
+
+    public override void SaveUserName(string userId, string userName, string mailAddress)
+    {
+        StartCoroutine(SaveUserNameNow(userId, userName, mailAddress));
+    }
+
+    IEnumerator SaveUserNameNow(string userId, string userName, string mailAddress)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var updates = new Dictionary<FieldPath, object>
+        {
+            { new FieldPath("userName"), userName },
+            { new FieldPath("mailAddress"), mailAddress },
+        };
+
+        firebase.Collection("users").Document(topUserId).UpdateAsync(updates);
+    }
+
+    public override void SaveNickName(string userId, string nickName)
+    {
+        StartCoroutine(SaveNickNameNow(userId, nickName));
+    }
+
+    IEnumerator SaveNickNameNow(string userId, string nickName)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var updates = new Dictionary<FieldPath, object>
+        {
+            { new FieldPath("nickName"), nickName }
+        };
+
+        firebase.Collection("users").Document(topUserId).UpdateAsync(updates);
     }
 }
