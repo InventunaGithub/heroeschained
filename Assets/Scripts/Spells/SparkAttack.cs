@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+//Author: Mert Karavural
+//Date: 5.11.2021
 public class SparkAttack : Spell
 {
     Animator casterAnimator;
@@ -36,9 +38,5 @@ public class SparkAttack : Spell
         casterHero.GainEnergy(casterHero.Intelligence + 5);
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
-    }
-    bool AnimatorIsPlaying(string stateName)
-    {
-        return casterAnimator.GetCurrentAnimatorStateInfo(0).length > casterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && casterAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
     }
 }

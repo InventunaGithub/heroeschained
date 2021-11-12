@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 0
   Name: Melee1
-  BaseHealth: 400
+  BaseHealth: 4000
   BaseDamage: 60
   Strength: 0
   Dexterity: 0
@@ -24,7 +24,7 @@ MonoBehaviour:
   Damage: 0
   Health: 15
   Range: 1
-  MaxEnergy: 0
+  MaxEnergy: 50
   Skills: 0000000004000000
   AIType: 0
   HeroType: 2

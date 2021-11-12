@@ -8,6 +8,8 @@ TagManager:
   - UnavailableGrid
   - Team1
   - Team2
+  - PlayerItem
+  - MarketItem
   layers:
   - Default
   - TransparentFX

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine;
 //Date: 19.10.2021
 
 [CreateAssetMenu(fileName = "Inventory Item", menuName = "Inventuna/Heroes Chained/Inventory Item")]
+[Serializable]
 public class InventoryItem : ScriptableObject
 {
     public int Id;
@@ -26,6 +28,8 @@ public class InventoryItem : ScriptableObject
 
     public float SellValue;
     public float BuyValue;
+
+    public Sprite Icon;
 }
 public enum ItemTypes
 {

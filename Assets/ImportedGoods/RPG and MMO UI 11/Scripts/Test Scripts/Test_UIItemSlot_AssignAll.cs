@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace DuloGames.UI
 {
@@ -10,21 +11,52 @@ namespace DuloGames.UI
 
         void Start()
         {
-            if (this.m_Container == null || UIItemDatabase.Instance == null)
+            if (this.m_Container == null || UIInventoryItemDatabase.Instance == null)
             {
                 this.Destruct();
                 return;
-            }
+            }      
 
-            UIItemSlot[] slots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
-            UIItemInfo[] items = UIItemDatabase.Instance.items;
-
-            if (slots.Length > 0 && items.Length > 0)
+            if (this.gameObject.CompareTag("PlayerItem"))
             {
-                foreach (UIItemSlot slot in slots)
-                    slot.Assign(items[Random.Range(0, items.Length)]);
-            }
+                UIItemSlot[] playerSlots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
+                List<UIItemInfo> playerItemInfo = new();
+                InventoryItem[] playerInventoryItem = UIInventoryItemDatabase.Instance.PlayerItems;
 
+                for (int i = 0; i < playerInventoryItem.Length; i++)
+                {
+                    playerItemInfo.Add(InventoryItemConventer.Instance.Conventer(playerInventoryItem[i]));
+                }
+
+                if (playerSlots.Length > 0 && playerItemInfo.Count > 0)
+                {
+                    for (int i = 0; i < playerSlots.Length; i++)
+                    {
+                        UIItemSlot slot = playerSlots[i];
+                        slot.Assign(playerItemInfo[Random.Range(0, playerItemInfo.Count)]);
+                    }
+                }
+            }
+            else if (this.gameObject.CompareTag("MarketItem"))
+            {
+                UIItemSlot[] marketSlots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
+                List<UIItemInfo> marketItemInfo = new();
+                InventoryItem[] marketInventoryItem = UIInventoryItemDatabase.Instance.MarketItems;
+
+                for (int i = 0; i < marketInventoryItem.Length; i++)
+                {
+                    marketItemInfo.Add(InventoryItemConventer.Instance.Conventer(marketInventoryItem[i]));
+                }
+
+                if (marketSlots.Length > 0 && marketItemInfo.Count > 0)
+                {
+                    for (int i = 0; i < marketSlots.Length; i++)
+                    {
+                        UIItemSlot slot = marketSlots[i];
+                        slot.Assign(marketItemInfo[Random.Range(0, marketItemInfo.Count)]);
+                    }
+                }
+            }
             this.Destruct();
         }
 

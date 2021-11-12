@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Spiderling
   m_EditorClassIdentifier: 
   HeroID: 0
-  Name: 
+  Name: Spiderling
   BaseHealth: 50
   BaseDamage: 5
   Strength: 0

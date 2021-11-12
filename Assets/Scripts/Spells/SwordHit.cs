@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Mert Karavural
+//Date: 5.11.2021
 public class SwordHit : Spell
 {
     Animator casterAnimator; 
@@ -22,8 +24,4 @@ public class SwordHit : Spell
         tempHeroController.setIsAttacking(false);
     }
 
-    bool AnimatorIsPlaying(string stateName)
-    {
-        return casterAnimator.GetCurrentAnimatorStateInfo(0).length > casterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime && casterAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
-    }
 }
