@@ -35,37 +35,43 @@ public class EarthShattererUltimateSkill : Spell
         yield return new WaitForSeconds(CastTime);
         if (casterHero.Health > 0)
         {
-            RaycastHit[] sphereCastHits = Physics.SphereCastAll(caster.transform.position - new Vector3(0, 0, RadiusOfCone), RadiusOfCone, direction, DistanceOfCone);
-            List<RaycastHit> coneCastHitList = new List<RaycastHit>();
+            //RaycastHit[] sphereCastHits = Physics.SphereCastAll(caster.transform.position - new Vector3(0, 0, RadiusOfCone), RadiusOfCone, direction, DistanceOfCone);
+            //List<RaycastHit> coneCastHitList = new List<RaycastHit>();
 
-            if (sphereCastHits.Length > 0)
-            {
-                for (int i = 0; i < sphereCastHits.Length; i++)
-                {
-                    Vector3 hitPoint = sphereCastHits[i].point;
-                    Vector3 directionToHit = hitPoint - caster.transform.position;
-                    float angleToHit = Vector3.Angle(direction, directionToHit);
-                    if (angleToHit < AngleOfCone)
-                    {
-                        coneCastHitList.Add(sphereCastHits[i]);
-                    }
-                }
-            }
+            //if (sphereCastHits.Length > 0)
+            //{
+            //    for (int i = 0; i < sphereCastHits.Length; i++)
+            //    {
+            //        Vector3 hitPoint = sphereCastHits[i].point;
+            //        Vector3 directionToHit = hitPoint - caster.transform.position;
+            //        float angleToHit = Vector3.Angle(direction, directionToHit);
+            //        if (angleToHit < AngleOfCone)
+            //        {
+            //            Debug.DrawRay(caster.transform.position + Vector3.up, directionToHit, Color.red, 1);
+            //            coneCastHitList.Add(sphereCastHits[i]);
+            //        }
+            //        else
+            //        {
+            //            Debug.DrawRay(caster.transform.position + Vector3.up, directionToHit, Color.white, 1);
+            //        }
+            //    }
+            //}
 
-            RaycastHit[] coneCastHits = new RaycastHit[coneCastHitList.Count];
-            coneCastHits = coneCastHitList.ToArray();
+            //Debug.Break();
+            //RaycastHit[] coneCastHits = new RaycastHit[coneCastHitList.Count];
+            //coneCastHits = coneCastHitList.ToArray();
 
-            foreach(var inCone in coneCastHits)
-            {
-                if(inCone.transform.tag == "Team2")
-                {
-                    Hero tempHero = inCone.transform.GetComponent<Hero>();
-                    GameObject splash = Instantiate(Effects[2], tempHero.transform.position + Vector3.up, Quaternion.identity);
-                    Destroy(splash, 0.3f);
-                    tempHero.Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
-                    //TODO Reducing attack damage 
-                }
-            }
+            //foreach (var inCone in coneCastHits)
+            //{
+            //    if (inCone.transform.tag == "Team2")
+            //    {
+            //        Hero tempHero = inCone.transform.GetComponent<Hero>();
+            //        GameObject splash = Instantiate(Effects[2], tempHero.transform.position + Vector3.up, Quaternion.identity);
+            //        Destroy(splash, 0.3f);
+            //        tempHero.Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
+            //        //TODO Reducing attack damage 
+            //    }
+            //}
 
             CasterAnimator.CrossFade("Attack", 0.1f);
         }
