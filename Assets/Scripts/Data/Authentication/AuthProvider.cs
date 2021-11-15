@@ -14,4 +14,6 @@ public abstract class AuthProvider : MonoBehaviour
     public abstract void Login(string userName, string password);
 
     public abstract void Register(string userName, string password);
+
+    public abstract void Logout();
 }

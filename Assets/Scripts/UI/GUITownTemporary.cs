@@ -6,19 +6,27 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DuloGames.UI;
 using UnityEngine.SceneManagement;
+using System;
+using static MessagingManager;
 
 public class GUITownTemporary : MonoBehaviour
 {
     public GameObject PnlLogin;
     public GameObject PnlRegister;
+    public GameObject PnlUserInfo;
     public GameObject PnlLoading;
     public GameObject PnlGame;
     public GameObject WinCity;
     public GameObject WinGuild;
     public GameObject WinQuest;
     public GameObject WinDialog;
+    public GameObject WinConfirm;
     public GameObject WinCityMarketPlayer;
     public GameObject WinCityMarketShop;
+    public GameObject WinSettings;
+    public GameObject WinMessages;
+    public GameObject WinInput;
+    public GameObject WinCompose;
     public float TransitionTime = 0.75f;
     public float NotificationTime = 1.75f;
     public Auth Authentication;
@@ -33,13 +41,22 @@ public class GUITownTemporary : MonoBehaviour
     public QuestManager Quests;
     public GameObject QuestItem;
     public GameObject QuestObjective;
+    public MessagingManager Messenger;
+    public float MessagePollingInterval = 5;
+    public Text MessageCount;
+    public int MaxMessagesInMessageBox = 100;
+    public GameObject MessageTemplate;
 
     public delegate void OnAfterEvent();
+    public delegate void OnAfterEventWithValue(object obj);
     OnAfterEvent AfterDialogEvent = null;
-
+    
     public enum GuildBuildings { GuildHouse, Tavern };
 
-    // Start is called before the first frame update
+    bool canRunOnToggle = true;
+    int oldMessageCount = -1;
+    InGameMessage[] DownloadedMessageHeaders = null;
+
     void Start()
     {
         PnlLogin.GetComponent<CanvasGroup>().alpha = 0;
@@ -51,6 +68,10 @@ public class GUITownTemporary : MonoBehaviour
         WinCity.GetComponent<UIWindow>().Show();
         WinQuest.GetComponent<UIWindow>().Hide();
         WinDialog.GetComponent<UIWindow>().Hide();
+        WinSettings.GetComponent<UIWindow>().Hide();
+        WinMessages.GetComponent<UIWindow>().Hide();
+        WinInput.GetComponent<UIWindow>().Hide();
+        WinCompose.GetComponent<UIWindow>().Hide();
 
         NotifyGreen.SetActive(false);
         NotifyRed.SetActive(false);
@@ -62,6 +83,157 @@ public class GUITownTemporary : MonoBehaviour
         {
             DisplayLoading("Reconnecting to last session...");
         }
+
+        InvokeRepeating("MessagePoller", 0, MessagePollingInterval);
+    }
+
+    void MessagePoller()
+    {
+        if (VariableManager.Instance.VariableExists("userid"))
+        {
+            Messenger.QueryNewMessageCount((obj) =>
+            {
+                int messages = (int)obj;
+                MessageCount.text = messages == 0 ? "MESSAGES" : ("MESSAGES (" + messages + ")");
+
+                if(oldMessageCount != messages)
+                {
+                    oldMessageCount = messages;
+                    RebuildMessages();
+                }                
+            });
+        }
+    }
+
+    void RebuildMessages()
+    {
+        GameObject contentArea = WinMessages.transform.Find("Content/Message List/Scroll Rect/Viewport/Content").gameObject;
+
+        // delete old messages
+        for (int i = 0; i < contentArea.transform.childCount; i++)
+        {
+            Destroy(contentArea.transform.GetChild(i).gameObject);
+        }
+
+        // fetch new headers
+        Messenger.GetMessageHeaders(MaxMessagesInMessageBox, (obj) =>
+        {
+            DownloadedMessageHeaders = (InGameMessage[])obj;
+            GameObject messageItem;
+
+            for (int i = 0; i < DownloadedMessageHeaders.Length; i++)
+            {
+                messageItem = Instantiate(MessageTemplate, contentArea.transform);
+                messageItem.transform.Find("TextSender").GetComponent<Text>().text = DownloadedMessageHeaders[i].SenderName;
+                messageItem.transform.Find("TextTime").GetComponent<Text>().text = DownloadedMessageHeaders[i].ArrivedAt.ToShortDateString() + " " + DownloadedMessageHeaders[i].ArrivedAt.ToShortTimeString();
+
+                if (DownloadedMessageHeaders[i].ReadAt == DateTime.MinValue)
+                {
+                    messageItem.transform.Find("TextSender").GetComponent<Text>().fontStyle = FontStyle.Bold;
+                    messageItem.transform.Find("TextTime").GetComponent<Text>().fontStyle = FontStyle.Bold;
+                }
+
+                messageItem.SetActive(true);
+                string messageId = DownloadedMessageHeaders[i].MessageId;
+                var toggle = messageItem.GetComponent<Toggle>();
+                toggle.onValueChanged.RemoveAllListeners();
+                toggle.onValueChanged.AddListener((value) =>
+                {
+                    if(!canRunOnToggle)
+                    {
+                        return;
+                    }
+
+                    UntoggleAllMessages();
+
+                    if(value)
+                    {
+                        DisplayMessage(messageId);
+                    } else
+                    {
+                        HideMessagePanel();
+                    }
+                });
+
+                if (i == 0)
+                {
+                    toggle.isOn = true;
+                }
+            }
+
+            contentArea.GetComponent<ToggleGroup>().EnsureValidState();
+        });
+    }
+
+    void UntoggleAllMessages()
+    {
+        GameObject contentArea = WinMessages.transform.Find("Content/Message List/Scroll Rect/Viewport/Content").gameObject;
+
+        Toggle toggle;
+        for (int i = 0; i < contentArea.transform.childCount; i++)
+        {
+            toggle = contentArea.transform.GetChild(i).GetComponent<Toggle>();
+            canRunOnToggle = false;
+            toggle.isOn = false;
+            canRunOnToggle = true;
+        }
+    }
+
+    public void HideMessagePanel()
+    {
+        WinMessages.transform.Find("Content/Quest Info/ButtonDelete").gameObject.SetActive(false);
+        WinMessages.transform.Find("Content/Quest Info/ButtonReply").gameObject.SetActive(false);
+        WinMessages.transform.Find("Content/Quest Info/ButtonNewMessage").gameObject.SetActive(false);
+        WinMessages.transform.Find("Content/Quest Info/Scroll Rect/Viewport/Content/Title Group/Title Text").GetComponent<Text>().text = "";
+        WinMessages.transform.Find("Content/Quest Info/Scroll Rect/Viewport/Content/Description Text").GetComponent<Text>().text = "";
+    }
+
+    private void DisplayMessage(string messageId)
+    {
+        if(DownloadedMessageHeaders == null)
+        {
+            HideMessagePanel();
+            return;
+        }
+
+        for (int i = 0; i < DownloadedMessageHeaders.Length; i++)
+        {
+            if(DownloadedMessageHeaders[i].MessageId == messageId)
+            {
+                Messenger.GetMessageBody(messageId, (obj) =>
+                {
+                    var btnDelete = WinMessages.transform.Find("Content/Quest Info/ButtonDelete");
+                    var btnReply = WinMessages.transform.Find("Content/Quest Info/ButtonReply");
+                    var btnNewMessage = WinMessages.transform.Find("Content/Quest Info/ButtonNewMessage");
+
+                    btnDelete.gameObject.SetActive(true);
+                    btnDelete.GetComponent<Button>().onClick.RemoveAllListeners();
+                    btnDelete.GetComponent<Button>().onClick.AddListener(() => {
+                        DeleteMessage(messageId);
+                    });
+
+                    btnReply.gameObject.SetActive(true);
+                    btnReply.GetComponent<Button>().onClick.RemoveAllListeners();
+                    btnReply.GetComponent<Button>().onClick.AddListener(() => {
+                        ComposeMessageWithContent("RE: " + DownloadedMessageHeaders[i].Title, "> On " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + " " + DownloadedMessageHeaders[i].SenderName + " wrote:\n\n" + (string)obj, DownloadedMessageHeaders[i].SenderUserName);
+                    });
+
+                    btnNewMessage.gameObject.SetActive(true);
+                    btnNewMessage.GetComponent<Button>().onClick.RemoveAllListeners();
+                    btnNewMessage.GetComponent<Button>().onClick.AddListener(() => {
+                        ComposeNewMessage();
+                    });
+
+                    WinMessages.transform.Find("Content/Quest Info/Scroll Rect/Viewport/Content/Title Group/Title Text").GetComponent<Text>().text = DownloadedMessageHeaders[i].Title;
+                    WinMessages.transform.Find("Content/Quest Info/Scroll Rect/Viewport/Content/Description Text").GetComponent<Text>().text = (string)obj;
+                });
+
+                return;
+            }
+        }
+
+        var composeInput = WinMessages.transform.Find("Content/Quest Info/Scroll Rect/Viewport/Content/Description Text").GetChild(0);
+        composeInput.gameObject.SetActive(false);
     }
 
     public void DisplayLoading(string message)
@@ -118,7 +290,7 @@ public class GUITownTemporary : MonoBehaviour
             VariableManager.Instance.SetVariable("firstVisit", false);
             transform.Find("/Managers").GetComponent<DialogManager>().Launch();
 
-            string userId = VariableManager.Instance.GetLocal("userid").ToString();
+            string userId = VariableManager.Instance.GetLocal("userid");
             Data.GetProvider().SetUserFirstVisitProperty(userId);
         }
 
@@ -168,6 +340,8 @@ public class GUITownTemporary : MonoBehaviour
         yield return new WaitForSeconds(TransitionTime);
 
         DisplayGamePanel();
+        WinCity.GetComponent<UIWindow>().Show();
+        WinSettings.GetComponent<UIWindow>().Show();
     }
 
     public void DisplayGamePanel()
@@ -175,6 +349,15 @@ public class GUITownTemporary : MonoBehaviour
         PnlGame.GetComponent<CanvasGroup>().alpha = 0;
         PnlGame.SetActive(true);
         PnlGame.GetComponent<CanvasGroup>().DOFade(1, TransitionTime);
+    }
+
+    public IEnumerator HideGamePanel()
+    {
+        PnlGame.GetComponent<CanvasGroup>().DOFade(0, TransitionTime);
+
+        yield return new WaitForSeconds(TransitionTime);
+
+        PnlGame.SetActive(false);
     }
 
     public void Register()
@@ -545,5 +728,211 @@ public class GUITownTemporary : MonoBehaviour
     {
         WinCityMarketPlayer.GetComponent<UIWindow>().Hide();
         WinCityMarketShop.GetComponent<UIWindow>().Hide();
+    }
+
+    public void Confirm(string question, string answer1, string answer2, OnAfterEvent onAnswer1, OnAfterEvent onAnswer2)
+    {
+        WinConfirm.transform.Find("Content/Scroll Rect/Viewport/Content/Description Text").GetComponent<Text>().text = question;
+        WinConfirm.transform.Find("Content/ButtonAccept/Text").GetComponent<Text>().text = answer1;
+        WinConfirm.transform.Find("Content/ButtonDecline/Text").GetComponent<Text>().text = answer2;
+
+        WinConfirm.transform.Find("Content/ButtonAccept").GetComponent<Button>().onClick.RemoveAllListeners();
+        WinConfirm.transform.Find("Content/ButtonDecline").GetComponent<Button>().onClick.RemoveAllListeners();
+
+        WinConfirm.transform.Find("Content/ButtonAccept").GetComponent<Button>().onClick.AddListener(() =>
+        {
+            WinConfirm.GetComponent<UIWindow>().Hide();
+            onAnswer1?.Invoke();
+        });
+
+        WinConfirm.transform.Find("Content/ButtonDecline").GetComponent<Button>().onClick.AddListener(() =>
+        {
+            WinConfirm.GetComponent<UIWindow>().Hide();
+            onAnswer2?.Invoke();
+        });
+
+        WinConfirm.GetComponent<UIWindow>().Show();
+    }
+
+    public void LogoutSequence()
+    {
+        StartCoroutine(LogoutSequenceNow());
+    }
+
+    IEnumerator LogoutSequenceNow()
+    {
+        HideDialogs();
+        HideCityBuildings();
+        HideGuildBuildings();
+        StartCoroutine(HideGamePanel());
+
+        yield return new WaitForSeconds(TransitionTime);
+
+        oldMessageCount = -1;
+        DisplayLogin();
+    }
+
+    private void HideGuildBuildings()
+    {
+        WinGuild.GetComponent<UIWindow>().Hide();
+        WinQuest.GetComponent<UIWindow>().Hide();
+    }
+
+    private void HideCityBuildings()
+    {
+        WinCity.GetComponent<UIWindow>().Hide();
+        WinCityMarketPlayer.GetComponent<UIWindow>().Hide();
+        WinCityMarketShop.GetComponent<UIWindow>().Hide();
+    }
+
+    private void HideDialogs()
+    {
+        WinDialog.GetComponent<UIWindow>().Hide();
+        WinConfirm.GetComponent<UIWindow>().Hide();
+        WinSettings.GetComponent<UIWindow>().Hide();
+    }
+
+    public void DisplaySettings()
+    {
+        WinSettings.GetComponent<UIWindow>().Show();
+    }
+
+    public void DisplayMessages()
+    {
+        WinMessages.GetComponent<UIWindow>().Show();
+
+        if (DownloadedMessageHeaders.Length > 0)
+        {
+            DisplayMessage(DownloadedMessageHeaders[0].MessageId);
+        }
+    }
+
+    public void HideMessages()
+    {
+        WinMessages.GetComponent<UIWindow>().Hide();
+    }
+
+    public void DeleteMessage(string messageId)
+    {
+        Confirm("Are you sure you want to delete this message?", "YES", "NO", () =>
+        {
+            DisplayLoading("Deleting message...");
+
+            Messenger.Delete(messageId, () =>
+            {
+                HideLoading();
+                HideMessagePanel();
+                HideMessages();
+                RebuildMessages();
+            });
+        }, null);
+    }
+
+    public void Input(string title, string message, string initialValue, bool canCanel, OnAfterEventWithValue onAfterEvent)
+    {
+        WinInput.transform.Find("Header/Text").GetComponent<Text>().text = title;
+        WinInput.transform.Find("Header/ButtonClose").transform.localScale = canCanel ? Vector3.one : Vector3.zero;
+        WinInput.transform.Find("Content/Scroll Rect/Viewport/Content/Description Text").GetComponent<Text>().text = message;
+        WinInput.transform.Find("Content/Scroll Rect/Viewport/Content/InputField").GetComponent<InputField>().text = initialValue;
+        WinInput.GetComponent<UIWindow>().Show();
+
+        var button = WinInput.transform.Find("Content/ButtonOK").GetComponent<Button>();
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(() =>
+        {
+            if(!canCanel && WinInput.transform.Find("Content/Scroll Rect/Viewport/Content/InputField").GetComponent<InputField>().text.Trim() == "")
+            {
+                return;
+            }
+
+            WinInput.GetComponent<UIWindow>().Hide();
+            onAfterEvent?.Invoke(WinInput.transform.Find("Content/Scroll Rect/Viewport/Content/InputField").GetComponent<InputField>().text.Trim());
+        });
+    }
+
+    public void ComposeNewMessage()
+    {
+        ComposeMessageWithContent("", "", "");
+    }
+
+    void ComposeMessageWithContent(string title, string content, string sendTo)
+    {
+        WinMessages.GetComponent<UIWindow>().Hide();
+        WinCompose.GetComponent<UIWindow>().Show();
+
+        WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/To/InputField").GetComponent<InputField>().text = sendTo;
+        WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/Subject/InputField").GetComponent<InputField>().text = title;
+        WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/InputMessage").GetComponent<InputField>().text = content;
+    }
+
+    public void CancelCompseMessage()
+    {
+        WinCompose.GetComponent<UIWindow>().Hide();
+
+        WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/To/InputField").GetComponent<InputField>().text = "";
+        WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/Subject/InputField").GetComponent<InputField>().text = "";
+        WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/InputMessage").GetComponent<InputField>().text = "";
+    }
+
+    public void SendInGameMessage()
+    {
+        var recipient = WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/To/InputField").GetComponent<InputField>().text.Trim();
+        var subject = WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/Subject/InputField").GetComponent<InputField>().text.Trim();
+        var content = WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/InputMessage").GetComponent<InputField>().text.Trim();
+
+        if (recipient == "")
+        {
+            NotifyError("ERROR", "Recipient cannot be blank");
+            return;
+        }
+
+        if (recipient == "system")
+        {
+            NotifyError("ERROR", "Cannot send messages to system user");
+            return;
+        }
+
+        if (recipient == VariableManager.Instance.GetVariable("username").ToString())
+        {
+            NotifyError("ERROR", "Sending to yourself? Hmmm that doesn't seem to be a good idea...");
+            return;
+        }
+
+        if (subject == "")
+        {
+            NotifyError("ERROR", "Subject cannot be blank");
+            return;
+        }
+
+        if (content == "")
+        {
+            NotifyError("ERROR", "Message content cannot be blank");
+            return;
+        }
+
+        WinCompose.GetComponent<UIWindow>().Hide();
+        DisplayLoading("Sending message...");
+
+        Data.GetProvider().TestIfUserNameExists(recipient, (present) =>
+        {
+            if (!(bool)present)
+            {
+                HideLoading();
+                NotifyError("ERROR", "Recipient not found");
+
+                WinCompose.GetComponent<UIWindow>().Show();
+            }
+            else
+            {
+                WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/To/InputField").GetComponent<InputField>().text = "";
+                WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/Subject/InputField").GetComponent<InputField>().text = "";
+                WinCompose.transform.Find("Content/Scroll Rect/Viewport/Content/InputMessage").GetComponent<InputField>().text = "";
+
+                Data.GetProvider().SendMessage(VariableManager.Instance.GetLocal("userid"), VariableManager.Instance.GetVariable("nickname").ToString(), recipient, subject, content);
+
+                Notify("SUCCESS", "Your message has been sent");
+                HideLoading();
+            }
+        });
     }
 }

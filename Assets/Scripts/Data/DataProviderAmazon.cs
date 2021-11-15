@@ -55,4 +55,59 @@ public class DataProviderAmazon : DataProvider
     {
         return "Amazon AWS";
     }
+
+    public override void GetNewMessageCount(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetMessageCount(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetMessageHeaders(string userId, int messageCount, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetSentMessageHeaders(string userId, int messageCount, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void SendMessage(string from, string senderName, string to, string title, string content)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void DeleteMessage(string sentTo, string messageId, OnCompletionDelegate onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetMessageBody(string sentTo, string messageId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void MarkMessageAsRead(string sentTo, string messageId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void TestIfUserNameExists(string userName, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void SaveUserName(string userId, string userName, string mailAddress)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void SaveNickName(string userId, string nickName)
+    {
+        throw new System.NotImplementedException();
+    }
 }

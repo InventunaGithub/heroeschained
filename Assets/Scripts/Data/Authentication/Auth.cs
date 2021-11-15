@@ -69,7 +69,8 @@ public class Auth : MonoBehaviour
                     // save additional user data
                     var provider = Data.GetProvider();
                     provider.CreateUser(new DOUser(elements[0], elements[1]), () => {
-                        StartCoroutine(PostLoginSequence());
+                        GUI.HideRegister();
+                        StartCoroutine(PostRegisterSequence());
                     });
                 }
             };
@@ -80,6 +81,53 @@ public class Auth : MonoBehaviour
         {
             GUI.NotifyError("ERROR", "Authentication provider not set");
         }
+    }
+
+    IEnumerator PostRegisterSequence()
+    {
+        yield return new WaitForSeconds(GUI.TransitionTime);
+
+        GUI.HideLoading();
+        GUI.Input("USER NAME", "Please set a user name for yourself", "", false, (userName) =>
+        {
+            StartCoroutine(UserNameExistenceSequence((string)userName));
+        });
+    }
+
+    IEnumerator UserNameExistenceSequence(string userName)
+    {
+        GUI.HideRegister();
+
+        yield return new WaitForSeconds(GUI.TransitionTime);
+
+        GUI.DisplayLoading();
+
+        yield return new WaitForSeconds(GUI.TransitionTime);
+
+        Data.GetProvider().TestIfUserNameExists(userName, (result) => {
+            GUI.HideLoading();
+
+            if ((bool)result)
+            {
+                // another user with the given user name exists
+                GUI.NotifyError("USER NAME IS IN USE", "That user name has been taken already");
+                GUI.HideRegister();
+
+                StartCoroutine(PostRegisterSequence());
+            }
+            else
+            {
+                // no other user exists wth the given name
+                string userId = VariableManager.Instance.GetLocal("userid");
+                Data.GetProvider().SaveUserName(userId, userName, VariableManager.Instance.GetLocal("mail_address"));
+
+                GUI.Input("NICK NAME", "How would you like to be called " + userName + "?", "", false, (nickName) =>
+                {
+                    Data.GetProvider().SaveNickName(userId, (string)nickName);
+                    StartCoroutine(PostLoginSequence());
+                });
+            }
+        });
     }
 
     public void Login(string userName, string password)
@@ -129,6 +177,7 @@ public class Auth : MonoBehaviour
         yield return new WaitForSeconds(GUI.TransitionTime);
 
         GUI.HideLogin();
+
         yield return new WaitForSeconds(GUI.TransitionTime);
 
         GUI.DisplayLoading("Loading user settings...");
@@ -146,26 +195,14 @@ public class Auth : MonoBehaviour
                     }
                     else
                     {
-                        VariableManager.Instance.SetOrAddVariable("nickname", user.NickName);
-                        VariableManager.Instance.SetOrAddVariable("userid", VariableManager.Instance.GetLocal("userid"));
-
-                        VariableManager.Instance.SetOrAddVariable("city_tavern_open", user.CityTavernOpen);
-                        VariableManager.Instance.SetOrAddVariable("city_arena_open", user.CityArenaOpen);
-                        VariableManager.Instance.SetOrAddVariable("city_market_open", user.CityMarketOpen);
-                        VariableManager.Instance.SetOrAddVariable("city_royal_palace_open", user.CityRoyalPalaceOpen);
-                        VariableManager.Instance.SetOrAddVariable("city_slums_open", user.CitySlumsOpen);
-                        VariableManager.Instance.SetOrAddVariable("city_gate_open", user.CityGateOpen);
-
-                        VariableManager.Instance.SetOrAddVariable("guild_tavern_open", user.GuildTavernOpen);
-                        VariableManager.Instance.SetOrAddVariable("guild_court_open", user.GuildCourtOpen);
-                        VariableManager.Instance.SetOrAddVariable("guild_garage_open", user.GuildGarageOpen);
-                        VariableManager.Instance.SetOrAddVariable("guild_healing_open", user.GuildHealingOpen);
-                        VariableManager.Instance.SetOrAddVariable("guild_pet_open", user.GuildPetOpen);
-                        VariableManager.Instance.SetOrAddVariable("guild_scout_open", user.GuildScoutOpen);
-                        VariableManager.Instance.SetOrAddVariable("guild_smith_open", user.GuildSmithOpen);
-                        VariableManager.Instance.SetOrAddVariable("guild_training_grounds_open", user.GuildTrainingGroundsOpen);
-
-                        StartCoroutine(PostLoginSucceeded(user));
+                        if (string.IsNullOrEmpty(user.UserName))
+                        {
+                            StartCoroutine(PostRegisterSequence());
+                        }
+                        else
+                        {
+                            SucceedUserLogin(user);
+                        }
                     }
                 });
             } else
@@ -176,6 +213,31 @@ public class Auth : MonoBehaviour
                 });
             }
         });
+    }
+
+    private void SucceedUserLogin(DOUser user)
+    {
+        VariableManager.Instance.SetOrAddVariable("nickname", user.NickName);
+        VariableManager.Instance.SetOrAddVariable("username", user.UserName);
+        VariableManager.Instance.SetOrAddVariable("userid", VariableManager.Instance.GetLocal("userid"));
+
+        VariableManager.Instance.SetOrAddVariable("city_tavern_open", user.CityTavernOpen);
+        VariableManager.Instance.SetOrAddVariable("city_arena_open", user.CityArenaOpen);
+        VariableManager.Instance.SetOrAddVariable("city_market_open", user.CityMarketOpen);
+        VariableManager.Instance.SetOrAddVariable("city_royal_palace_open", user.CityRoyalPalaceOpen);
+        VariableManager.Instance.SetOrAddVariable("city_slums_open", user.CitySlumsOpen);
+        VariableManager.Instance.SetOrAddVariable("city_gate_open", user.CityGateOpen);
+
+        VariableManager.Instance.SetOrAddVariable("guild_tavern_open", user.GuildTavernOpen);
+        VariableManager.Instance.SetOrAddVariable("guild_court_open", user.GuildCourtOpen);
+        VariableManager.Instance.SetOrAddVariable("guild_garage_open", user.GuildGarageOpen);
+        VariableManager.Instance.SetOrAddVariable("guild_healing_open", user.GuildHealingOpen);
+        VariableManager.Instance.SetOrAddVariable("guild_pet_open", user.GuildPetOpen);
+        VariableManager.Instance.SetOrAddVariable("guild_scout_open", user.GuildScoutOpen);
+        VariableManager.Instance.SetOrAddVariable("guild_smith_open", user.GuildSmithOpen);
+        VariableManager.Instance.SetOrAddVariable("guild_training_grounds_open", user.GuildTrainingGroundsOpen);
+
+        StartCoroutine(PostLoginSucceeded(user));
     }
 
     IEnumerator PostLoginFailed()
@@ -193,11 +255,34 @@ public class Auth : MonoBehaviour
     {
         yield return new WaitForSeconds(GUI.TransitionTime);
 
-        GUI.Notify("PLAYER NICK NAME", user.NickName);
+        GUI.Notify("WELCOME BACK", user.NickName);
         GUI.HideLoading();
 
         yield return new WaitForSeconds(GUI.TransitionTime);
 
+        GUI.HideCityWindow();
+        //GUI.Hide();
+
+        StartCoroutine(PopupStartWindows());
+    }
+
+    IEnumerator PopupStartWindows()
+    {
+        yield return new WaitForSeconds(GUI.TransitionTime);
+
+        GUI.SwitchToGame();
         GUI.DisplayCity();
+        GUI.DisplaySettings();
+    }
+
+    public void Logout()
+    {
+        GUI.Confirm("Are you sure you want to logout?", "YES", "NO", () => {
+            VariableManager.Instance.ResetLocals();
+            VariableManager.Instance.ResetVariables();
+
+            authProvider.Logout();
+            GUI.LogoutSequence();
+        }, null);
     }
 }

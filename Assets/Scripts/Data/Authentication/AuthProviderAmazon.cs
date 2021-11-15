@@ -37,4 +37,9 @@ public class AuthProviderAmazon : AuthProvider
     {
         Init();
     }
+
+    public override void Logout()
+    {
+        throw new System.NotImplementedException();
+    }
 }

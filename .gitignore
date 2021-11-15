@@ -60,3 +60,6 @@ sysinfo.txt
 crashlytics-build.properties
 /build (Windows)
 /UserSettings/Layouts/*.dwlt
+/UserSettings/Layouts/*.dwlt
+/Recordings/*.webm
+/UserSettings/Layouts/*.dwlt

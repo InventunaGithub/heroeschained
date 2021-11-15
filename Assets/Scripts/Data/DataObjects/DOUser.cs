@@ -15,6 +15,7 @@ public class DOUser : DataObject
         }
     }
     public string NickName;
+    public string UserName;
     public DateTime RestrictedUntil = DateTime.MinValue;
     public string RestrictionReason = "";
     public DateTime LastLogon = DateTime.MinValue;
