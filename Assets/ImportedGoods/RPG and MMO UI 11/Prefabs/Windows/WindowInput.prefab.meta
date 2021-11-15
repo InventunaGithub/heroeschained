@@ -1,11 +1,7 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Prefabs/Cards/EarthShattererUltimateCard.prefab.meta
-guid: f81971e7fd42f094181ea0ad26de66ea
-=======
 guid: baeb5e2e27ca5b54385d72cda570156c
->>>>>>> main:Assets/ImportedGoods/RPG and MMO UI 11/Prefabs/Windows/WindowInput.prefab.meta
 PrefabImporter:
   externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  userData:
+  assetBundleName:
+  assetBundleVariant:

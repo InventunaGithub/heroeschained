@@ -1,11 +1,7 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Prefabs/Cards/RainOfArrowsUltimateCard.prefab.meta
-guid: 34f5019c0c1e9dc4d8b50ac4f9973afb
-=======
 guid: e75e363b27fea1e46b6d682ea220c6b5
->>>>>>> main:Assets/ImportedGoods/RPG and MMO UI 11/Prefabs/Windows/WindowMessages.prefab.meta
 PrefabImporter:
   externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  userData:
+  assetBundleName:
+  assetBundleVariant:
