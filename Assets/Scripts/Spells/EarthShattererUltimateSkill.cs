@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.AI;
 
 public class EarthShattererUltimateSkill : Spell
 {
@@ -14,7 +15,7 @@ public class EarthShattererUltimateSkill : Spell
     public float AngleOfCone;
     HeroController tempHeroController;
 
-    public override void CastWithDirection(GameObject caster, Vector3 direction)
+    public override void CastWithDirection(GameObject caster, GameObject skillMesh)
     {
         tempHeroController = caster.GetComponent<HeroController>();
         tempHeroController.setIsAttacking(true);
@@ -28,55 +29,58 @@ public class EarthShattererUltimateSkill : Spell
         CasterAnimator.CrossFade("Cast", 0.1f);
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
-        StartCoroutine(CastSpellLag(casterHero, caster , direction));
+        tempHeroController.Agent.isStopped = true;
+        tempHeroController.Agent.enabled = false;
+        caster.transform.DOLookAt(skillMesh.transform.position + Vector3.forward, 0.1f);
+        StartCoroutine(CastSpellLag(casterHero, caster , skillMesh));
     }
-    IEnumerator CastSpellLag(Hero casterHero, GameObject caster, Vector3 direction)
+    IEnumerator CastSpellLag(Hero casterHero, GameObject caster, GameObject skillMesh)
     {
         yield return new WaitForSeconds(CastTime);
         if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
-            //RaycastHit[] sphereCastHits = Physics.SphereCastAll(caster.transform.position - new Vector3(0, 0, RadiusOfCone), RadiusOfCone, direction, DistanceOfCone);
-            //List<RaycastHit> coneCastHitList = new List<RaycastHit>();
-
-            //if (sphereCastHits.Length > 0)
-            //{
-            //    for (int i = 0; i < sphereCastHits.Length; i++)
-            //    {
-            //        Vector3 hitPoint = sphereCastHits[i].point;
-            //        Vector3 directionToHit = hitPoint - caster.transform.position;
-            //        float angleToHit = Vector3.Angle(direction, directionToHit);
-            //        if (angleToHit < AngleOfCone)
-            //        {
-            //            Debug.DrawRay(caster.transform.position + Vector3.up, directionToHit, Color.red, 1);
-            //            coneCastHitList.Add(sphereCastHits[i]);
-            //        }
-            //        else
-            //        {
-            //            Debug.DrawRay(caster.transform.position + Vector3.up, directionToHit, Color.white, 1);
-            //        }
-            //    }
-            //}
-
-            //Debug.Break();
-            //RaycastHit[] coneCastHits = new RaycastHit[coneCastHitList.Count];
-            //coneCastHits = coneCastHitList.ToArray();
-
-            //foreach (var inCone in coneCastHits)
-            //{
-            //    if (inCone.transform.tag == "Team2")
-            //    {
-            //        Hero tempHero = inCone.transform.GetComponent<Hero>();
-            //        GameObject splash = Instantiate(Effects[2], tempHero.transform.position + Vector3.up, Quaternion.identity);
-            //        Destroy(splash, 0.3f);
-            //        tempHero.Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
-            //        //TODO Reducing attack damage 
-            //    }
-            //}
+            List<GameObject> inArea = skillMesh.GetComponentInChildren<CollisionObserver>().CollidedObjects;
+            
+            foreach (GameObject inCone in inArea)
+            {
+                if (inCone.transform.tag == "Team2")
+                {
+                    Hero tempHero = inCone.transform.GetComponent<Hero>();
+                   
+                    GameObject splash = Instantiate(Effects[1], tempHero.transform.position + Vector3.up, Quaternion.identity);
+                    Destroy(splash, 0.3f);
+                    tempHero.Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
+                    //TODO Reducing attack damage 
+                    StartCoroutine(MakeTheGameObjectJump(inCone));
+                }
+            }
 
             CasterAnimator.CrossFade("Attack", 0.1f);
         }
         tempHeroController.setIsAttacking(false);
+        tempHeroController.Agent.enabled = true;
+        tempHeroController.Agent.isStopped = false;
+    }
+    
+    IEnumerator MakeTheGameObjectJump(GameObject targetGO)
+    {
+        HeroController inConeHC = targetGO.transform.GetComponent<HeroController>();
+        targetGO.transform.GetComponent<Rigidbody>().useGravity = false;
+        inConeHC.Agent.enabled = false;
+        inConeHC.Agent.isStopped = true;
+        inConeHC.HeroLock = true;
+        Vector3 origin = targetGO.transform.position;
+        yield return new WaitForSeconds(0.1f);
+        targetGO.transform.DOMoveY(3, 0.3f);
+        yield return new WaitForSeconds(0.4f);
+        targetGO.transform.DOMove(origin, 0.3f);
+        yield return new WaitForSeconds(0.3f);
+        inConeHC.HeroLock = false;
+        inConeHC.Agent.enabled = true;
+        inConeHC.Agent.isStopped = false;
+        targetGO.transform.GetComponent<Rigidbody>().useGravity = true;
     }
 
-    
+
+
 }

@@ -39,13 +39,13 @@ public class SpellManager : MonoBehaviour
             }
         }
     }
-    public void CastWithDirection(int spellID, Vector3 direction, GameObject caster)
+    public void CastWithDirection(int spellID, GameObject skillMesh, GameObject caster)
     {
         foreach (GameObject spell in Spells)
         {
             if (spell.GetComponent<Spell>().ID == spellID)
             {
-                spell.GetComponent<Spell>().CastWithDirection(caster , direction);
+                spell.GetComponent<Spell>().CastWithDirection(caster , skillMesh);
             }
         }
     }

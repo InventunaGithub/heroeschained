@@ -23399,7 +23399,7 @@ MonoBehaviour:
   - {fileID: 1143630440}
   - {fileID: 1918485186}
   AOEIndicatorPrefab: {fileID: 1899250594192068, guid: 6561be0bdcabd634da8ca71c49c14153, type: 3}
-  AOEIndicatorConePrefab: {fileID: 149964, guid: 3328d5d74c357064087a925505b79caf, type: 3}
+  AOEIndicatorConePrefab: {fileID: 3544174859990511799, guid: fef4582b8d2f3cd4894c03bb7d0035d3, type: 3}
   GuildEnergy: 0
   GuildEnergyRefreshPerSecond: 10
   GuildEnergyBar: {fileID: 1946862829}
@@ -33744,7 +33744,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220352888}
   m_LocalRotation: {x: 0.11170767, y: -0.63591653, z: 0.093733855, w: 0.75785595}
-  m_LocalPosition: {x: 11, y: 3.54, z: 15.68}
+  m_LocalPosition: {x: 10.861, y: 3.54, z: 14.892}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -77,7 +77,7 @@ public class CardManager : MonoBehaviour
                 {
                     if (Physics.Raycast(ray, out hitData, 1000, ~heroLayer))
                     {
-                        AOEIndicatorCone.transform.DOLookAt(hitData.point , 0.01f);
+                        AOEIndicatorCone.transform.DOLookAt(hitData.point , 0.01f, AxisConstraint.Y);
                     }
                 }
             }
@@ -112,7 +112,7 @@ public class CardManager : MonoBehaviour
                         HC.MainHero.UltimateEnergy = 0;
                         HC.UltimateSkillPulled = false;
                         Debug.DrawLine(usingHeroGO.transform.position, hitData.point, Color.cyan , 2);
-                        SM.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, (hitData.point - usingHeroGO.transform.position).normalized, usingHeroGO);
+                        SM.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, AOEIndicatorCone , usingHeroGO);
                         AOEIndicatorCone.SetActive(false);
                     }
                     else
@@ -193,7 +193,7 @@ public class CardManager : MonoBehaviour
             }
             else if (usingCard.CardType == CardTypes.PickADirectionUlti)
             {
-                Quaternion spawnRotation = Quaternion.Euler(0, 0, 0);
+                Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
                 this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
                 if (AOEIndicatorCone == null)
                 {

@@ -35,6 +35,7 @@ public class HeroController : MonoBehaviour
     public bool Victory = false;
     public bool SeeingTarget = false;
     public bool UltimateSkillPulled = false;
+    public bool HeroLock = false;
     private bool interwal = false;
     private bool agentEnabled = false;
     public float Distance = 0;
@@ -95,7 +96,7 @@ public class HeroController : MonoBehaviour
 
     void Update()
     {
-        if (BM.GameStarted)
+        if (BM.GameStarted && !HeroLock)
         {
             if (!agentEnabled)
             {

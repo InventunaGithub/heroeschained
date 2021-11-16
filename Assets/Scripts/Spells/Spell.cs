@@ -24,7 +24,7 @@ public class Spell : MonoBehaviour
     {
 
     }
-    public virtual void CastWithDirection(GameObject caster, Vector3 direction)
+    public virtual void CastWithDirection(GameObject caster, GameObject skillMesh)
     {
 
     }
