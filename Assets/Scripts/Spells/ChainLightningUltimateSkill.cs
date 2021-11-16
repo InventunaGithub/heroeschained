@@ -37,7 +37,7 @@ public class ChainLightningUltimateSkill : Spell
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
         yield return new WaitForSeconds(CastTime);
-        if (casterHero.Health > 0)
+        if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             GameObject targetGO = null;
             CasterAnimator.CrossFade("Attack", 0.1f);

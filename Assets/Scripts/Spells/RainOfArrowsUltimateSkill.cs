@@ -38,7 +38,7 @@ public class RainOfArrowsUltimateSkill : Spell
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
         yield return new WaitForSeconds(CastTime);
-        if (casterHero.Health > 0)
+        if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
             for (int i = 0; i < tempHeroController.EnemyTeam.Count * HitEachEnemyWithAmount; i++)

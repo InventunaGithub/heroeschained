@@ -29,10 +29,10 @@ public class HeroController : MonoBehaviour
     private LayerMask obstructionMask;
     private List<Transform> inRange = new List<Transform>();
     private Animator heroAnimator;
-    private bool isDead = false;
+    public bool IsDead = false;
     private bool isAttacking = false;
     private bool isRunning = false;
-    private bool victory = false;
+    public bool Victory = false;
     public bool SeeingTarget = false;
     public bool UltimateSkillPulled = false;
     private bool interwal = false;
@@ -105,14 +105,14 @@ public class HeroController : MonoBehaviour
             }
 
 
-            if (MainHero.Health <= 0 && EnemyTeam.Count != 0  && !isDead) //Death state
+            if (MainHero.Health <= 0 && EnemyTeam.Count != 0  && !IsDead) //Death state
             {
                 Destroy(UltimateSkillCardGO);
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
                 HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
                 EnergyBar.value = 0;
-                isDead = true;
+                IsDead = true;
                 DyingAnimation();
                 team.Remove(MainHero);
                 if (Agent.enabled)
@@ -124,7 +124,7 @@ public class HeroController : MonoBehaviour
                 Agent.enabled = false;
                 CC.enabled = false;
             }
-            else if (EnemyTeam.Count == 0 && !victory && !isDead) //Victory state
+            else if (EnemyTeam.Count == 0 && !Victory && !IsDead) //Victory state
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
@@ -134,7 +134,7 @@ public class HeroController : MonoBehaviour
                 {
                     MainHero.Health = 1;
                 }
-                victory = true;
+                Victory = true;
                 VictoryAnimation();
                 if (Agent.enabled)
                 {
@@ -144,7 +144,7 @@ public class HeroController : MonoBehaviour
                 Agent.enabled = false;
                 CC.enabled = false;
             }
-            else if(!victory && !isDead)
+            else if(!Victory && !IsDead)
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
@@ -338,7 +338,7 @@ public class HeroController : MonoBehaviour
    
     public void VictoryAnimation()
     {
-        isDead = false;
+        IsDead = false;
         onCooldown = false;
         heroAnimator.CrossFade("Victory", 0.1f);
     }

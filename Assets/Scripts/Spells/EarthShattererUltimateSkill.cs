@@ -33,7 +33,7 @@ public class EarthShattererUltimateSkill : Spell
     IEnumerator CastSpellLag(Hero casterHero, GameObject caster, Vector3 direction)
     {
         yield return new WaitForSeconds(CastTime);
-        if (casterHero.Health > 0)
+        if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             //RaycastHit[] sphereCastHits = Physics.SphereCastAll(caster.transform.position - new Vector3(0, 0, RadiusOfCone), RadiusOfCone, direction, DistanceOfCone);
             //List<RaycastHit> coneCastHitList = new List<RaycastHit>();
