@@ -19,12 +19,13 @@ public class Hero : MonoBehaviour
     public int UltimateSkill;
     public int UltimateSkillCardID;
     public HeroSO RootSO;
-    public int HeroID;
+    public int ID;
     public string Name;
     public GameObject HeroObject;
     public int BaseHealth;
     public int BaseDamage;
     public int BaseDefence;
+    public float AttackSpeed; // Attacks Per Second
     public int Armor;
     public int Damage;
     public int Defence;
@@ -40,7 +41,7 @@ public class Hero : MonoBehaviour
 
     public void Init(HeroSO rootSO)
     {
-        HeroID = rootSO.HeroID;
+        ID = rootSO.HeroID;
         Name = rootSO.Name;
         BaseHealth = rootSO.BaseHealth;
         Range = rootSO.Range;
@@ -58,6 +59,7 @@ public class Hero : MonoBehaviour
         UltimateSkillCardID = rootSO.UltimateSkillCardID;
         UltimateEnergy = 0;
         Energy = 0;
+        AttackSpeed = 1; //This here will be effected by weapon. 1 is default for now
         inventory = GetComponent<Inventory>();
         equipment = GetComponent<Equipment>();
     }
@@ -112,6 +114,14 @@ public class Hero : MonoBehaviour
         if (UltimateEnergy < 0)
         {
             UltimateEnergy = 0;
+        }
+        if (AttackSpeed >= 5)
+        {
+            AttackSpeed = 5;
+        }
+        if (AttackSpeed < 0)
+        {
+            AttackSpeed = 0;
         }
     }
 

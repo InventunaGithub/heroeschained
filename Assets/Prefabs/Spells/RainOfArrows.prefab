@@ -52,8 +52,8 @@ MonoBehaviour:
   - {fileID: 158776, guid: 524b12464dce5b248a893d67a188da05, type: 3}
   CastTime: 2
   AOERange: 1
-  EnergyCost: 15
+  EnergyCost: 25
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
-  PrimaryDamageMultiplier: 1.3
-  SecondaryDamageMultiplier: 0.6
+  PrimaryDamagePercent: 120
+  SecondaryDamagePercent: 80

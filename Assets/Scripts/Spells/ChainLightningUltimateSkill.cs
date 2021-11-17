@@ -7,10 +7,10 @@ using DG.Tweening;
 public class ChainLightningUltimateSkill : Spell
 {
     //Hit the closet enemy for 160% damage and then the next closet enemy for 120% damage then 80%, 40%
-    public float PrimaryDamageMultiplier;
-    public float SecondaryDamageMultiplier;
-    public float ThirdDamageMultiplier;
-    public float FourthDamageMultiplier;
+    public float PrimaryDamagePercent;
+    public float SecondaryDamagePercent;
+    public float ThirdDamagePercent;
+    public float FourthDamagePercent;
     HeroController tempHeroController;
     public override void Cast(GameObject caster, GameObject target)
     {
@@ -50,7 +50,7 @@ public class ChainLightningUltimateSkill : Spell
                 targetGO = tempHeroController.ClosestEnemy(tempList);
                 projectile.transform.DOMove(targetGO.transform.position + Vector3.up ,  travelTime);
                 yield return new WaitForSeconds(travelTime);
-                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
+                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * (PrimaryDamagePercent / 100)));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 GameObject splash1 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
                 Destroy(splash1, 0.5f);
@@ -60,7 +60,7 @@ public class ChainLightningUltimateSkill : Spell
                 targetGO = tempHeroController.ClosestEnemy(tempList);
                 projectile.transform.DOMove(targetGO.transform.position + Vector3.up, travelTime);
                 yield return new WaitForSeconds(travelTime);
-                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * SecondaryDamageMultiplier));
+                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * (SecondaryDamagePercent / 100)));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 GameObject splash2 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
                 Destroy(splash2, 0.5f);
@@ -70,7 +70,7 @@ public class ChainLightningUltimateSkill : Spell
                 targetGO = tempHeroController.ClosestEnemy(tempList);
                 projectile.transform.DOMove(targetGO.transform.position + Vector3.up, travelTime);
                 yield return new WaitForSeconds(travelTime);
-                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * ThirdDamageMultiplier));
+                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * (ThirdDamagePercent / 100)));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 GameObject splash3 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
                 Destroy(splash3, 0.5f);
@@ -80,7 +80,7 @@ public class ChainLightningUltimateSkill : Spell
                 targetGO = tempHeroController.ClosestEnemy(tempList);
                 projectile.transform.DOMove(targetGO.transform.position + Vector3.up, travelTime);
                 yield return new WaitForSeconds(travelTime);
-                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * FourthDamageMultiplier));
+                targetGO.GetComponent<Hero>().Hurt((int)(casterHero.Damage * (FourthDamagePercent / 100)));
                 tempList.Remove(tempHeroController.ClosestEnemy(tempList).GetComponent<Hero>());
                 GameObject splash4 = Instantiate(Effects[2], targetGO.transform.position + Vector3.up, Quaternion.identity);
                 Destroy(splash4, 0.5f);

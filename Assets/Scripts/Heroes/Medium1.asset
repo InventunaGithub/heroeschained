@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
   m_Name: Medium1
   m_EditorClassIdentifier: 
-  HeroID: 0
+  HeroID: 3
   Name: Medium1
   BaseHealth: 400
   BaseDefence: 10

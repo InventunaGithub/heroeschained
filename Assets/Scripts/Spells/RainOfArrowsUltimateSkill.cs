@@ -7,8 +7,8 @@ using DG.Tweening;
 public class RainOfArrowsUltimateSkill : Spell
 {
     //Shoots 3 arrows of light into the sky that multiply and hit all enemies 3 times for 100% damage while reduce their def by 10% per hit for (10)secs
-    public float PrimaryDamageMultiplier;
-    public float ReduceDefMultiplier;
+    public float PrimaryDamagePercent;
+    public float ReduceDefPercent;
     public int HitEachEnemyWithAmount;
     public int ReduceDefSeconds;
     HeroController tempHeroController;
@@ -61,7 +61,7 @@ public class RainOfArrowsUltimateSkill : Spell
                         arrows.RemoveAt(arrows.Count - 1);
                         GameObject splash = Instantiate(Effects[1], hero.transform.position + Vector3.up, Quaternion.identity);
                         Destroy(splash, 0.3f);
-                        hero.Hurt(casterHero.Damage);
+                        hero.Hurt((int)(casterHero.Damage * (PrimaryDamagePercent / 100)));
                         lowerDef(hero, ReduceDefSeconds);
                     }
                     else
@@ -78,7 +78,7 @@ public class RainOfArrowsUltimateSkill : Spell
     IEnumerator lowerDef(Hero hero , int time)
     {
         int tempDefence = hero.Defence;
-        hero.Defence -= (int)(hero.BaseDefence * ReduceDefMultiplier);
+        hero.Defence -= (int)(hero.BaseDefence * (ReduceDefPercent / 100));
         if(hero.Defence < 0 )
         {
             hero.Defence = 0;

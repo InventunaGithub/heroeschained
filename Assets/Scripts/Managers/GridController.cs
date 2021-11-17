@@ -7,44 +7,32 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
+    [HideInInspector] public Renderer GridRenderer;
     BattlefieldManager BM;
-    Renderer gridRenderer;
     public GameObject HeroOnGrid;
-    bool gridFull;
-    public bool Dropped;
+    public int ID;
     void Start()
     {
         BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
-        gridRenderer = GetComponent<Renderer>();
+        GridRenderer = GetComponent<Renderer>();
     }
- 
+
     private void OnTriggerEnter(Collider other)
-    {   
+    {
+        BM.GridCurrentlyOn = this.gameObject;
         if(HeroOnGrid == null)
         {
             HeroOnGrid = other.gameObject;
-            gridFull = true;
         }
-        if(!gridFull || HeroOnGrid == BM.HitGO)
-        {
-            BM.LastGridPos = this.transform;
-            gridRenderer.material.color = Color.red;
-        }
-
+        GridRenderer.material.color = Color.red;
     }
-
     void OnTriggerExit(Collider other)
     {
-        if (!gridFull || HeroOnGrid == BM.HitGO)
+        if(HeroOnGrid == BM.HitGO)
         {
-            if (BM.LastGridPos != this.transform)
-            {
-                BM.LastGridPos = this.transform;
-            }
-            gridRenderer.material.color = Color.green;
             HeroOnGrid = null;
-            gridFull = false;
+            GridRenderer.material.color = Color.green;
         }
-        
+        BM.GridCurrentlyOn = null;
     }
 }

@@ -54,7 +54,7 @@ MonoBehaviour:
   EnergyCost: 20
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
-  PrimaryDamageMultiplier: 1.6
-  SecondaryDamageMultiplier: 1.2
-  ThirdDamageMultiplier: 0.8
-  FourthDamageMultiplier: 0.4
+  PrimaryDamagePercent: 160
+  SecondaryDamagePercent: 120
+  ThirdDamagePercent: 80
+  FourthDamagePercent: 40

@@ -7,7 +7,7 @@ using DG.Tweening;
 //Date: 11.2021
 public class RegenerateGC : Spell
 {
-    public float HealAmountMultiplier;
+    public float HealAmountPercent;
     public override void CastWithPosition(Vector3 positionToCast)
     {
         Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
@@ -32,7 +32,7 @@ public class RegenerateGC : Spell
                     GameObject splash = Instantiate(Effects[0], hero.transform.position, spawnRotation);
                     splash.transform.localScale = Vector3.one * 0.4f * AOERange;
                     Destroy(splash, 0.5f);
-                    hero.GetComponent<Hero>().Health += (int)(hero.GetComponent<Hero>().BaseHealth * HealAmountMultiplier);
+                    hero.GetComponent<Hero>().Health += (int)(hero.GetComponent<Hero>().BaseHealth * (HealAmountPercent/100));
                     hero.GetComponent<Hero>().Normalise();
                 }
             }

@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
-using DG.Tweening;
+using System.Collections;
+using UnityEngine;
 
 //Author: Mert Karavural
 //Date: 4.11.2021
 
 public class BloodDrain : Spell
 {
-    public float PrimaryDamageMultiplier;
-    public float HealAmountMultiplier;
+    //Renamed as Blood Steal
+    public float PrimaryDamagePercent;
+    public float HealAmountPercent;
     public override void Cast(GameObject caster , GameObject target)
     {
         SetCaster(caster);
@@ -38,8 +37,8 @@ public class BloodDrain : Spell
         if(!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * PrimaryDamageMultiplier)));
-            casterHero.Health += (int)(Math.Round(casterHero.Damage * HealAmountMultiplier));
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100))));
+            casterHero.Health += (int)(Math.Round((casterHero.Damage * (PrimaryDamagePercent / 100)) * (HealAmountPercent / 100)));
             casterHero.Normalise();
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             GameObject tempEffect = Instantiate(Effects[0], caster.transform.position, spawnRotation);

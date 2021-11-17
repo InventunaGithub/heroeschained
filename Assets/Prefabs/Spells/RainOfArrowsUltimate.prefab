@@ -54,7 +54,7 @@ MonoBehaviour:
   EnergyCost: 20
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
-  PrimaryDamageMultiplier: 1
-  ReduceDefMultiplier: 0.1
+  PrimaryDamagePercent: 100
+  ReduceDefPercent: 10
   HitEachEnemyWithAmount: 3
   ReduceDefSeconds: 10

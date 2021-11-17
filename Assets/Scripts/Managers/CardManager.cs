@@ -14,6 +14,7 @@ public class CardManager : MonoBehaviour
     private Ray ray;
     private Camera mainCam;
     private bool clickedOn;
+    private bool firstDraw = false;
     private LayerMask heroLayer;
     public GameObject AOEIndicatorPrefab;
     public GameObject AOEIndicatorConePrefab;
@@ -34,25 +35,29 @@ public class CardManager : MonoBehaviour
     {
         mainCam = Camera.main;
         heroLayer = LayerMask.GetMask("HeroLayer");
-        CardArea = GameObject.Find("CardArea");
         SM = GetComponent<SpellManager>();
         BM = GetComponent<BattlefieldManager>();
         GuildEnergyBar.maxValue = MaxGuildEnergy;
         StartCoroutine(RestoreEnergy());
-        for (int i = 0; i < 4; i++)
-        {
-            Hand.Add(Deck[Deck.Count - 1]);
-            GameObject tempCardGO = Instantiate(FindCard(Deck[Deck.Count - 1]), Vector3.zero, Quaternion.identity);
-            tempCardGO.transform.SetParent(CardArea.transform);
-            Deck.RemoveAt(Deck.Count - 1);
-        }
-        RealignCards();
+        
     }
     void Update()
     {
-        RealignCards();
         if (BM.GameStarted)
         {
+            if (!firstDraw)
+            {
+                CardArea = GameObject.Find("CardArea");
+                for (int i = 0; i < 4; i++)
+                {
+                    Hand.Add(Deck[Deck.Count - 1]);
+                    GameObject tempCardGO = Instantiate(FindCard(Deck[Deck.Count - 1]), Vector3.zero, Quaternion.identity);
+                    tempCardGO.transform.SetParent(CardArea.transform);
+                    Deck.RemoveAt(Deck.Count - 1);
+                }
+                firstDraw = true;
+            }
+            RealignCards();
             ray = mainCam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
             Physics.Raycast(ray, out hitData, 1000, ~heroLayer);

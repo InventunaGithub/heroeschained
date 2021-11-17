@@ -54,8 +54,6 @@ MonoBehaviour:
   EnergyCost: 20
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
-  PrimaryDamageMultiplier: 0
-  HealAmountMultiplier: 0
-  DistanceOfCone: 3
-  RadiusOfCone: 3
-  AngleOfCone: 45
+  PrimaryDamageMultiplier: 1.5
+  ReduceAttackSpeedTime: 999
+  ReduceAttackSpeedPercent: 20

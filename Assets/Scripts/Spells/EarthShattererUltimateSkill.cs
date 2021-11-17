@@ -9,10 +9,9 @@ public class EarthShattererUltimateSkill : Spell
 {
     //With all his might they slam their weapon on the ground making it crumble, does 150% damage to all enemies in a cone and reducing their attack speed by 20%
     public float PrimaryDamageMultiplier;
-    public float HealAmountMultiplier;
-    public float DistanceOfCone;
-    public float RadiusOfCone;
-    public float AngleOfCone;
+    public float ReduceAttackSpeedTime;
+    public float ReduceAttackSpeedPercent;
+    [Range(0, 100)]
     HeroController tempHeroController;
 
     public override void CastWithDirection(GameObject caster, GameObject skillMesh)
@@ -29,7 +28,7 @@ public class EarthShattererUltimateSkill : Spell
         CasterAnimator.CrossFade("Cast", 0.1f);
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
-        tempHeroController.Agent.isStopped = true;
+        tempHeroController.HeroLock = true;
         tempHeroController.Agent.enabled = false;
         caster.transform.DOLookAt(skillMesh.transform.position + Vector3.forward, 0.1f);
         StartCoroutine(CastSpellLag(casterHero, caster , skillMesh));
@@ -50,8 +49,8 @@ public class EarthShattererUltimateSkill : Spell
                     GameObject splash = Instantiate(Effects[1], tempHero.transform.position + Vector3.up, Quaternion.identity);
                     Destroy(splash, 0.3f);
                     tempHero.Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
-                    //TODO Reducing attack damage 
                     StartCoroutine(MakeTheGameObjectJump(inCone));
+                    StartCoroutine(SlowAttackSpeed(inCone , ReduceAttackSpeedTime));
                 }
             }
 
@@ -59,25 +58,35 @@ public class EarthShattererUltimateSkill : Spell
         }
         tempHeroController.setIsAttacking(false);
         tempHeroController.Agent.enabled = true;
-        tempHeroController.Agent.isStopped = false;
+        tempHeroController.HeroLock = false;
     }
     
+    IEnumerator SlowAttackSpeed(GameObject targetGO , float duration)
+    {
+        HeroController targetHC = targetGO.GetComponent<HeroController>();
+        Hero targetHero = targetGO.GetComponent<Hero>();
+        targetHero.AttackSpeed -= targetHero.AttackSpeed / (ReduceAttackSpeedPercent / 100);
+        targetHero.Normalise();
+        targetHC.CalculateNormalAttackCooldown();
+        yield return new WaitForSeconds(duration);
+        targetHero.AttackSpeed += targetHero.AttackSpeed / (ReduceAttackSpeedPercent / 100);
+        targetHero.Normalise();
+        targetHC.CalculateNormalAttackCooldown();
+    }
     IEnumerator MakeTheGameObjectJump(GameObject targetGO)
     {
         HeroController inConeHC = targetGO.transform.GetComponent<HeroController>();
         targetGO.transform.GetComponent<Rigidbody>().useGravity = false;
-        inConeHC.Agent.enabled = false;
-        inConeHC.Agent.isStopped = true;
         inConeHC.HeroLock = true;
+        inConeHC.Agent.enabled = false;
         Vector3 origin = targetGO.transform.position;
         yield return new WaitForSeconds(0.1f);
         targetGO.transform.DOMoveY(3, 0.3f);
         yield return new WaitForSeconds(0.4f);
         targetGO.transform.DOMove(origin, 0.3f);
         yield return new WaitForSeconds(0.3f);
-        inConeHC.HeroLock = false;
         inConeHC.Agent.enabled = true;
-        inConeHC.Agent.isStopped = false;
+        inConeHC.HeroLock = false;
         targetGO.transform.GetComponent<Rigidbody>().useGravity = true;
     }
 

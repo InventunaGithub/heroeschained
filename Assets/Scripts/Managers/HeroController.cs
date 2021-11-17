@@ -52,6 +52,7 @@ public class HeroController : MonoBehaviour
     private CapsuleCollider CC;
     private Camera mainCam;
     private GameObject UltimateSkillCardGO;
+    public GridController GridCurrentlyOn;
 
     void Start()
     {
@@ -79,7 +80,7 @@ public class HeroController : MonoBehaviour
         HeroEnergyBar = Instantiate(EnergyBarGO, gameObject.transform.position + -(Vector3.up * 0.1f), gameObject.transform.rotation);
         HeroEnergyBar.transform.SetParent(GameObject.Find("Canvas").transform);
         obstructionMask = LayerMask.GetMask("Obstacle");
-        NormalAttackCooldown = 2 - (0.5f);
+        CalculateNormalAttackCooldown();
         if (NormalAttackCooldown < 0.7f)
         {
             NormalAttackCooldown = 0.7f;
@@ -174,7 +175,10 @@ public class HeroController : MonoBehaviour
                 if (MainHero.AIType == AITypes.Closest && !interwal && !isAttacking)
                 {
                     StartCoroutine(SelectClosestEnemy());
-                    transform.DOLookAt(TargetHeroGO.transform.position, 0.1f);
+                    if(TargetHeroGO != null)
+                    {
+                        transform.DOLookAt(TargetHeroGO.transform.position, 0.1f);
+                    }
                 }
                 else if (MainHero.AIType == AITypes.Lockon && !isAttacking)
                 {
@@ -349,5 +353,9 @@ public class HeroController : MonoBehaviour
         isAttacking = given;
     }
 
+    public void CalculateNormalAttackCooldown()
+    {
+        NormalAttackCooldown  = 1 / MainHero.AttackSpeed;
+    }
 
 }
