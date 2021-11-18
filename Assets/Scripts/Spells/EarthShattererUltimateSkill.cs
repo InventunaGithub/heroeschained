@@ -5,6 +5,8 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.AI;
 
+//Author: Mert Karavural
+//Date: 11.2021
 public class EarthShattererUltimateSkill : Spell
 {
     //With all his might they slam their weapon on the ground making it crumble, does 150% damage to all enemies in a cone and reducing their attack speed by 20%

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+//Author: Mert Karavural
+//Date: 11.2021
 public class RainOfArrowsUltimateSkill : Spell
 {
     //Shoots 3 arrows of light into the sky that multiply and hit all enemies 3 times for 100% damage while reduce their def by 10% per hit for (10)secs

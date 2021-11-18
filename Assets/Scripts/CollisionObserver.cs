@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Mert Karavural
+//Date: 11.2021
 public class CollisionObserver : MonoBehaviour
 {
     public List<GameObject> CollidedObjects;

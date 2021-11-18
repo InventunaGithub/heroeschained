@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+//Author: Mert Karavural
+//Date: 11.2021
 public class ChainLightningUltimateSkill : Spell
 {
     //Hit the closet enemy for 160% damage and then the next closet enemy for 120% damage then 80%, 40%
