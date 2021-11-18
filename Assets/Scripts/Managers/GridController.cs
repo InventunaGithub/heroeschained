@@ -27,6 +27,7 @@ public class GridController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Entered :" + transform.name);
         formationManager.GridCurrentlyOn = this.gameObject;
         if(HeroOnGrid == null)
         {
@@ -39,14 +40,14 @@ public class GridController : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-
-        if(HeroOnGrid == formationManager.ClickedGO)
+        if (GridRenderer.material.color != Color.white)
+        {
+            GridRenderer.material.color = Color.green;
+        }
+        Debug.Log("Exitted :" + transform.name);
+        if (HeroOnGrid == formationManager.ClickedGO)
         {
             HeroOnGrid = null;
-            if (GridRenderer.material.color != Color.white)
-            {
-                GridRenderer.material.color = Color.green;
-            }
         }
         formationManager.GridCurrentlyOn = null;
     }
