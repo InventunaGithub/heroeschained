@@ -13,6 +13,7 @@ public class ArrowShotBlue : Spell
     GameObject projectileGO;
     public Vector3 offset = new Vector3(0, 1, 0);
     private float travelTime;
+    public int GainEnergyAmount;
 
     public override void Cast(GameObject caster, GameObject target)
     {
@@ -36,7 +37,7 @@ public class ArrowShotBlue : Spell
         Destroy(projectileGO);
         GameObject splashGO = Instantiate(Effects[1], GetTarget().transform.position + offset, GetTarget().transform.rotation);
         targetHero.Hurt(casterHero.Damage);
-        casterHero.GainEnergy(5);
+        casterHero.GainEnergy(GainEnergyAmount);
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
     }

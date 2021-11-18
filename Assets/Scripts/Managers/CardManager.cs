@@ -226,7 +226,7 @@ public class CardManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.01f);
-            GuildEnergy += GuildEnergyRefreshPerSecond / 100;
+            GuildEnergy += GuildEnergyRefreshPerSecond / 100f;
             if(GuildEnergy > MaxGuildEnergy)
             {
                 GuildEnergy = MaxGuildEnergy;
