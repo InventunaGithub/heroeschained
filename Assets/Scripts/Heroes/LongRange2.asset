@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
   m_Name: LongRange2
   m_EditorClassIdentifier: 
-  HeroID: 0
+  HeroID: 4
   Name: LongRange2
   BaseHealth: 400
+  BaseDefence: 10
   BaseDamage: 60
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
+  Defence: 0
   Damage: 0
   Health: 0
   Range: 20
   MaxEnergy: 50
+  MaxUltimateEnergy: 10
   Skills: 0100000005000000
+  UltimateSkill: 10
+  UltimateSkillCardID: 4
   AIType: 0
   HeroType: 1
   HeroSkin: {fileID: 1011537662448562, guid: 1b38e6745e597ec4c9b81a84e6855b29, type: 3}

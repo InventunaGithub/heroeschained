@@ -8,6 +8,7 @@ public class SwordHit : Spell
 {
     Animator casterAnimator; 
     Animator targetAnimator;
+    public int GainEnergyAmount;
     public Vector3 offset = new Vector3(0, 1, 0);
     public override void Cast(GameObject caster, GameObject target)
     {
@@ -19,7 +20,7 @@ public class SwordHit : Spell
         tempHeroController.setIsAttacking(true);
         GameObject splashGO = Instantiate(Effects[0], target.transform.position + offset , target.transform.rotation);
         targetHero.Hurt(casterHero.Damage);
-        casterHero.GainEnergy(casterHero.Intelligence + 5);
+        casterHero.GainEnergy(GainEnergyAmount);
         Destroy(splashGO, 0.3f);
         tempHeroController.setIsAttacking(false);
     }

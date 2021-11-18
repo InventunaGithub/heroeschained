@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
   m_Name: Meele2
   m_EditorClassIdentifier: 
-  HeroID: 0
+  HeroID: 1
   Name: Meele2
-  BaseHealth: 400
+  BaseHealth: 4000
+  BaseDefence: 10
   BaseDamage: 60
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
+  Defence: 0
   Damage: 0
-  Health: 15
+  Health: 0
   Range: 1
   MaxEnergy: 50
+  MaxUltimateEnergy: 10
   Skills: 0000000004000000
+  UltimateSkill: 9
+  UltimateSkillCardID: 3
   AIType: 0
   HeroType: 2
   HeroSkin: {fileID: 1054337533542136, guid: 6476eae1e9db93d418ce447bd2f2cadc, type: 3}

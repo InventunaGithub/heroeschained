@@ -8,7 +8,7 @@ using DG.Tweening;
 //Date: 4.11.2021
 public class PowerStrike :  Spell
 {
-    public float PrimaryDamageMultiplier;
+    public float PrimaryDamagePercent;
     public override void Cast(GameObject caster, GameObject target)
     {
         SetCaster(caster);
@@ -24,18 +24,19 @@ public class PowerStrike :  Spell
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
         CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Idle", 0.1f);
+        CasterAnimator.CrossFade("Cast", 0.1f);
         GameObject castingEffect = Instantiate(Effects[1], caster.transform.position + Vector3.up, caster.transform.rotation);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
     }
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
         yield return new WaitForSeconds(CastTime);
-        if (casterHero.Health > 0)
+        if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * PrimaryDamageMultiplier)));
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
             targetHero.Normalise();
             GameObject tempEffect = Instantiate(Effects[0], target.transform.position + Vector3.up, target.transform.rotation);
             Destroy(tempEffect, 1);

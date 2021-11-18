@@ -16,9 +16,9 @@ public class HeroController : MonoBehaviour
     public Hero MainHero;
     public int TargetHero;
     public int SkillEnergyCost;
-    private List<Hero> enemyTeam;
+    public List<Hero> EnemyTeam;
     private List<Hero> team;
-    private NavMeshAgent agent;
+    public NavMeshAgent Agent;
     public float NormalAttackCooldown;
     private bool onCooldown = false;
     public float Radius = 25.0f; //This is sight Radius
@@ -27,13 +27,14 @@ public class HeroController : MonoBehaviour
     public GameObject TargetHeroGO;
     public GameObject[] Projectiles;
     private LayerMask obstructionMask;
-    private List<Transform> inRange = new List<Transform>();
     private Animator heroAnimator;
-    private bool isDead = false;
+    public bool IsDead = false;
     private bool isAttacking = false;
     private bool isRunning = false;
-    private bool victory = false;
+    public bool Victory = false;
     public bool SeeingTarget = false;
+    public bool UltimateSkillPulled = false;
+    public bool HeroLock = false;
     private bool interwal = false;
     private bool agentEnabled = false;
     public float Distance = 0;
@@ -43,84 +44,88 @@ public class HeroController : MonoBehaviour
     private GameObject HeroEnergyBar;
     private Slider HealthBar;
     private Slider EnergyBar;
-    private BattlefieldManager BM;
-    private SpellManager SM;
-    private Rigidbody RB;
-    private CapsuleCollider CC;
+    private BattlefieldManager battlefieldManager;
+    private SpellManager spellManager;
+    private CardManager cardManager;
+    private Rigidbody rigidBody;
+    private CapsuleCollider capsuleCollider;
     private Camera mainCam;
+    private GameObject UltimateSkillCardGO;
+    public GridController GridCurrentlyOn;
 
     void Start()
     {
-        BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
-        SM = GameObject.Find("Managers").GetComponent<SpellManager>();
-        RB = GetComponent<Rigidbody>();
-        CC = GetComponent<CapsuleCollider>();
+        battlefieldManager = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
+        spellManager = GameObject.Find("Managers").GetComponent<SpellManager>();
+        cardManager = GameObject.Find("Managers").GetComponent<CardManager>();
+        rigidBody = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         MainHero = GetComponent<Hero>();
-        agent = gameObject.GetComponent<NavMeshAgent>();
+        Agent = gameObject.GetComponent<NavMeshAgent>();
         heroAnimator = transform.GetChild(0).GetComponent<Animator>();
         MainHero.HeroObject = this.gameObject;
         if(gameObject.tag == "Team1")
         {
-            team = BM.Team1;
-            enemyTeam = BM.Team2;
+            team = battlefieldManager.Team1;
+            EnemyTeam = battlefieldManager.Team2;
         }
         else if(gameObject.tag == "Team2")
         {
-            team = BM.Team2;
-            enemyTeam = BM.Team1;
+            team = battlefieldManager.Team2;
+            EnemyTeam = battlefieldManager.Team1;
         }
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
         HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
         HeroEnergyBar = Instantiate(EnergyBarGO, gameObject.transform.position + -(Vector3.up * 0.1f), gameObject.transform.rotation);
         HeroEnergyBar.transform.SetParent(GameObject.Find("Canvas").transform);
         obstructionMask = LayerMask.GetMask("Obstacle");
-        NormalAttackCooldown = 2 - (MainHero.Dexterity * 0.5f);
+        CalculateNormalAttackCooldown();
         if (NormalAttackCooldown < 0.7f)
         {
             NormalAttackCooldown = 0.7f;
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
-        HealthBar.maxValue = MainHero.MaxHealth;
+        HealthBar.maxValue = MainHero.BaseHealth;
         EnergyBar = HeroEnergyBar.GetComponent<Slider>();
         EnergyBar.maxValue = MainHero.MaxEnergy;
-        agent.enabled = false;
-        RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        Agent.enabled = false;
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         mainCam = Camera.main;
 
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (BM.GameStarted)
+        if (battlefieldManager.GameStarted && !HeroLock)
         {
             if (!agentEnabled)
             {
                 agentEnabled = true;
-                agent.enabled = true;
+                Agent.enabled = true;
                 Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), false);
             }
 
 
-            if (MainHero.Health <= 0 && enemyTeam.Count != 0  && !isDead) //Death state
+            if (MainHero.Health <= 0 && EnemyTeam.Count != 0  && !IsDead) //Death state
             {
+                Destroy(UltimateSkillCardGO);
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
                 HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
                 EnergyBar.value = 0;
-                isDead = true;
+                IsDead = true;
                 DyingAnimation();
                 team.Remove(MainHero);
-                if (agent.enabled)
+                if (Agent.enabled)
                 {
-                    agent.isStopped = true;
+                    Agent.isStopped = true;
                 }
-                RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                RB.useGravity = false;
-                agent.enabled = false;
-                CC.enabled = false;
+                rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                rigidBody.useGravity = false;
+                Agent.enabled = false;
+                capsuleCollider.enabled = false;
             }
-            else if (enemyTeam.Count == 0 && !victory && !isDead) //Victory state
+            else if (EnemyTeam.Count == 0 && !Victory && !IsDead) //Victory state
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
@@ -130,55 +135,70 @@ public class HeroController : MonoBehaviour
                 {
                     MainHero.Health = 1;
                 }
-                victory = true;
+                Victory = true;
                 VictoryAnimation();
-                if (agent.enabled)
+                if (Agent.enabled)
                 {
-                    agent.isStopped = true;
+                    Agent.isStopped = true;
                 }
-                RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                agent.enabled = false;
-                CC.enabled = false;
+                rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                Agent.enabled = false;
+                capsuleCollider.enabled = false;
             }
-            else if(!victory && !isDead)
+            else if(!Victory && !IsDead)
             {
                 HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
                 HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + - (Vector3.up * 0.1f));
                 EnergyBar.value = MainHero.Energy;
+
+                if(MainHero.UltimateEnergy == MainHero.MaxUltimateEnergy && MainHero.MaxUltimateEnergy != 0)
+                {
+                    if(!UltimateSkillPulled)
+                    {
+                        UltimateSkillCardGO = cardManager.PullUltimateSkillCard(MainHero.HeroObject);
+                        UltimateSkillPulled = true;
+                    }
+                }
+
                 if (isRunning)
                 {
-                    RB.constraints = RigidbodyConstraints.None;
-                    RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    rigidBody.constraints = RigidbodyConstraints.None;
+                    rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
                 else
                 {
-                    RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                    RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
-                if (MainHero.AIType == AITypes.Closest && !interwal)
+                if (MainHero.AIType == AITypes.Closest && !interwal && !isAttacking)
                 {
                     StartCoroutine(SelectClosestEnemy());
+                    if(TargetHeroGO != null)
+                    {
+                        transform.DOLookAt(TargetHeroGO.transform.position, 0.1f);
+                    }
                 }
-                else if (MainHero.AIType == AITypes.Lockon)
+                else if (MainHero.AIType == AITypes.Lockon && !isAttacking)
                 {
                     if (TargetHeroGO == null)
                     {
-                        TargetHeroGO = ClosestEnemy();
+                        TargetHeroGO = ClosestEnemy(EnemyTeam);
                     }
                     else
                     {
                         if (TargetHeroGO.GetComponent<HeroController>().MainHero.Health <= 0)
                         {
-                            TargetHeroGO = ClosestEnemy();
+                            TargetHeroGO = ClosestEnemy(EnemyTeam);
                         }
                     }
+                    transform.DOLookAt(TargetHeroGO.transform.position, 0.1f);
                 }
                 NavMeshPath path = new NavMeshPath();
                 if (TargetHeroGO != null)
                 {
                     SeeingTarget = CanSeeTarget(TargetHeroGO);
-                    if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, agent.areaMask, path))
+                    if (NavMesh.CalculatePath(transform.position, TargetHeroGO.transform.position, Agent.areaMask, path))
                     {
                         float distance = Vector3.Distance(transform.position, path.corners[0]);
                         for (int j = 1; j < path.corners.Length; j++)
@@ -186,13 +206,13 @@ public class HeroController : MonoBehaviour
                             distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
                         }
                         Distance = distance;
-                        if ((distance > MainHero.Range && distance > agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
+                        if ((distance > MainHero.Range && distance > Agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
                         {
-                            agent.isStopped = false;
-                            agent.SetPath(path);
-                            if(agent.velocity != Vector3.zero)
+                            Agent.isStopped = false;
+                            Agent.SetPath(path);
+                            if(Agent.velocity != Vector3.zero)
                             {
-                                transform.rotation = Quaternion.LookRotation(agent.velocity, Vector3.up);
+                                transform.rotation = Quaternion.LookRotation(Agent.velocity, Vector3.up);
                             }
                             if (!isRunning)
                             {
@@ -202,23 +222,22 @@ public class HeroController : MonoBehaviour
                         }
                         else
                         {
-                            transform.DOLookAt(TargetHeroGO.transform.position , 0.1f);
                             isRunning = false;
-                            agent.isStopped = true;
-                            if (!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < SkillEnergyCost)
+                            Agent.isStopped = true;
+                            if (!onCooldown && EnemyTeam.Count >= 0 && !isAttacking && MainHero.Energy < SkillEnergyCost)
                             {
-                                if (TargetHero < enemyTeam.Count)
+                                if (TargetHero < EnemyTeam.Count)
                                 {
                                     StartCoroutine(CooldownTimer(NormalAttackCooldown));
-                                    SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , enemyTeam[TargetHero].HeroObject);
+                                    spellManager.Cast(MainHero.Skills[0] , MainHero.HeroObject , EnemyTeam[TargetHero].HeroObject);
                                 }
                             }
-                            else if(!onCooldown && enemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= SkillEnergyCost)
+                            else if(!onCooldown && EnemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= SkillEnergyCost)
                             {
-                                if (TargetHero < enemyTeam.Count)
+                                if (TargetHero < EnemyTeam.Count)
                                 {
                                     StartCoroutine(CooldownTimer(NormalAttackCooldown));
-                                    SM.Cast(MainHero.Skills[1], MainHero.HeroObject, enemyTeam[TargetHero].HeroObject);
+                                    spellManager.Cast(MainHero.Skills[1], MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
                                     MainHero.Energy -= 10;
                                 }
                             }
@@ -228,8 +247,7 @@ public class HeroController : MonoBehaviour
             }
         }
     }
-
-    public GameObject ClosestEnemy()
+    public GameObject ClosestEnemy(List<Hero> enemyTeam)
     {
         float closestTargetDistance = float.MaxValue;
         NavMeshPath path = null;
@@ -244,7 +262,7 @@ public class HeroController : MonoBehaviour
             }
             path = new NavMeshPath();
 
-            if (NavMesh.CalculatePath(transform.position, enemyTeam[i].HeroObject.transform.position, agent.areaMask, path))
+            if (NavMesh.CalculatePath(transform.position, enemyTeam[i].HeroObject.transform.position, Agent.areaMask, path))
             {
                 float distance = Vector3.Distance(transform.position, path.corners[0]);
 
@@ -292,7 +310,7 @@ public class HeroController : MonoBehaviour
     IEnumerator SelectClosestEnemy()
     {
         interwal = true;
-        TargetHeroGO = ClosestEnemy();
+        TargetHeroGO = ClosestEnemy(EnemyTeam);
         yield return new WaitForSeconds(1);
         interwal = false;
     }
@@ -324,7 +342,7 @@ public class HeroController : MonoBehaviour
    
     public void VictoryAnimation()
     {
-        isDead = false;
+        IsDead = false;
         onCooldown = false;
         heroAnimator.CrossFade("Victory", 0.1f);
     }
@@ -334,5 +352,9 @@ public class HeroController : MonoBehaviour
         isAttacking = given;
     }
 
+    public void CalculateNormalAttackCooldown()
+    {
+        NormalAttackCooldown  = 1 / MainHero.AttackSpeed;
+    }
 
 }

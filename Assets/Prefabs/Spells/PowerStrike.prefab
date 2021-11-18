@@ -50,7 +50,7 @@ MonoBehaviour:
   - {fileID: 162722, guid: 1fc71432c1bd537489e1be6246b56973, type: 3}
   CastTime: 1
   AOERange: 0
-  EnergyCost: 15
+  EnergyCost: 25
   CasterAnimator: {fileID: 0}
   TargetAnimator: {fileID: 0}
-  PrimaryDamageMultiplier: 1.3
+  PrimaryDamagePercent: 150

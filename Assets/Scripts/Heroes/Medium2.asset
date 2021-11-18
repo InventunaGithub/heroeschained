@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
   m_Name: Medium2
   m_EditorClassIdentifier: 
-  HeroID: 0
+  HeroID: 2
   Name: Medium2
   BaseHealth: 400
+  BaseDefence: 10
   BaseDamage: 60
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
-  Armor: 0
+  Defence: 0
   Damage: 0
   Health: 0
   Range: 10
   MaxEnergy: 50
+  MaxUltimateEnergy: 10
   Skills: 0200000003000000
+  UltimateSkill: 8
+  UltimateSkillCardID: 2
   AIType: 0
   HeroType: 0
   HeroSkin: {fileID: 1475453720705624, guid: 8f9228f2edb4a494b88ead025871460e, type: 3}

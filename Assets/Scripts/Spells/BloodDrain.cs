@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
-using DG.Tweening;
+using System.Collections;
+using UnityEngine;
 
 //Author: Mert Karavural
 //Date: 4.11.2021
 
 public class BloodDrain : Spell
 {
-    Animator casterAnimator;
-    Animator targetAnimator;
-    public float PrimaryDamageMultiplier;
-    public float HealAmountMultiplier;
+    //Renamed as Blood Steal
+    public float PrimaryDamagePercent;
+    public float HealAmountPercent;
     public override void Cast(GameObject caster , GameObject target)
     {
         SetCaster(caster);
@@ -28,19 +25,20 @@ public class BloodDrain : Spell
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
         CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Idle", 0.1f);
+        CasterAnimator.CrossFade("Cast", 0.1f);
         GameObject castingEffect = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
     }
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero ,GameObject caster , GameObject target)
     {
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
         yield return new WaitForSeconds(CastTime);
-        if(casterHero.Health > 0)
+        if(!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * PrimaryDamageMultiplier)));
-            casterHero.Health += (int)(Math.Round(casterHero.Damage * HealAmountMultiplier));
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
+            casterHero.Health += (int)(Math.Round((casterHero.Damage * (PrimaryDamagePercent / 100f)) * (HealAmountPercent / 100f)));
             casterHero.Normalise();
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             GameObject tempEffect = Instantiate(Effects[0], caster.transform.position, spawnRotation);

@@ -8,8 +8,8 @@ using DG.Tweening;
 //Date: 5.11.2021
 public class RainOfArrows : Spell
 {   
-    public float PrimaryDamageMultiplier ; 
-    public float SecondaryDamageMultiplier; 
+    public float PrimaryDamagePercent ; 
+    public float SecondaryDamagePercent; 
     public override void Cast(GameObject caster, GameObject target)
     {
         SetCaster(caster);
@@ -25,15 +25,16 @@ public class RainOfArrows : Spell
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
         CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Idle", 0.1f);
+        CasterAnimator.CrossFade("Cast", 0.1f);
         GameObject castingEffect = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
     }
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
         yield return new WaitForSeconds(CastTime);
-        if(casterHero.Health > 0)
+        if(!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
             Collider[] inAOE = Physics.OverlapSphere(targetHero.HeroObject.transform.position, AOERange);
@@ -43,12 +44,12 @@ public class RainOfArrows : Spell
                 {
                     if (hero != targetHero)
                     {
-                        hero.GetComponent<Hero>().Hurt((int)(casterHero.Damage * SecondaryDamageMultiplier));
+                        hero.GetComponent<Hero>().Hurt((int)(casterHero.Damage * (SecondaryDamagePercent / 100f)));
                     }
 
                 }
             }
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * PrimaryDamageMultiplier)));
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
             targetHero.Normalise();
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             GameObject AOERing = Instantiate(Effects[3], target.transform.position, spawnRotation);

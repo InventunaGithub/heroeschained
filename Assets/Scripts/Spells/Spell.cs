@@ -24,6 +24,10 @@ public class Spell : MonoBehaviour
     {
 
     }
+    public virtual void CastWithDirection(GameObject caster, GameObject skillMesh)
+    {
+
+    }
     public virtual void SetCaster(GameObject caster)
     {
         this.caster = caster;
