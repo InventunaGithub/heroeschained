@@ -84,7 +84,7 @@ public class BattlefieldManager : MonoBehaviour
             //Shooting A Raycast from mouse position to scene , if it hits a GameObject that tagged Team1 , start the clicking procedure.
             ray = mainCam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
-            Physics.Raycast(ray, out hitData, 10000000);
+            Physics.Raycast(ray, out hitData, 1000);
             if (Input.GetMouseButtonDown(0) && hitData.transform.tag == "Team1")
             {
                 //Click Lock , also get who we are hitting with the ray
@@ -144,16 +144,18 @@ public class BattlefieldManager : MonoBehaviour
     {
         foreach (var heroPair in formation)
         {
+            //Caching key and value
+            int gridID = heroPair.Key;
+            int heroID = heroPair.Value;
             //Instantiatin the heroObject , placing them in the correct grid
             //writing what grid hero is on , giving hero the team tag , adding hero to the team.
-            GameObject heroGO = Instantiate(HeroObjectPrefab, gridArea.transform.GetChild(heroPair.Key).transform.position, gridArea.transform.GetChild(heroPair.Key).transform.rotation);
-            heroGO.transform.SetParent(characters.transform);
-            heroGO.GetComponent<HeroController>().GridCurrentlyOn = gridArea.transform.GetChild(heroPair.Key).transform.GetComponent<GridController>();
+            GameObject heroGO = Instantiate(HeroObjectPrefab, gridArea.transform.GetChild(gridID).transform.position, gridArea.transform.GetChild(gridID).transform.rotation, characters.transform);
+            heroGO.GetComponent<HeroController>().GridCurrentlyOn = gridArea.transform.GetChild(gridID).transform.GetComponent<GridController>();
             heroGO.GetComponent<Hero>().HeroObject = heroGO;
             heroGO.transform.tag = teamName;
-            GameObject heroSkin = Instantiate(FindHero(heroPair.Value).HeroSkin, heroGO.transform.position, Quaternion.identity);
+            GameObject heroSkin = Instantiate(FindHero(heroID).HeroSkin, heroGO.transform.position, Quaternion.identity);
             heroSkin.transform.SetParent(heroGO.transform);
-            heroGO.GetComponent<Hero>().Init(FindHero(heroPair.Value));
+            heroGO.GetComponent<Hero>().Init(FindHero(heroID));
             team.Add(heroGO.GetComponent<Hero>());
         }  
     }

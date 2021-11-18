@@ -30,7 +30,6 @@ public class CardManager : MonoBehaviour
     public Slider GuildEnergyBar;
     [HideInInspector] public GameObject CardArea;
     public float MaxGuildEnergy;
-    Quaternion transRot;
     void Start()
     {
         mainCam = Camera.main;
@@ -51,8 +50,7 @@ public class CardManager : MonoBehaviour
                 for (int i = 0; i < 4; i++)
                 {
                     Hand.Add(Deck[Deck.Count - 1]);
-                    GameObject tempCardGO = Instantiate(FindCard(Deck[Deck.Count - 1]), Vector3.zero, Quaternion.identity);
-                    tempCardGO.transform.SetParent(CardArea.transform);
+                    GameObject tempCardGO = Instantiate(FindCard(Deck[Deck.Count - 1]), Vector3.zero, Quaternion.identity , CardArea.transform);
                     Deck.RemoveAt(Deck.Count - 1);
                 }
                 firstDraw = true;
