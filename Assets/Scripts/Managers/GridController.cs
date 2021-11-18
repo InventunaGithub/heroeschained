@@ -8,31 +8,46 @@ using UnityEngine;
 public class GridController : MonoBehaviour
 {
     [HideInInspector] public Renderer GridRenderer;
-    BattlefieldManager battlefieldManager;
+    FormationManager formationManager;
     public GameObject HeroOnGrid;
     public int ID;
-    void Start()
+    void Awake()
     {
-        battlefieldManager = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
+        formationManager = GameObject.Find("Managers").GetComponent<FormationManager>();
         GridRenderer = GetComponent<Renderer>();
     }
 
+    public void OnFormation()
+    {
+        GridRenderer.material.color = Color.white;
+    }
+    public void NotOnFormation()
+    {
+        GridRenderer.material.color = Color.green;
+    }
     private void OnTriggerEnter(Collider other)
     {
-        battlefieldManager.GridCurrentlyOn = this.gameObject;
+        formationManager.GridCurrentlyOn = this.gameObject;
         if(HeroOnGrid == null)
         {
             HeroOnGrid = other.gameObject;
         }
-        GridRenderer.material.color = Color.red;
+        if(GridRenderer.material.color != Color.white)
+        {
+            GridRenderer.material.color = Color.red;
+        }
     }
     void OnTriggerExit(Collider other)
     {
-        if(HeroOnGrid == battlefieldManager.HitGO)
+
+        if(HeroOnGrid == formationManager.ClickedGO)
         {
             HeroOnGrid = null;
-            GridRenderer.material.color = Color.green;
+            if (GridRenderer.material.color != Color.white)
+            {
+                GridRenderer.material.color = Color.green;
+            }
         }
-        battlefieldManager.GridCurrentlyOn = null;
+        formationManager.GridCurrentlyOn = null;
     }
 }
