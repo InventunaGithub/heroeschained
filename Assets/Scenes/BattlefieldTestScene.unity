@@ -2108,8 +2108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &83798554
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4012,8 +4013,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &138253036
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5328,8 +5330,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &172801481
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6880,8 +6883,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &231546500
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9787,8 +9791,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &352093308
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10808,8 +10813,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &390174218
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22121,8 +22127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &829169551
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23568,9 +23575,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Team1IDs: 000000000300000005000000
-  Team2IDs: e9030000e9030000e9030000ea030000
-  Team1GPs: 000000000100000002000000
-  Team2GPs: 00000000010000000200000004000000
+  Team2IDs: ea030000ea030000ea030000e9030000
+  Team1GridPositions: 000000000100000002000000
+  Team2GridPositions: 00000000010000000200000004000000
   Team1: []
   Team2: []
   HeroesSO:
@@ -23586,11 +23593,11 @@ MonoBehaviour:
   ReadyButton: {fileID: 1612019727}
   HitGO: {fileID: 0}
   LastGridPos: {x: 0, y: 0, z: 0}
-  GC: {fileID: 0}
+  GridCtrlr: {fileID: 0}
   ClickedOnHero: 0
   PlacingOnFullGrid: 0
   GameStarted: 0
-  onGrid: {x: 0, y: 0, z: 0}
+  GridCurrentlyOn: {fileID: 0}
 --- !u!114 &891635084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23642,6 +23649,7 @@ MonoBehaviour:
   GuildEnergyBar: {fileID: 1946862829}
   CardArea: {fileID: 976377565}
   MaxGuildEnergy: 100
+  slowTimeAmount: 0.5
 --- !u!114 &891635086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26577,8 +26585,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &979985182
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27115,8 +27124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &988765312
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28024,8 +28034,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1019678898
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38075,8 +38086,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1390238623
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39106,8 +39118,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1412445753
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43944,8 +43957,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1587624726
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45791,8 +45805,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1649942257
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47711,8 +47726,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1713256685
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48054,8 +48070,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1723945090
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -52192,8 +52209,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!65 &1850114902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -57718,8 +57736,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bb40935b7035f479e8caca90b287ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridRenderer: {fileID: 0}
   HeroOnGrid: {fileID: 0}
-  Dropped: 0
+  ID: 0
 --- !u!1001 &2054066950
 PrefabInstance:
   m_ObjectHideFlags: 0
