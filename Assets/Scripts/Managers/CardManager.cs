@@ -30,6 +30,7 @@ public class CardManager : MonoBehaviour
     public Slider GuildEnergyBar;
     [HideInInspector] public GameObject CardArea;
     public float MaxGuildEnergy;
+    public float slowTimeAmount;
     void Start()
     {
         mainCam = Camera.main;
@@ -114,7 +115,6 @@ public class CardManager : MonoBehaviour
                         GuildEnergy -= spellManager.FindSpell(usingCard.SpellID).EnergyCost;
                         HC.MainHero.UltimateEnergy = 0;
                         HC.UltimateSkillPulled = false;
-                        Debug.DrawLine(usingHeroGO.transform.position, hitData.point, Color.cyan , 2);
                         spellManager.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, AOEIndicatorCone , usingHeroGO);
                         AOEIndicatorCone.SetActive(false);
                     }
@@ -155,7 +155,7 @@ public class CardManager : MonoBehaviour
 
     IEnumerator SlowTime(float time)
     {
-        Time.timeScale = 0.3f;
+        Time.timeScale = slowTimeAmount;
         yield return new WaitForSeconds(time);
         Time.timeScale = 1;
     }

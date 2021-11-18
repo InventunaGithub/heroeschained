@@ -36,7 +36,7 @@ public class PowerStrike :  Spell
         if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100 ))));
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
             targetHero.Normalise();
             GameObject tempEffect = Instantiate(Effects[0], target.transform.position + Vector3.up, target.transform.rotation);
             Destroy(tempEffect, 1);

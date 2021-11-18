@@ -44,12 +44,12 @@ public class RainOfArrows : Spell
                 {
                     if (hero != targetHero)
                     {
-                        hero.GetComponent<Hero>().Hurt((int)(casterHero.Damage * (SecondaryDamagePercent / 100)));
+                        hero.GetComponent<Hero>().Hurt((int)(casterHero.Damage * (SecondaryDamagePercent / 100f)));
                     }
 
                 }
             }
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100))));
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
             targetHero.Normalise();
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             GameObject AOERing = Instantiate(Effects[3], target.transform.position, spawnRotation);

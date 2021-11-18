@@ -8,7 +8,7 @@ using UnityEngine.AI;
 public class EarthShattererUltimateSkill : Spell
 {
     //With all his might they slam their weapon on the ground making it crumble, does 150% damage to all enemies in a cone and reducing their attack speed by 20%
-    public float PrimaryDamageMultiplier;
+    public float PrimaryDamagePercent;
     public float ReduceAttackSpeedTime;
     public float ReduceAttackSpeedPercent;
     [Range(0, 100)]
@@ -48,7 +48,7 @@ public class EarthShattererUltimateSkill : Spell
                    
                     GameObject splash = Instantiate(Effects[1], tempHero.transform.position + Vector3.up, Quaternion.identity);
                     Destroy(splash, 0.3f);
-                    tempHero.Hurt((int)(casterHero.Damage * PrimaryDamageMultiplier));
+                    tempHero.Hurt((int)(casterHero.Damage * (PrimaryDamagePercent / 100f)));
                     StartCoroutine(MakeTheGameObjectJump(inCone));
                     StartCoroutine(SlowAttackSpeed(inCone , ReduceAttackSpeedTime));
                 }
@@ -65,11 +65,11 @@ public class EarthShattererUltimateSkill : Spell
     {
         HeroController targetHC = targetGO.GetComponent<HeroController>();
         Hero targetHero = targetGO.GetComponent<Hero>();
-        targetHero.AttackSpeed -= targetHero.AttackSpeed / (ReduceAttackSpeedPercent / 100);
+        targetHero.AttackSpeed -= targetHero.AttackSpeed / (ReduceAttackSpeedPercent / 100f);
         targetHero.Normalise();
         targetHC.CalculateNormalAttackCooldown();
         yield return new WaitForSeconds(duration);
-        targetHero.AttackSpeed += targetHero.AttackSpeed / (ReduceAttackSpeedPercent / 100);
+        targetHero.AttackSpeed += targetHero.AttackSpeed / (ReduceAttackSpeedPercent / 100f);
         targetHero.Normalise();
         targetHC.CalculateNormalAttackCooldown();
     }

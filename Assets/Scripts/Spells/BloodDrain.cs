@@ -37,8 +37,8 @@ public class BloodDrain : Spell
         if(!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             CasterAnimator.CrossFade("Attack", 0.1f);
-            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100))));
-            casterHero.Health += (int)(Math.Round((casterHero.Damage * (PrimaryDamagePercent / 100)) * (HealAmountPercent / 100)));
+            targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
+            casterHero.Health += (int)(Math.Round((casterHero.Damage * (PrimaryDamagePercent / 100f)) * (HealAmountPercent / 100f)));
             casterHero.Normalise();
             Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
             GameObject tempEffect = Instantiate(Effects[0], caster.transform.position, spawnRotation);

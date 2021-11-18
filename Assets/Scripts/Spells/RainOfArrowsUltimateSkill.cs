@@ -61,7 +61,7 @@ public class RainOfArrowsUltimateSkill : Spell
                         arrows.RemoveAt(arrows.Count - 1);
                         GameObject splash = Instantiate(Effects[1], hero.transform.position + Vector3.up, Quaternion.identity);
                         Destroy(splash, 0.3f);
-                        hero.Hurt((int)(casterHero.Damage * (PrimaryDamagePercent / 100)));
+                        hero.Hurt((int)(casterHero.Damage * (PrimaryDamagePercent / 100f)));
                         lowerDef(hero, ReduceDefSeconds);
                     }
                     else
@@ -78,7 +78,7 @@ public class RainOfArrowsUltimateSkill : Spell
     IEnumerator lowerDef(Hero hero , int time)
     {
         int tempDefence = hero.Defence;
-        hero.Defence -= (int)(hero.BaseDefence * (ReduceDefPercent / 100));
+        hero.Defence -= (int)(hero.BaseDefence * (ReduceDefPercent / 100f));
         if(hero.Defence < 0 )
         {
             hero.Defence = 0;

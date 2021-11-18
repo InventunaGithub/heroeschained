@@ -27,7 +27,6 @@ public class HeroController : MonoBehaviour
     public GameObject TargetHeroGO;
     public GameObject[] Projectiles;
     private LayerMask obstructionMask;
-    private List<Transform> inRange = new List<Transform>();
     private Animator heroAnimator;
     public bool IsDead = false;
     private bool isAttacking = false;
