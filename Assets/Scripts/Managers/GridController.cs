@@ -8,18 +8,18 @@ using UnityEngine;
 public class GridController : MonoBehaviour
 {
     [HideInInspector] public Renderer GridRenderer;
-    BattlefieldManager BM;
+    BattlefieldManager battlefieldManager;
     public GameObject HeroOnGrid;
     public int ID;
     void Start()
     {
-        BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
+        battlefieldManager = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
         GridRenderer = GetComponent<Renderer>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        BM.GridCurrentlyOn = this.gameObject;
+        battlefieldManager.GridCurrentlyOn = this.gameObject;
         if(HeroOnGrid == null)
         {
             HeroOnGrid = other.gameObject;
@@ -28,11 +28,11 @@ public class GridController : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        if(HeroOnGrid == BM.HitGO)
+        if(HeroOnGrid == battlefieldManager.HitGO)
         {
             HeroOnGrid = null;
             GridRenderer.material.color = Color.green;
         }
-        BM.GridCurrentlyOn = null;
+        battlefieldManager.GridCurrentlyOn = null;
     }
 }

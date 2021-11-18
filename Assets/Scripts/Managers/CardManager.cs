@@ -23,8 +23,8 @@ public class CardManager : MonoBehaviour
     private Card usingCard;
     private GameObject usingHeroGO;
     private GameObject usingCardGO;
-    private SpellManager SM;
-    private BattlefieldManager BM;
+    private SpellManager spellManager;
+    private BattlefieldManager battlefieldManager;
     [HideInInspector] public float GuildEnergy;
     public float GuildEnergyRefreshPerSecond;
     public Slider GuildEnergyBar;
@@ -35,15 +35,15 @@ public class CardManager : MonoBehaviour
     {
         mainCam = Camera.main;
         heroLayer = LayerMask.GetMask("HeroLayer");
-        SM = GetComponent<SpellManager>();
-        BM = GetComponent<BattlefieldManager>();
+        spellManager = GetComponent<SpellManager>();
+        battlefieldManager = GetComponent<BattlefieldManager>();
         GuildEnergyBar.maxValue = MaxGuildEnergy;
         StartCoroutine(RestoreEnergy());
         
     }
     void Update()
     {
-        if (BM.GameStarted)
+        if (battlefieldManager.GameStarted)
         {
             if (!firstDraw)
             {
@@ -90,8 +90,8 @@ public class CardManager : MonoBehaviour
             {
                 if(usingCard.CardType == CardTypes.GuildCard)
                 { 
-                    SM.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
-                    GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
+                    spellManager.CastWithPosition(usingCard.SpellID, hitData.point + (Vector3.up * 0.1f));
+                    GuildEnergy -= spellManager.FindSpell(usingCard.SpellID).EnergyCost;
                     clickedOn = false;
                     AOEIndicator.SetActive(false);
                     StartCoroutine(PullCardFromDeck());
@@ -99,8 +99,8 @@ public class CardManager : MonoBehaviour
                 else if (usingCard.CardType == CardTypes.DraggableUlti)
                 {
                     StartCoroutine(SlowTime(0.5f));
-                    SM.CastWithPosition(usingHeroGO.GetComponent<Hero>().UltimateSkill , hitData.point + (Vector3.up * 0.1f));
-                    GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
+                    spellManager.CastWithPosition(usingHeroGO.GetComponent<Hero>().UltimateSkill , hitData.point + (Vector3.up * 0.1f));
+                    GuildEnergy -= spellManager.FindSpell(usingCard.SpellID).EnergyCost;
                     clickedOn = false;
                     AOEIndicator.SetActive(false);
                     StartCoroutine(PullCardFromDeck());
@@ -113,11 +113,11 @@ public class CardManager : MonoBehaviour
                     {
                         StartCoroutine(SlowTime(0.5f));
                         StartCoroutine(DestroyCardRitual(usingCardGO));
-                        GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
+                        GuildEnergy -= spellManager.FindSpell(usingCard.SpellID).EnergyCost;
                         HC.MainHero.UltimateEnergy = 0;
                         HC.UltimateSkillPulled = false;
                         Debug.DrawLine(usingHeroGO.transform.position, hitData.point, Color.cyan , 2);
-                        SM.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, AOEIndicatorCone , usingHeroGO);
+                        spellManager.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, AOEIndicatorCone , usingHeroGO);
                         AOEIndicatorCone.SetActive(false);
                     }
                     else
@@ -134,10 +134,10 @@ public class CardManager : MonoBehaviour
                     {
                         StartCoroutine(SlowTime(0.5f));
                         StartCoroutine(DestroyCardRitual(usingCardGO));
-                        GuildEnergy -= SM.FindSpell(usingCard.SpellID).EnergyCost;
+                        GuildEnergy -= spellManager.FindSpell(usingCard.SpellID).EnergyCost;
                         HC.MainHero.UltimateEnergy = 0;
                         HC.UltimateSkillPulled = false;
-                        SM.Cast(HC.MainHero.UltimateSkill, HC.MainHero.HeroObject, HC.EnemyTeam[HC.TargetHero].HeroObject);
+                        spellManager.Cast(HC.MainHero.UltimateSkill, HC.MainHero.HeroObject, HC.EnemyTeam[HC.TargetHero].HeroObject);
                     }
                     else
                     {
@@ -165,7 +165,7 @@ public class CardManager : MonoBehaviour
     {
         usingCardGO = usedCard;
         usingCard = usedCard.GetComponent<Card>(); 
-        if (GuildEnergy >= SM.FindSpell(usingCard.SpellID).EnergyCost)
+        if (GuildEnergy >= spellManager.FindSpell(usingCard.SpellID).EnergyCost)
         {
             if (usingCard.CardType == CardTypes.GuildCard)
             {
@@ -179,7 +179,7 @@ public class CardManager : MonoBehaviour
                     AOEIndicator.SetActive(true);
                     AOEIndicator.transform.position = usedCard.transform.position;
                 }
-                AOEIndicator.transform.localScale = Vector3.one * 0.4f * SM.FindSpell(usingCard.SpellID).AOERange;
+                AOEIndicator.transform.localScale = Vector3.one * 0.4f * spellManager.FindSpell(usingCard.SpellID).AOERange;
             }
             else if(usingCard.CardType == CardTypes.DraggableUlti)
             {
@@ -193,7 +193,7 @@ public class CardManager : MonoBehaviour
                     AOEIndicator.SetActive(true);
                     AOEIndicator.transform.position = usedCard.transform.position;
                 }
-                AOEIndicator.transform.localScale = Vector3.one * 0.4f * SM.FindSpell(usingCard.SpellID).AOERange;
+                AOEIndicator.transform.localScale = Vector3.one * 0.4f * spellManager.FindSpell(usingCard.SpellID).AOERange;
                 this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
             }
             else if (usingCard.CardType == CardTypes.PickADirectionUlti)

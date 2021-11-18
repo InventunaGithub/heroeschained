@@ -11,8 +11,8 @@ public class BattlefieldManager : MonoBehaviour
     public Dictionary<int, int> Team2Formation = new Dictionary<int, int>();
     public List<int> Team1IDs;
     public List<int> Team2IDs;
-    public List<int> Team1GPs;
-    public List<int> Team2GPs;
+    public List<int> Team1GridPositions;
+    public List<int> Team2GridPositions;
     [HideInInspector] public List<Hero> Team1;
     [HideInInspector] public List<Hero> Team2;
     public List<HeroSO> HeroesSO;
@@ -27,7 +27,7 @@ public class BattlefieldManager : MonoBehaviour
     private Ray ray;
     [HideInInspector] public Vector3 LastGridPos;
     private LayerMask heroLayer;
-    [HideInInspector] public GridController GC;
+    [HideInInspector] public GridController GridCtrlr;
     [HideInInspector] public bool ClickedOnHero;
     [HideInInspector] public bool PlacingOnFullGrid;
     public bool GameStarted = false;
@@ -53,11 +53,11 @@ public class BattlefieldManager : MonoBehaviour
         }
         for (int i = 0; i < Team1IDs.Count; i++)
         {
-            Team1Formation.Add(Team1GPs[i], Team1IDs[i]);
+            Team1Formation.Add(Team1GridPositions[i], Team1IDs[i]);
         }
         for (int i = 0; i < Team2IDs.Count; i++)
         {
-            Team2Formation.Add(Team2GPs[i], Team2IDs[i]);
+            Team2Formation.Add(Team2GridPositions[i], Team2IDs[i]);
         }
 
         SetUpFormation(Team1Formation, gridArea1, "Team1", Team1);

@@ -14,18 +14,18 @@ public class Card : MonoBehaviour
     public string Description;
     public CardTypes CardType;
     [HideInInspector]public GameObject UsingHero;
-    private CardManager CM;
-    private SpellManager SM;
+    private CardManager cardManager;
+    private SpellManager spellManager;
     private Button cardButton;
     void Start()
     {
-        CM = GameObject.Find("Managers").GetComponent<CardManager>();
-        SM = GameObject.Find("Managers").GetComponent<SpellManager>();
+        cardManager = GameObject.Find("Managers").GetComponent<CardManager>();
+        spellManager = GameObject.Find("Managers").GetComponent<SpellManager>();
         cardButton = GetComponent<Button>();
     }
     void Update()
     {
-        if (CM.GuildEnergy >= SM.FindSpell(SpellID).EnergyCost)
+        if (cardManager.GuildEnergy >= spellManager.FindSpell(SpellID).EnergyCost)
         {
             cardButton.interactable = true;
         }

@@ -45,35 +45,35 @@ public class HeroController : MonoBehaviour
     private GameObject HeroEnergyBar;
     private Slider HealthBar;
     private Slider EnergyBar;
-    private BattlefieldManager BM;
-    private SpellManager SM;
-    private CardManager CM;
-    private Rigidbody RB;
-    private CapsuleCollider CC;
+    private BattlefieldManager battlefieldManager;
+    private SpellManager spellManager;
+    private CardManager cardManager;
+    private Rigidbody rigidBody;
+    private CapsuleCollider capsuleCollider;
     private Camera mainCam;
     private GameObject UltimateSkillCardGO;
     public GridController GridCurrentlyOn;
 
     void Start()
     {
-        BM = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
-        SM = GameObject.Find("Managers").GetComponent<SpellManager>();
-        CM = GameObject.Find("Managers").GetComponent<CardManager>();
-        RB = GetComponent<Rigidbody>();
-        CC = GetComponent<CapsuleCollider>();
+        battlefieldManager = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
+        spellManager = GameObject.Find("Managers").GetComponent<SpellManager>();
+        cardManager = GameObject.Find("Managers").GetComponent<CardManager>();
+        rigidBody = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         MainHero = GetComponent<Hero>();
         Agent = gameObject.GetComponent<NavMeshAgent>();
         heroAnimator = transform.GetChild(0).GetComponent<Animator>();
         MainHero.HeroObject = this.gameObject;
         if(gameObject.tag == "Team1")
         {
-            team = BM.Team1;
-            EnemyTeam = BM.Team2;
+            team = battlefieldManager.Team1;
+            EnemyTeam = battlefieldManager.Team2;
         }
         else if(gameObject.tag == "Team2")
         {
-            team = BM.Team2;
-            EnemyTeam = BM.Team1;
+            team = battlefieldManager.Team2;
+            EnemyTeam = battlefieldManager.Team1;
         }
         HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
         HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
@@ -90,14 +90,14 @@ public class HeroController : MonoBehaviour
         EnergyBar = HeroEnergyBar.GetComponent<Slider>();
         EnergyBar.maxValue = MainHero.MaxEnergy;
         Agent.enabled = false;
-        RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         mainCam = Camera.main;
 
     }
 
     void Update()
     {
-        if (BM.GameStarted && !HeroLock)
+        if (battlefieldManager.GameStarted && !HeroLock)
         {
             if (!agentEnabled)
             {
@@ -121,10 +121,10 @@ public class HeroController : MonoBehaviour
                 {
                     Agent.isStopped = true;
                 }
-                RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                RB.useGravity = false;
+                rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                rigidBody.useGravity = false;
                 Agent.enabled = false;
-                CC.enabled = false;
+                capsuleCollider.enabled = false;
             }
             else if (EnemyTeam.Count == 0 && !Victory && !IsDead) //Victory state
             {
@@ -142,9 +142,9 @@ public class HeroController : MonoBehaviour
                 {
                     Agent.isStopped = true;
                 }
-                RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
                 Agent.enabled = false;
-                CC.enabled = false;
+                capsuleCollider.enabled = false;
             }
             else if(!Victory && !IsDead)
             {
@@ -157,20 +157,20 @@ public class HeroController : MonoBehaviour
                 {
                     if(!UltimateSkillPulled)
                     {
-                        UltimateSkillCardGO = CM.PullUltimateSkillCard(MainHero.HeroObject);
+                        UltimateSkillCardGO = cardManager.PullUltimateSkillCard(MainHero.HeroObject);
                         UltimateSkillPulled = true;
                     }
                 }
 
                 if (isRunning)
                 {
-                    RB.constraints = RigidbodyConstraints.None;
-                    RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    rigidBody.constraints = RigidbodyConstraints.None;
+                    rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
                 else
                 {
-                    RB.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-                    RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
                 if (MainHero.AIType == AITypes.Closest && !interwal && !isAttacking)
                 {
@@ -230,7 +230,7 @@ public class HeroController : MonoBehaviour
                                 if (TargetHero < EnemyTeam.Count)
                                 {
                                     StartCoroutine(CooldownTimer(NormalAttackCooldown));
-                                    SM.Cast(MainHero.Skills[0] , MainHero.HeroObject , EnemyTeam[TargetHero].HeroObject);
+                                    spellManager.Cast(MainHero.Skills[0] , MainHero.HeroObject , EnemyTeam[TargetHero].HeroObject);
                                 }
                             }
                             else if(!onCooldown && EnemyTeam.Count >= 0 && !isAttacking && MainHero.Energy >= SkillEnergyCost)
@@ -238,7 +238,7 @@ public class HeroController : MonoBehaviour
                                 if (TargetHero < EnemyTeam.Count)
                                 {
                                     StartCoroutine(CooldownTimer(NormalAttackCooldown));
-                                    SM.Cast(MainHero.Skills[1], MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
+                                    spellManager.Cast(MainHero.Skills[1], MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
                                     MainHero.Energy -= 10;
                                 }
                             }
