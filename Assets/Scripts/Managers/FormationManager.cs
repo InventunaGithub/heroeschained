@@ -60,10 +60,12 @@ public class FormationManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && hitData.transform.tag == "Team1")
         {
             //Click Lock , also get who we are hitting with the ray
+            
             ClickedOnHero = true;
             ClickedGO = hitData.transform.gameObject;
             clickedHero = ClickedGO.GetComponent<Hero>();
             clickedHeroController = ClickedGO.GetComponent<HeroController>();
+            GridCurrentlyOn = FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).gameObject;
             //set last known grid position to the position we are lifting the hero up.
             LastGridPos = ClickedGO.transform.position;
         }
@@ -89,13 +91,30 @@ public class FormationManager : MonoBehaviour
                     CurrentFormation.Remove(clickedHeroController.GridCurrentlyOn.ID);
                     CurrentFormation.Add(tempGC.ID, clickedHero.ID);
                     ClickedGO.GetComponent<HeroController>().GridCurrentlyOn = tempGC;
+                }
+                else
+                {
+                    GameObject swappedGO = tempGC.HeroOnGrid;
+                    //Swap positions of heroes
+                    tempGC.HeroOnGrid.transform.DOMove(FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).transform.position, 0.1f);
+                    ClickedGO.transform.DOMove(GridCurrentlyOn.transform.position, 0.1f);
+                    //Swap Formation Values
+                    CurrentFormation[tempGC.ID] = clickedHero.ID;
+                    CurrentFormation[clickedHeroController.GridCurrentlyOn.ID] = tempGC.HeroOnGrid.GetComponent<Hero>().ID;
+                    //Swap Grids HeroOnGrid Values
+                    tempGC.HeroOnGrid = ClickedGO;
+                    FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).GetComponent<GridController>().HeroOnGrid = swappedGO;
+
+                    swappedGO.GetComponent<HeroController>().GridCurrentlyOn = clickedHeroController.GridCurrentlyOn;
+                    clickedHeroController.GridCurrentlyOn = tempGC;
+                    LastGridPos = GridCurrentlyOn.transform.position;
 
                 }
 
             }
             else
             {
-                ClickedGO.transform.DOMove(FormationArea.transform.GetChild(ClickedGO.GetComponent<HeroController>().GridCurrentlyOn.ID).transform.position , 0.1f);
+                ClickedGO.transform.DOMove(FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).transform.position , 0.1f);
             }
             ClickedOnHero = false;
             ClickedGO = null;
