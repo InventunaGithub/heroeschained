@@ -7,7 +7,7 @@ using DG.Tweening;
 //Date: 3.11.2021
 public class BattlefieldManager : MonoBehaviour
 {
-    [HideInInspector] public List<Hero> Team1;//Hero Team
+    public List<Hero> Team1;//Hero Team
     [HideInInspector] public List<Hero> Team2; 
     public List<HeroSO> HeroesSO;
     public GameObject Characters;

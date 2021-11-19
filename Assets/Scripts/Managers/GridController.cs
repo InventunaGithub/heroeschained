@@ -28,9 +28,9 @@ public class GridController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(formationManager.ClickedOnHero)
+        formationManager.GridCurrentlyOn = this.gameObject;
+        if (formationManager.ClickedOnHero || formationManager.ClickedOnHeroCard)
         {
-            formationManager.GridCurrentlyOn = this.gameObject;
             if (HeroOnGrid == null)
             {
                 HeroOnGrid = other.gameObject;
@@ -43,7 +43,7 @@ public class GridController : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        if (formationManager.ClickedOnHero)
+        if (formationManager.ClickedOnHero || formationManager.ClickedOnHeroCard)
         {
             if (GridRenderer.material.color != Color.white)
             {
@@ -53,7 +53,7 @@ public class GridController : MonoBehaviour
             {
                 HeroOnGrid = null;
             }
-            formationManager.GridCurrentlyOn = null;
         }
+        formationManager.GridCurrentlyOn = null;
     }
 }
