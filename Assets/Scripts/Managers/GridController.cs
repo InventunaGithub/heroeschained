@@ -24,29 +24,36 @@ public class GridController : MonoBehaviour
     public void NotOnFormation()
     {
         GridRenderer.material.color = Color.green;
+        HeroOnGrid = null;
     }
     private void OnTriggerEnter(Collider other)
     {
-        formationManager.GridCurrentlyOn = this.gameObject;
-        if(HeroOnGrid == null)
+        if(formationManager.ClickedOnHero)
         {
-            HeroOnGrid = other.gameObject;
-        }
-        if(GridRenderer.material.color != Color.white)
-        {
-            GridRenderer.material.color = Color.red;
+            formationManager.GridCurrentlyOn = this.gameObject;
+            if (HeroOnGrid == null)
+            {
+                HeroOnGrid = other.gameObject;
+            }
+            if (GridRenderer.material.color != Color.white)
+            {
+                GridRenderer.material.color = Color.red;
+            }
         }
     }
     void OnTriggerExit(Collider other)
     {
-        if (GridRenderer.material.color != Color.white)
+        if (formationManager.ClickedOnHero)
         {
-            GridRenderer.material.color = Color.green;
+            if (GridRenderer.material.color != Color.white)
+            {
+                GridRenderer.material.color = Color.green;
+            }
+            if (HeroOnGrid == formationManager.ClickedGO)
+            {
+                HeroOnGrid = null;
+            }
+            formationManager.GridCurrentlyOn = null;
         }
-        if (HeroOnGrid == formationManager.ClickedGO)
-        {
-            HeroOnGrid = null;
-        }
-        formationManager.GridCurrentlyOn = null;
     }
 }

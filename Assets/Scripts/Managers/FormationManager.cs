@@ -92,7 +92,7 @@ public class FormationManager : MonoBehaviour
                     CurrentFormation.Add(tempGC.ID, clickedHero.ID);
                     ClickedGO.GetComponent<HeroController>().GridCurrentlyOn = tempGC;
                 }
-                else
+                else //Swapping
                 {
                     GameObject swappedGO = tempGC.HeroOnGrid;
                     //Swap positions of heroes
@@ -104,7 +104,7 @@ public class FormationManager : MonoBehaviour
                     //Swap Grids HeroOnGrid Values
                     tempGC.HeroOnGrid = ClickedGO;
                     FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).GetComponent<GridController>().HeroOnGrid = swappedGO;
-
+                    //Swapping Grid Currently On
                     swappedGO.GetComponent<HeroController>().GridCurrentlyOn = clickedHeroController.GridCurrentlyOn;
                     clickedHeroController.GridCurrentlyOn = tempGC;
                     LastGridPos = GridCurrentlyOn.transform.position;
@@ -141,13 +141,22 @@ public class FormationManager : MonoBehaviour
     {
         for (int i = 0; i < FormationArea.transform.childCount; i++)
         {
+            GridController tempGridController = FormationArea.transform.GetChild(i).GetComponent<GridController>();
             if (CurrentFormation.ContainsKey(i))
             {
-                FormationArea.transform.GetChild(i).GetComponent<GridController>().OnFormation();
+
+                tempGridController.OnFormation();
+                foreach (Hero hero in battleFieldManager.Team1)
+                {
+                    if(hero.ID == CurrentFormation[i])
+                    {
+                        tempGridController.HeroOnGrid = hero.HeroObject;
+                    }
+                }
             }
             else
             {
-                FormationArea.transform.GetChild(i).GetComponent<GridController>().NotOnFormation();
+                tempGridController.NotOnFormation();
             }
         }
     }
