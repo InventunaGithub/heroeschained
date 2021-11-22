@@ -10,6 +10,7 @@ TagManager:
   - Team2
   - PlayerItem
   - MarketItem
+  - HeroCard
   layers:
   - Default
   - TransparentFX
