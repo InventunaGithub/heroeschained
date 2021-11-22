@@ -42,7 +42,7 @@ public class BattlefieldManager : MonoBehaviour
             heroSkin.transform.SetParent(heroGO.transform);
             heroGO.GetComponent<Hero>().Init(FindHero(heroID));
             team.Add(heroGO.GetComponent<Hero>());
-        }  
+        } 
     }
     public HeroSO FindHero(int heroID)
     {

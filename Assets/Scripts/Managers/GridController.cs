@@ -28,13 +28,13 @@ public class GridController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (HeroOnGrid == null)
+        {
+            HeroOnGrid = other.gameObject;
+        }
         formationManager.GridCurrentlyOn = this.gameObject;
         if (formationManager.ClickedOnHero || formationManager.ClickedOnHeroCard)
         {
-            if (HeroOnGrid == null)
-            {
-                HeroOnGrid = other.gameObject;
-            }
             if (GridRenderer.material.color != Color.white)
             {
                 GridRenderer.material.color = Color.red;

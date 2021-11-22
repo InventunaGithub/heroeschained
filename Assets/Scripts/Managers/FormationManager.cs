@@ -11,6 +11,7 @@ public class FormationManager : MonoBehaviour
     public List<int> CurrentTeam;
     public List<int> CurrentTeamGridPossitions;
     public List<int> AllHeroes;
+    public int MaxTeamCount;
     private Ray ray;
     private LayerMask heroLayer;
     private Camera mainCam;
@@ -26,10 +27,14 @@ public class FormationManager : MonoBehaviour
     [HideInInspector] public bool PlacingOnFullGrid;
     public GameObject GridCurrentlyOn;
     private GameObject formationPanel;
+    private GameObject inGamePanel;
     public GameObject ReadyButton;
     private GameObject createdHeroGO;
     private GameObject thumbnailArea;
+    public bool OnTrash;
+    private bool battleSequence;
     public GameObject thumbnailPrefab;
+    public GameObject Trash;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +43,10 @@ public class FormationManager : MonoBehaviour
         ReadyButton.SetActive(true);
         heroLayer = LayerMask.GetMask("HeroLayer");
         formationPanel = GameObject.Find("formationPanel");
-        thumbnailArea = GameObject.Find("HeroThumbnails");
+        inGamePanel = GameObject.Find("inGamePanel");
+        inGamePanel.SetActive(false);
+        thumbnailArea = GameObject.Find("Content");
+        Trash = GameObject.Find("Trash");
         formationPanel.SetActive(true);
         battleFieldManager = GameObject.Find("Managers").GetComponent<BattlefieldManager>(); 
         FormationArea = GameObject.Find("FormationArea");
@@ -51,7 +59,7 @@ public class FormationManager : MonoBehaviour
         if (CurrentFormation.Count > 0)
         {
             battleFieldManager.SetUpFormation(CurrentFormation, FormationArea, "Team1", battleFieldManager.Team1);
-            ChangeGrid();
+            StartCoroutine(FirstChangeGrid());
         }
 
         for (int i = 0; i < AllHeroes.Count; i++)
@@ -70,9 +78,10 @@ public class FormationManager : MonoBehaviour
                     onTeam = true;
                     foreach (Hero hero in battleFieldManager.Team1) 
                     {
-                        if(hero.ID == pair.Value)
+                        if(hero.ID == pair.Value) //this creates a bug where they all get the same card.
                         {
                             tempCardGO.GetComponent<HeroCard>().ConnectedGameObject = hero.gameObject;
+                            hero.gameObject.GetComponent<HeroController>().ConnectedHeroCard = tempCardGO;
                         }
                     }
                 }
@@ -86,6 +95,8 @@ public class FormationManager : MonoBehaviour
             }
 
         }
+
+        thumbnailArea.GetComponent<RectTransform>().sizeDelta = new Vector2(1080 , (Mathf.Ceil( AllHeroes.Count / 4 )+1 )* 400);
         RealignThumbnails();
 
         //battleFieldManager.BattlefieldInitialize();
@@ -93,6 +104,7 @@ public class FormationManager : MonoBehaviour
 
     void Update()
     {
+
         //Shooting A Raycast from mouse position to scene , if it hits a GameObject that tagged Team1 , start the clicking procedure.
         ray = mainCam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
@@ -113,46 +125,60 @@ public class FormationManager : MonoBehaviour
             //Change the GameObjects position that we hit with the ray.
             if (Physics.Raycast(ray, out hitData, 1000, ~heroLayer))
             {
-                ClickedGO.transform.transform.DOMove(hitData.point, 0.1f);
+                ClickedGO.transform.transform.DOMove(hitData.point, 0.001f);
             }
         }
 
         if (Input.GetMouseButtonUp(0) && ClickedOnHero)
         {
-            if (GridCurrentlyOn != null)
+            if(OnTrash)
             {
-                GridController tempGC = GridCurrentlyOn.GetComponent<GridController>();
-                if (tempGC.HeroOnGrid == ClickedGO)
-                {
-                    //set hitHero's position to new position and change the dictionary.
-                    ClickedGO.transform.DOMove(GridCurrentlyOn.transform.position , 0.1f);
-                    LastGridPos = GridCurrentlyOn.transform.position;
-                    CurrentFormation.Remove(clickedHeroController.GridCurrentlyOn.ID);
-                    CurrentFormation.Add(tempGC.ID, clickedHero.ID);
-                    ClickedGO.GetComponent<HeroController>().GridCurrentlyOn = tempGC;
-                }
-                else //Swapping
-                {
-                    GameObject swappedGO = tempGC.HeroOnGrid;
-                    //Swap positions of heroes
-                    tempGC.HeroOnGrid.transform.DOMove(FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).transform.position, 0.1f);
-                    ClickedGO.transform.DOMove(GridCurrentlyOn.transform.position, 0.1f);
-                    //Swap Formation Values
-                    CurrentFormation[tempGC.ID] = clickedHero.ID;
-                    CurrentFormation[clickedHeroController.GridCurrentlyOn.ID] = tempGC.HeroOnGrid.GetComponent<Hero>().ID;
-                    //Swap Grids HeroOnGrid Values
-                    tempGC.HeroOnGrid = ClickedGO;
-                    FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).GetComponent<GridController>().HeroOnGrid = swappedGO;
-                    //Swapping Grid Currently On
-                    swappedGO.GetComponent<HeroController>().GridCurrentlyOn = clickedHeroController.GridCurrentlyOn;
-                    clickedHeroController.GridCurrentlyOn = tempGC;
-                    LastGridPos = GridCurrentlyOn.transform.position;
-                }
-
+                CurrentFormation.Remove(clickedHeroController.GridCurrentlyOn.ID);
+                clickedHeroController.GridCurrentlyOn = null;
+                HeroCard swappedOutHeroCard = clickedHeroController.ConnectedHeroCard.GetComponent<HeroCard>();
+                swappedOutHeroCard.ChangeColor(Color.green);
+                swappedOutHeroCard.OnTeam = false;
+                battleFieldManager.Team1.Remove(clickedHeroController.MainHero);
+                Destroy(clickedHeroController.MainHero.HeroObject);
+                Trash.GetComponent<TrashAreaObserver>().destroyed();
             }
             else
             {
-                ClickedGO.transform.DOMove(FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).transform.position , 0.1f);
+                if (GridCurrentlyOn != null)
+                {
+                    GridController tempGC = GridCurrentlyOn.GetComponent<GridController>();
+                    if (tempGC.HeroOnGrid == ClickedGO)
+                    {
+                        //set hitHero's position to new position and change the dictionary.
+                        ClickedGO.transform.DOMove(GridCurrentlyOn.transform.position, 0.1f);
+                        LastGridPos = GridCurrentlyOn.transform.position;
+                        CurrentFormation.Remove(clickedHeroController.GridCurrentlyOn.ID);
+                        CurrentFormation.Add(tempGC.ID, clickedHero.ID);
+                        ClickedGO.GetComponent<HeroController>().GridCurrentlyOn = tempGC;
+                    }
+                    else //Swapping
+                    {
+                        GameObject swappedGO = tempGC.HeroOnGrid;
+                        //Swap positions of heroes
+                        tempGC.HeroOnGrid.transform.DOMove(FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).transform.position, 0.1f);
+                        ClickedGO.transform.DOMove(GridCurrentlyOn.transform.position, 0.1f);
+                        //Swap Formation Values
+                        CurrentFormation[tempGC.ID] = clickedHero.ID;
+                        CurrentFormation[clickedHeroController.GridCurrentlyOn.ID] = tempGC.HeroOnGrid.GetComponent<Hero>().ID;
+                        //Swap Grids HeroOnGrid Values
+                        tempGC.HeroOnGrid = ClickedGO;
+                        FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).GetComponent<GridController>().HeroOnGrid = swappedGO;
+                        //Swapping Grid Currently On
+                        swappedGO.GetComponent<HeroController>().GridCurrentlyOn = clickedHeroController.GridCurrentlyOn;
+                        clickedHeroController.GridCurrentlyOn = tempGC;
+                        LastGridPos = GridCurrentlyOn.transform.position;
+                    }
+
+                }
+                else
+                {
+                    ClickedGO.transform.DOMove(FormationArea.transform.GetChild(clickedHeroController.GridCurrentlyOn.ID).transform.position, 0.1f);
+                }
             }
             ClickedOnHero = false;
             ClickedGO = null;
@@ -169,35 +195,105 @@ public class FormationManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0) && ClickedOnHeroCard)
         {
-           if(GridCurrentlyOn != null)
+            if (OnTrash)
             {
-                //Bug on HeroonGrid thing. When placing new heroes on the board , it causes the wrong tiles have wrong hero on grid.
-                GridController tempGC = GridCurrentlyOn.GetComponent<GridController>();
-                if (tempGC.HeroOnGrid == createdHeroGO)
-                {
-                    Hero createdHero = createdHeroGO.GetComponent<Hero>();
-                    battleFieldManager.Team1.Add(createdHero);
-                    ClickedHeroCardGO.GetComponent<HeroCard>().ConnectedGameObject = ClickedGO;
-                    createdHeroGO.transform.DOMove(GridCurrentlyOn.transform.position, 0.1f);
-                    LastGridPos = GridCurrentlyOn.transform.position;
-                    CurrentFormation.Add(tempGC.ID, createdHeroGO.GetComponent<Hero>().ID);
-                    tempGC.HeroOnGrid = createdHeroGO;
-                    createdHeroGO.GetComponent<HeroController>().GridCurrentlyOn = tempGC;
-                    ClickedHeroCardGO.GetComponent<HeroCard>().OnTeam = true;
-                    ClickedHeroCardGO.GetComponent<HeroCard>().ChangeColor(Color.red);
-                }
-                else
-                {
-                    //Swapping heroes out.
-                    Destroy(createdHeroGO);
-                    ClickedHeroCardGO = null;
-                }
+                Destroy(createdHeroGO);
+                Trash.GetComponent<TrashAreaObserver>().destroyed();
             }
             else
             {
-                Destroy(createdHeroGO);
-                ClickedHeroCardGO = null;
+                if (GridCurrentlyOn != null)
+                {
+                    GridController tempGridCtrlr = GridCurrentlyOn.GetComponent<GridController>();
+                    if (tempGridCtrlr.HeroOnGrid == createdHeroGO)
+                    {
+                        //this happens when you drag a hero card to a empty grid , it makes the new hero join the team .
+                        if(battleFieldManager.Team1.Count< MaxTeamCount)
+                        {
+                            Hero createdHero = createdHeroGO.GetComponent<Hero>();
+                            battleFieldManager.Team1.Add(createdHero);
+                            ClickedHeroCardGO.GetComponent<HeroCard>().ConnectedGameObject = createdHeroGO;
+                            createdHero.GetComponent<HeroController>().ConnectedHeroCard = ClickedHeroCardGO;
+                            createdHeroGO.transform.DOMove(GridCurrentlyOn.transform.position, 0.1f);
+                            LastGridPos = GridCurrentlyOn.transform.position;
+                            CurrentFormation.Add(tempGridCtrlr.ID, createdHeroGO.GetComponent<Hero>().ID);
+                            tempGridCtrlr.HeroOnGrid = createdHeroGO;
+                            createdHeroGO.GetComponent<HeroController>().GridCurrentlyOn = tempGridCtrlr;
+                            ClickedHeroCardGO.GetComponent<HeroCard>().OnTeam = true;
+                            ClickedHeroCardGO.GetComponent<HeroCard>().ChangeColor(Color.red);
+                        }
+                        else
+                        {
+                            Debug.Log("maxteamcount reached");
+                            Destroy(createdHeroGO);
+                        }
+                        
+                    }
+                    else
+                    {
+                        //this happens when you drag a card to a full grid , it replaces the grid with the hero you are holding.
+                        HeroController swappedOutHeroController = tempGridCtrlr.HeroOnGrid.GetComponent<HeroController>();
+                        swappedOutHeroController.GridCurrentlyOn = null;
+                        HeroCard swappedOutHeroCard = swappedOutHeroController.ConnectedHeroCard.GetComponent<HeroCard>();
+                        swappedOutHeroCard.ChangeColor(Color.green);
+                        swappedOutHeroCard.OnTeam = false;
+                        battleFieldManager.Team1.Remove(swappedOutHeroController.MainHero);
+                        Destroy(swappedOutHeroController.MainHero.HeroObject);
+
+                        Hero createdHero = createdHeroGO.GetComponent<Hero>();
+                        battleFieldManager.Team1.Add(createdHero);
+                        ClickedHeroCardGO.GetComponent<HeroCard>().ConnectedGameObject = createdHeroGO;
+                        createdHero.GetComponent<HeroController>().ConnectedHeroCard = ClickedHeroCardGO;
+                        createdHeroGO.transform.DOMove(GridCurrentlyOn.transform.position, 0.1f);
+                        LastGridPos = GridCurrentlyOn.transform.position;
+                        CurrentFormation[tempGridCtrlr.ID] = createdHeroGO.GetComponent<Hero>().ID;
+                        tempGridCtrlr.HeroOnGrid = createdHeroGO;
+                        createdHeroGO.GetComponent<HeroController>().GridCurrentlyOn = tempGridCtrlr;
+                        ClickedHeroCardGO.GetComponent<HeroCard>().OnTeam = true;
+                        ClickedHeroCardGO.GetComponent<HeroCard>().ChangeColor(Color.red);
+                        //Swapping heroes out.
+                        ClickedHeroCardGO = null;
+                    }
+                }
+                else
+                {
+                    //this happens when you drag a hero card to a non grid area.( go to the first free spot on grids)
+                    if (battleFieldManager.Team1.Count < MaxTeamCount)
+                    {
+                        int freeGridIndex = -1;
+                        for (int i = 0; i < 9; i++)
+                        {
+                            if (!CurrentFormation.ContainsKey(i))
+                            {
+                                if (freeGridIndex == -1)
+                                {
+                                    freeGridIndex = i;
+                                }
+                            }
+                        }
+                        GameObject tempGridGO = FormationArea.transform.GetChild(freeGridIndex).gameObject;
+                        GridController tempGridCtrlr = FormationArea.transform.GetChild(freeGridIndex).GetComponent<GridController>();
+                        Hero createdHero = createdHeroGO.GetComponent<Hero>();
+                        battleFieldManager.Team1.Add(createdHero);
+                        ClickedHeroCardGO.GetComponent<HeroCard>().ConnectedGameObject = createdHeroGO;
+                        createdHero.GetComponent<HeroController>().ConnectedHeroCard = ClickedHeroCardGO;
+                        createdHeroGO.transform.DOMove(tempGridGO.transform.position, 0.1f);
+                        LastGridPos = tempGridGO.transform.position;
+                        CurrentFormation.Add(tempGridCtrlr.ID, createdHeroGO.GetComponent<Hero>().ID);
+                        tempGridCtrlr.HeroOnGrid = createdHeroGO;
+                        createdHeroGO.GetComponent<HeroController>().GridCurrentlyOn = tempGridCtrlr;
+                        ClickedHeroCardGO.GetComponent<HeroCard>().OnTeam = true;
+                        ClickedHeroCardGO.GetComponent<HeroCard>().ChangeColor(Color.red);
+                        ClickedHeroCardGO = null;
+                    }
+                    else
+                    {
+                        Debug.Log("Maxteamcount reached");
+                        Destroy(createdHeroGO);
+                    }
+                }
             }
+
             ChangeGrid();
             ClickedOnHeroCard = false; 
         }
@@ -205,12 +301,30 @@ public class FormationManager : MonoBehaviour
     }
     public void RealignThumbnails()
     {
-        int pos = 0;
-        foreach (RectTransform child in thumbnailArea.transform)
+        //int pos = 0;
+        //foreach (RectTransform child in thumbnailArea.transform)
+        //{
+        //    child.anchoredPosition = new Vector3(-680 + (pos * 200), 0, 0);
+        //    pos += 1;
+        //}
+    }
+
+    IEnumerator FirstChangeGrid()
+    {
+        yield return new WaitForSeconds(0.1f);
+        for (int i = 0; i < FormationArea.transform.childCount; i++)
         {
-            child.anchoredPosition = new Vector3(-680 + (pos * 200), 0, 0);
-            pos += 1;
+            GridController tempGridController = FormationArea.transform.GetChild(i).GetComponent<GridController>();
+            if (CurrentFormation.ContainsKey(i))
+            {
+                tempGridController.OnFormation();
+            }
+            else
+            {
+                tempGridController.NotOnFormation();
+            }
         }
+
     }
     public void ChangeGrid()
     {
@@ -220,13 +334,6 @@ public class FormationManager : MonoBehaviour
             if (CurrentFormation.ContainsKey(i))
             {
                 tempGridController.OnFormation();
-                foreach (Hero hero in battleFieldManager.Team1)
-                {
-                    if(hero.ID == CurrentFormation[i])
-                    {
-                        tempGridController.HeroOnGrid = hero.HeroObject;
-                    }
-                }
             }
             else
             {
@@ -249,6 +356,18 @@ public class FormationManager : MonoBehaviour
             createdHeroGO.transform.tag = "Team1";
             GameObject createdHeroSkin = Instantiate(battleFieldManager.FindHero(ClickedHeroCardGO.GetComponent<HeroCard>().HeroScriptableObjectID).HeroSkin, createdHeroGO.transform.position, Quaternion.identity, createdHeroGO.transform);
         }
+    }
+    public void StartBattleStartSequence()
+    {
+        StartCoroutine(BattleStartSequence());
+    }
+    IEnumerator BattleStartSequence()
+    {
+        battleSequence = true;
+        Trash.SetActive(false);
+        inGamePanel.SetActive(true);
+        formationPanel.SetActive(false);
+        yield return new WaitForSeconds(0.1f);
     }
     //BM startgame
 }

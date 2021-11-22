@@ -52,6 +52,7 @@ public class HeroController : MonoBehaviour
     private Camera mainCam;
     private GameObject UltimateSkillCardGO;
     public GridController GridCurrentlyOn;
+    public GameObject ConnectedHeroCard;
 
     void Start()
     {
