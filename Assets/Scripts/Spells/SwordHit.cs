@@ -14,15 +14,18 @@ public class SwordHit : Spell
     {
         HeroController tempHeroController = caster.GetComponent<HeroController>();
         casterAnimator = caster.transform.GetChild(0).GetComponent<Animator>();
-        casterAnimator.CrossFade("Attack", 0.1f);
-        Hero casterHero = caster.GetComponent<Hero>();
-        Hero targetHero = target.GetComponent<Hero>();
-        tempHeroController.setIsAttacking(true);
-        GameObject splashGO = Instantiate(Effects[0], target.transform.position + offset , target.transform.rotation);
-        targetHero.Hurt(casterHero.Damage);
-        casterHero.GainEnergy(GainEnergyAmount);
-        Destroy(splashGO, 0.3f);
-        tempHeroController.setIsAttacking(false);
+        if(!tempHeroController.IsDead && !tempHeroController.Victory)
+        {
+            casterAnimator.CrossFade("Attack", 0.1f);
+            Hero casterHero = caster.GetComponent<Hero>();
+            Hero targetHero = target.GetComponent<Hero>();
+            tempHeroController.SetIsAttacking(true);
+            GameObject splashGO = Instantiate(Effects[0], target.transform.position + offset, target.transform.rotation);
+            targetHero.Hurt(casterHero.Damage);
+            casterHero.GainEnergy(GainEnergyAmount);
+            Destroy(splashGO, 0.3f);
+            tempHeroController.SetIsAttacking(false);
+        }
     }
 
 }

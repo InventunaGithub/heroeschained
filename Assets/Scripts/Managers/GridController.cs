@@ -11,7 +11,7 @@ public class GridController : MonoBehaviour
     FormationManager formationManager;
     public GameObject HeroOnGrid;
     public int ID;
-    void Awake()
+    void Start()
     {
         formationManager = GameObject.Find("Managers").GetComponent<FormationManager>();
         GridRenderer = GetComponent<Renderer>();

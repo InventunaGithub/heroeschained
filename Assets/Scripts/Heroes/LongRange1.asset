@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 5
   Name: LongRange1
-  BaseHealth: 400
+  BaseHealth: 40000
   BaseDefence: 10
   BaseDamage: 60
   Defence: 0

@@ -1,9 +1,9 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-using DG.Tweening;
 
 //Author: Mert Karavural
 //Date: 28 Sep 2020
@@ -97,6 +97,9 @@ public class HeroController : MonoBehaviour
 
     void Update()
     {
+        HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+        HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
+
         if (battlefieldManager.GameStarted && !HeroLock)
         {
             if (!agentEnabled)
@@ -106,13 +109,10 @@ public class HeroController : MonoBehaviour
                 Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), false);
             }
 
-
             if (MainHero.Health <= 0 && EnemyTeam.Count != 0  && !IsDead) //Death state
             {
                 Destroy(UltimateSkillCardGO);
-                HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
                 HealthBar.value = MainHero.Health;
-                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
                 EnergyBar.value = 0;
                 IsDead = true;
                 DyingAnimation();
@@ -126,12 +126,12 @@ public class HeroController : MonoBehaviour
                 Agent.enabled = false;
                 capsuleCollider.enabled = false;
             }
-            else if (EnemyTeam.Count == 0 && !Victory && !IsDead) //Victory state
+            else if (EnemyTeam.Count == 0 && !Victory && !IsDead && battlefieldManager.LastPhase) //Victory state
             {
-                HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
+                
                 HealthBar.value = MainHero.Health;
-                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
                 EnergyBar.value = MainHero.Energy;
+
                 if (MainHero.Health == 0)
                 {
                     MainHero.Health = 1;
@@ -195,6 +195,9 @@ public class HeroController : MonoBehaviour
                     }
                     transform.DOLookAt(TargetHeroGO.transform.position, 0.1f);
                 }
+
+                //Navigation Part
+
                 NavMeshPath path = new NavMeshPath();
                 if (TargetHeroGO != null)
                 {
@@ -207,7 +210,7 @@ public class HeroController : MonoBehaviour
                             distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
                         }
                         Distance = distance;
-                        if ((distance > MainHero.Range && distance > Agent.stoppingDistance) || !CanSeeTarget(TargetHeroGO))
+                        if ((distance > MainHero.Range && distance > Agent.stoppingDistance) || !SeeingTarget)
                         {
                             Agent.isStopped = false;
                             Agent.SetPath(path);
@@ -252,7 +255,6 @@ public class HeroController : MonoBehaviour
     {
         float closestTargetDistance = float.MaxValue;
         NavMeshPath path = null;
-        NavMeshPath shortestPath = null;
         GameObject Temp= null;
 
         for (int i = 0; i < enemyTeam.Count; i++)
@@ -275,7 +277,6 @@ public class HeroController : MonoBehaviour
                 if (distance < closestTargetDistance)
                 {
                     closestTargetDistance = distance;
-                    shortestPath = path;
                     TargetHero = i;
                     Temp = enemyTeam[TargetHero].HeroObject;
                 }
@@ -326,7 +327,6 @@ public class HeroController : MonoBehaviour
     public void DyingAnimation()
     {
         onCooldown = false;
-
         heroAnimator.CrossFade("Death", 0.1f);
     }
 
@@ -348,7 +348,7 @@ public class HeroController : MonoBehaviour
         heroAnimator.CrossFade("Victory", 0.1f);
     }
 
-    public void setIsAttacking(bool given)
+    public void SetIsAttacking(bool given)
     {
         isAttacking = given;
     }

@@ -193,7 +193,7 @@ public class FormationManager : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && ClickedOnHeroCard)
+        if (( Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2) ) && ClickedOnHeroCard)
         {
             if (OnTrash)
             {
@@ -354,20 +354,23 @@ public class FormationManager : MonoBehaviour
             createdHeroGO = Instantiate(battleFieldManager.HeroObjectPrefab, hitData.point + Vector3.up, Quaternion.identity, battleFieldManager.Characters.transform);
             createdHeroGO.GetComponent<Hero>().HeroObject = createdHeroGO;
             createdHeroGO.transform.tag = "Team1";
-            GameObject createdHeroSkin = Instantiate(battleFieldManager.FindHero(ClickedHeroCardGO.GetComponent<HeroCard>().HeroScriptableObjectID).HeroSkin, createdHeroGO.transform.position, Quaternion.identity, createdHeroGO.transform);
+            HeroSO rootHero = battleFieldManager.FindHero(ClickedHeroCardGO.GetComponent<HeroCard>().HeroScriptableObjectID);
+            GameObject createdHeroSkin = Instantiate(rootHero.HeroSkin, createdHeroGO.transform.position, Quaternion.identity, createdHeroGO.transform);
+            createdHeroGO.GetComponent<Hero>().Init(rootHero);
         }
     }
     public void StartBattleStartSequence()
     {
-        StartCoroutine(BattleStartSequence());
+        StartCoroutine(MessageBattlefieldManager());
     }
-    IEnumerator BattleStartSequence()
+    IEnumerator MessageBattlefieldManager()
     {
         battleSequence = true;
         Trash.SetActive(false);
         inGamePanel.SetActive(true);
         formationPanel.SetActive(false);
         yield return new WaitForSeconds(0.1f);
+        StartCoroutine(battleFieldManager.StartMovingSequence());
     }
     //BM startgame
 }

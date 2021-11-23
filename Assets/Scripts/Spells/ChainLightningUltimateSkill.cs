@@ -17,7 +17,7 @@ public class ChainLightningUltimateSkill : Spell
     public override void Cast(GameObject caster, GameObject target)
     {
         tempHeroController = caster.GetComponent<HeroController>();
-        tempHeroController.setIsAttacking(true);
+        tempHeroController.SetIsAttacking(true);
         SetCaster(caster);
         SetTarget(target);
         if (GetTarget() == null)
@@ -89,6 +89,6 @@ public class ChainLightningUltimateSkill : Spell
             }
             Destroy(projectile, 0.1f);
         }
-        tempHeroController.setIsAttacking(false);
+        tempHeroController.SetIsAttacking(false);
     }
 }
