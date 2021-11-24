@@ -7,8 +7,6 @@ using DG.Tweening;
 //Date: 5.11.2021
 public class ArrowShotBlue : Spell
 {
-    Animator casterAnimator;
-    Animator targetAnimator;
     HeroController tempHeroController;
     GameObject projectileGO;
     public Vector3 offset = new Vector3(0, 1, 0);
@@ -21,8 +19,7 @@ public class ArrowShotBlue : Spell
         SetCaster(caster);
         SetTarget(target);
         tempHeroController = caster.GetComponent<HeroController>();
-        casterAnimator = caster.transform.GetChild(0).GetComponent<Animator>();
-        casterAnimator.CrossFade("Attack", 0.1f);
+        tempHeroController.AttackAnimation();
         tempHeroController.SetIsAttacking(true);
         projectileGO = Instantiate(Effects[0], caster.transform.position + offset, caster.transform.rotation);
         projectileGO.transform.DOMove(target.transform.position + offset, travelTime);

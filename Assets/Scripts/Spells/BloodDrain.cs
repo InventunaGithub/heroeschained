@@ -24,8 +24,7 @@ public class BloodDrain : Spell
         }
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
-        CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Cast", 0.1f);
+        target.GetComponent<HeroController>().CastAnimation();
         GameObject castingEffect = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
@@ -36,7 +35,7 @@ public class BloodDrain : Spell
         yield return new WaitForSeconds(CastTime);
         if(!tempHeroController.IsDead && !tempHeroController.Victory)
         {
-            CasterAnimator.CrossFade("Attack", 0.1f);
+            tempHeroController.AttackAnimation();
             targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
             casterHero.Health += (int)(Math.Round((casterHero.Damage * (PrimaryDamagePercent / 100f)) * (HealAmountPercent / 100f)));
             casterHero.Normalise();

@@ -326,7 +326,13 @@ public class HeroController : MonoBehaviour
     public void DyingAnimation()
     {
         onCooldown = false;
+        ResetAnimations();
         heroAnimator.CrossFade("Death", 0.1f);
+    }
+    public void ResetAnimations()
+    {
+        heroAnimator.enabled = false;
+        heroAnimator.enabled = true;
     }
 
     public void RunningAnimation()
@@ -337,12 +343,23 @@ public class HeroController : MonoBehaviour
     {
         heroAnimator.CrossFade("Idle", 0.1f);
     }
+    public void AttackAnimation()
+    {
+        if(!IsDead && battlefieldManager.GameStarted)
+        {
+            heroAnimator.CrossFade("Attack", 0.1f);
+        }
+    }
+    public void CastAnimation()
+    {
+        heroAnimator.CrossFade("Idle", 0.1f);
+    }
 
-   
     public void VictoryAnimation()
     {
         IsDead = false;
         onCooldown = false;
+        ResetAnimations();
         heroAnimator.CrossFade("Victory", 0.1f);
     }
 

@@ -26,8 +26,7 @@ public class EarthShattererUltimateSkill : Spell
             throw new Exception("No caster is selected");
         }
         Hero casterHero = caster.GetComponent<Hero>();
-        CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Cast", 0.1f);
+        tempHeroController.CastAnimation();
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         tempHeroController.HeroLock = true;
@@ -57,7 +56,7 @@ public class EarthShattererUltimateSkill : Spell
                 }
             }
 
-            CasterAnimator.CrossFade("Attack", 0.1f);
+            tempHeroController.AttackAnimation();
         }
         tempHeroController.SetIsAttacking(false);
         tempHeroController.Agent.enabled = true;

@@ -30,8 +30,7 @@ public class ChainLightningUltimateSkill : Spell
         }
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
-        CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Cast", 0.1f);
+        tempHeroController.CastAnimation();
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
@@ -39,10 +38,11 @@ public class ChainLightningUltimateSkill : Spell
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
         yield return new WaitForSeconds(CastTime);
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
         if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             GameObject targetGO = null;
-            CasterAnimator.CrossFade("Attack", 0.1f);
+            tempHeroController.AttackAnimation();
             GameObject projectile = Instantiate(Effects[1], caster.transform.position + Vector3.up, Quaternion.identity);
             projectile.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             List<Hero> tempList = new List<Hero>(tempHeroController.EnemyTeam);

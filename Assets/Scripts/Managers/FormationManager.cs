@@ -61,7 +61,6 @@ public class FormationManager : MonoBehaviour
             //Shooting A Raycast from mouse position to scene , if it hits a GameObject that tagged Team1 , start the clicking procedure.
             ray = mainCam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
-            Physics.Raycast(ray, out hitData, 1000);
             if (battleFieldManager.Team1.Count == 0)
             {
                 if (ReadyButton.activeSelf)
@@ -77,7 +76,7 @@ public class FormationManager : MonoBehaviour
                 }
             }
 
-            if (Input.GetMouseButtonDown(0) && hitData.transform.tag == "Team1")
+            if (Input.GetMouseButtonDown(0) && Physics.Raycast(ray, out hitData, 1000) && hitData.transform.tag == "Team1")
             {
                 //Click Lock , also get who we are hitting with the ray
                 ClickedOnHero = true;

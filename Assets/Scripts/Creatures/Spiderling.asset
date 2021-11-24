@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 1002
   Name: Spiderling
-  BaseHealth: 500
+  BaseHealth: 1000
   BaseDefence: 0
   BaseDamage: 5
   Defence: 0

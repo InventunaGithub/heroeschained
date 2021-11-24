@@ -15,6 +15,7 @@ public class BattlefieldManager : MonoBehaviour
     public List<HeroSO> HeroesSO;
     public GameObject Characters;
     public GameObject HeroObjectPrefab;
+    private GameObject cameraGO;
     public List<int> EnemyTeamIDs;
     public List<int> EnemyTeamGridPositions;
     public List<GameObject> Team1GridAreas;
@@ -24,13 +25,12 @@ public class BattlefieldManager : MonoBehaviour
     public bool Victory = false;
     public bool Lose = false;
     private int phase = 0;
-    private FormationManager formationManager;
     private BattlefieldUIManager battleFieldUIManager;
 
     private void Start()
     {
         Characters = GameObject.Find("Characters");
-        formationManager = GameObject.Find("Managers").GetComponent<FormationManager>();
+        cameraGO = GameObject.Find("CameraGO");
         battleFieldUIManager = GameObject.Find("Managers").GetComponent<BattlefieldUIManager>();
         for (int i = 0; i < EnemyTeamIDs.Count; i++)
         {
@@ -41,28 +41,25 @@ public class BattlefieldManager : MonoBehaviour
         EnemyTeamFormations.Add(EnemyTeam2Formation);
 
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        if(Team2.Count == 0 && GameStarted && !LastPhase)
+        
+        if (Team2.Count == 0 && GameStarted && !LastPhase)
         {
             phase += 1;
-            Debug.Log("Moving to next phase");
             StartCoroutine(StartMovingSequence());
         }
-        if(EnemyTeamFormations.Count == phase + 1)
-        {
-            LastPhase = true;
-        }
-        if(LastPhase && Team2.Count == 0)
+        if (LastPhase && Team2.Count == 0 && !Victory)
         {
             Victory = true;
             Debug.Log("You Win The Dungeon");
         }
-        if (LastPhase && Team1.Count == 0)
+        if (LastPhase && Team1.Count == 0 && !Lose)
         {
             Lose = true;
             Debug.Log("You Lost The Dungeon");
         }
+
     }
     public void StartGame(bool game)
     {
@@ -104,15 +101,20 @@ public class BattlefieldManager : MonoBehaviour
     {
         StartGame(false);
         battleFieldUIManager.SetIngamePanel(false);
-        Camera.main.transform.DOMoveZ(14 * (phase +1) , 3f);
         SetUpFormation(EnemyTeamFormations[phase], Team2GridAreas[phase], "Team2", Team2);
+        yield return new WaitForSeconds(2f);
+        cameraGO.transform.DOMove(Team1GridAreas[phase].transform.position + (Team2GridAreas[phase].transform.position - Team1GridAreas[phase].transform.position) / 2 , 2f);
+        cameraGO.transform.DORotate(Team1GridAreas[phase].transform.rotation.eulerAngles , 2f);
         foreach (Hero hero in Team1)
         {
             HeroController tempHeroController = hero.HeroObject.GetComponent<HeroController>();
             tempHeroController.Agent.enabled = true;
             tempHeroController.Agent.isStopped = false;
+            tempHeroController.SetIsAttacking(false);
+            tempHeroController.ResetAnimations();
             tempHeroController.RunningAnimation();
             tempHeroController.Agent.SetDestination(Team1GridAreas[phase].transform.GetChild(tempHeroController.GridCurrentlyOn.ID).transform.position);
+            yield return new WaitForFixedUpdate();
         }
         int whileHandbreak = 0;
         while(true)
@@ -128,7 +130,12 @@ public class BattlefieldManager : MonoBehaviour
                         remainingDistFlag = false;
                     }
                 }
+                else
+                {
+                    tempHeroController.IdleAnimation();
+                }
             }
+
             if (remainingDistFlag)
             {
                 break;
@@ -145,10 +152,16 @@ public class BattlefieldManager : MonoBehaviour
         foreach (Hero hero in Team1)
         {
             HeroController tempHeroController = hero.HeroObject.GetComponent<HeroController>();
+            tempHeroController.ResetAnimations();
             tempHeroController.IdleAnimation();
         }
-        yield return new WaitForSeconds(0.1f);
         battleFieldUIManager.SetIngamePanel(true);
+
+        if (EnemyTeamFormations.Count == phase + 1)
+        {
+            LastPhase = true;
+        }
+
         StartGame(true);
     }
 }

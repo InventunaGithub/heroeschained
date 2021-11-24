@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 1001
   Name: Spider
-  BaseHealth: 2500
+  BaseHealth: 3500
   BaseDefence: 0
-  BaseDamage: 40
+  BaseDamage: 30
   Defence: 0
   Damage: 5
   Health: 0
