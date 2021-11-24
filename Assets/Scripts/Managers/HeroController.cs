@@ -106,7 +106,6 @@ public class HeroController : MonoBehaviour
             {
                 agentEnabled = true;
                 Agent.enabled = true;
-                Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), false);
             }
 
             if (MainHero.Health <= 0 && EnemyTeam.Count != 0  && !IsDead) //Death state
@@ -333,7 +332,6 @@ public class HeroController : MonoBehaviour
     public void RunningAnimation()
     {
         heroAnimator.CrossFade("Run", 0.1f);
-     
     }
     public void IdleAnimation()
     {

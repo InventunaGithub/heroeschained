@@ -207,6 +207,7 @@ public class CardManager : MonoBehaviour
                     AOEIndicatorCone.SetActive(true);
                     AOEIndicatorCone.transform.position = usingHeroGO.transform.position;
                 }
+                AOEIndicatorCone.GetComponentInChildren<CollisionObserver>().CollidedObjects.Clear();
             }
             else if (usingCard.CardType == CardTypes.CastUlti)
             {

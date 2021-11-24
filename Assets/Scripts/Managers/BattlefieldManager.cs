@@ -21,12 +21,17 @@ public class BattlefieldManager : MonoBehaviour
     public List<GameObject> Team2GridAreas;
     public bool GameStarted = false;
     public bool LastPhase = false;
-    private bool phaseLock = false;
+    public bool Victory = false;
+    public bool Lose = false;
     private int phase = 0;
+    private FormationManager formationManager;
+    private BattlefieldUIManager battleFieldUIManager;
 
     private void Start()
     {
         Characters = GameObject.Find("Characters");
+        formationManager = GameObject.Find("Managers").GetComponent<FormationManager>();
+        battleFieldUIManager = GameObject.Find("Managers").GetComponent<BattlefieldUIManager>();
         for (int i = 0; i < EnemyTeamIDs.Count; i++)
         {
             EnemyTeam1Formation.Add(EnemyTeamGridPositions[i], EnemyTeamIDs[i]);
@@ -47,6 +52,16 @@ public class BattlefieldManager : MonoBehaviour
         if(EnemyTeamFormations.Count == phase + 1)
         {
             LastPhase = true;
+        }
+        if(LastPhase && Team2.Count == 0)
+        {
+            Victory = true;
+            Debug.Log("You Win The Dungeon");
+        }
+        if (LastPhase && Team1.Count == 0)
+        {
+            Lose = true;
+            Debug.Log("You Lost The Dungeon");
         }
     }
     public void StartGame(bool game)
@@ -88,6 +103,7 @@ public class BattlefieldManager : MonoBehaviour
     public IEnumerator StartMovingSequence()
     {
         StartGame(false);
+        battleFieldUIManager.SetIngamePanel(false);
         Camera.main.transform.DOMoveZ(14 * (phase +1) , 3f);
         SetUpFormation(EnemyTeamFormations[phase], Team2GridAreas[phase], "Team2", Team2);
         foreach (Hero hero in Team1)
@@ -95,14 +111,13 @@ public class BattlefieldManager : MonoBehaviour
             HeroController tempHeroController = hero.HeroObject.GetComponent<HeroController>();
             tempHeroController.Agent.enabled = true;
             tempHeroController.Agent.isStopped = false;
+            tempHeroController.RunningAnimation();
             tempHeroController.Agent.SetDestination(Team1GridAreas[phase].transform.GetChild(tempHeroController.GridCurrentlyOn.ID).transform.position);
-            Debug.Log(tempHeroController.Agent.SetDestination(Team1GridAreas[phase].transform.GetChild(tempHeroController.GridCurrentlyOn.ID).transform.position));
         }
         int whileHandbreak = 0;
         while(true)
         {
             bool remainingDistFlag = true;
-            Debug.Log(Team1.Count);
             foreach (Hero hero in Team1)
             {
                 HeroController tempHeroController = hero.HeroObject.GetComponent<HeroController>();
@@ -130,13 +145,10 @@ public class BattlefieldManager : MonoBehaviour
         foreach (Hero hero in Team1)
         {
             HeroController tempHeroController = hero.HeroObject.GetComponent<HeroController>();
-            if(phase == 0)
-            {
-                tempHeroController.Agent.enabled = false;
-            }
+            tempHeroController.IdleAnimation();
         }
         yield return new WaitForSeconds(0.1f);
-
+        battleFieldUIManager.SetIngamePanel(true);
         StartGame(true);
     }
 }
