@@ -41,7 +41,7 @@ public class BattlefieldManager : MonoBehaviour
         EnemyTeamFormations.Add(EnemyTeam2Formation);
 
     }
-    private void FixedUpdate()
+    private void Update()
     {
         
         if (Team2.Count == 0 && GameStarted && !LastPhase)
