@@ -20,15 +20,14 @@ public class SparkAttack : Spell
         SetCaster(caster);
         SetTarget(target);
         tempHeroController = caster.GetComponent<HeroController>();
-        casterAnimator = caster.transform.GetChild(0).GetComponent<Animator>();
-        casterAnimator.CrossFade("Attack", 0.1f);
-        tempHeroController.setIsAttacking(true);
+        tempHeroController.AttackAnimation();
+        tempHeroController.SetIsAttacking(true);
         projectileGO = Instantiate(Effects[0], caster.transform.position + offset, caster.transform.rotation);
         projectileGO.transform.DOMove(target.transform.position + offset, travelTime);
-        StartCoroutine(TravelTime());
+        StartCoroutine(TravelTime(tempHeroController , projectileGO));
     }
 
-    IEnumerator TravelTime()
+    IEnumerator TravelTime(HeroController tempHeroController , GameObject projectileGO)
     {
         Hero casterHero = GetCaster().GetComponent<Hero>();
         Hero targetHero = GetTarget().GetComponent<Hero>();
@@ -38,6 +37,6 @@ public class SparkAttack : Spell
         targetHero.Hurt(casterHero.Damage);
         casterHero.GainEnergy(GainEnergyAmount);
         Destroy(splashGO, 0.3f);
-        tempHeroController.setIsAttacking(false);
+        tempHeroController.SetIsAttacking(false);
     }
 }

@@ -18,7 +18,7 @@ public class RainOfArrowsUltimateSkill : Spell
     public override void Cast(GameObject caster, GameObject target)
     {
         tempHeroController = caster.GetComponent<HeroController>();
-        tempHeroController.setIsAttacking(true);
+        tempHeroController.SetIsAttacking(true);
         SetCaster(caster);
         SetTarget(target);
         if (GetTarget() == null)
@@ -31,8 +31,7 @@ public class RainOfArrowsUltimateSkill : Spell
         }
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
-        CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Cast", 0.1f);
+        tempHeroController.CastAnimation();
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
@@ -40,9 +39,10 @@ public class RainOfArrowsUltimateSkill : Spell
     IEnumerator CastSpellLag(Hero casterHero, Hero targetHero, GameObject caster, GameObject target)
     {
         yield return new WaitForSeconds(CastTime);
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
         if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
-            CasterAnimator.CrossFade("Attack", 0.1f);
+            tempHeroController.AttackAnimation();
             for (int i = 0; i < tempHeroController.EnemyTeam.Count * HitEachEnemyWithAmount; i++)
             {
                 GameObject arrow = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
@@ -57,14 +57,16 @@ public class RainOfArrowsUltimateSkill : Spell
                 {
                     if(hero.Health > 0)
                     {
-                        arrows[arrows.Count - 1].transform.DOMove(hero.transform.position, 0.3f);
-                        yield return new WaitForSeconds(0.3f);
-                        Destroy(arrows[arrows.Count - 1]);
+                        arrows[arrows.Count - 1].transform.DOMove(hero.transform.position, 0.2f);
+                        yield return new WaitForSeconds(0.4f);
+                        Destroy(arrows[arrows.Count - 1] , 0.5f);
                         arrows.RemoveAt(arrows.Count - 1);
+                        Vector3 splashTempPosition = hero.transform.position;
                         GameObject splash = Instantiate(Effects[1], hero.transform.position + Vector3.up, Quaternion.identity);
                         Destroy(splash, 0.3f);
                         hero.Hurt((int)(casterHero.Damage * (PrimaryDamagePercent / 100f)));
                         lowerDef(hero, ReduceDefSeconds);
+                        
                     }
                     else
                     { 
@@ -74,7 +76,7 @@ public class RainOfArrowsUltimateSkill : Spell
                 }
             }
         }
-        tempHeroController.setIsAttacking(false);
+        tempHeroController.SetIsAttacking(false);
     }
 
     IEnumerator lowerDef(Hero hero , int time)

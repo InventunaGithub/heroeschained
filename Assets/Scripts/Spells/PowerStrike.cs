@@ -23,8 +23,7 @@ public class PowerStrike :  Spell
         }
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
-        CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Cast", 0.1f);
+        targetHero.GetComponent<HeroController>().CastAnimation();
         GameObject castingEffect = Instantiate(Effects[1], caster.transform.position + Vector3.up, caster.transform.rotation);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
@@ -35,7 +34,7 @@ public class PowerStrike :  Spell
         yield return new WaitForSeconds(CastTime);
         if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
-            CasterAnimator.CrossFade("Attack", 0.1f);
+            tempHeroController.AttackAnimation();
             targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
             targetHero.Normalise();
             GameObject tempEffect = Instantiate(Effects[0], target.transform.position + Vector3.up, target.transform.rotation);

@@ -24,8 +24,7 @@ public class RainOfArrows : Spell
         }
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
-        CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Cast", 0.1f);
+        targetHero.GetComponent<HeroController>().CastAnimation();
         GameObject castingEffect = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));
@@ -36,7 +35,7 @@ public class RainOfArrows : Spell
         yield return new WaitForSeconds(CastTime);
         if(!tempHeroController.IsDead && !tempHeroController.Victory)
         {
-            CasterAnimator.CrossFade("Attack", 0.1f);
+            tempHeroController.AttackAnimation();
             Collider[] inAOE = Physics.OverlapSphere(targetHero.HeroObject.transform.position, AOERange);
             foreach (Collider hero in inAOE)
             {

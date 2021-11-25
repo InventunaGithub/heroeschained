@@ -19,15 +19,14 @@ public class EarthShattererUltimateSkill : Spell
     public override void CastWithDirection(GameObject caster, GameObject skillMesh)
     {
         tempHeroController = caster.GetComponent<HeroController>();
-        tempHeroController.setIsAttacking(true);
+        tempHeroController.SetIsAttacking(true);
         SetCaster(caster);
         if (GetCaster() == null)
         {
             throw new Exception("No caster is selected");
         }
         Hero casterHero = caster.GetComponent<Hero>();
-        CasterAnimator = caster.transform.GetComponentInChildren<Animator>();
-        CasterAnimator.CrossFade("Cast", 0.1f);
+        tempHeroController.CastAnimation();
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         tempHeroController.HeroLock = true;
@@ -38,6 +37,7 @@ public class EarthShattererUltimateSkill : Spell
     IEnumerator CastSpellLag(Hero casterHero, GameObject caster, GameObject skillMesh)
     {
         yield return new WaitForSeconds(CastTime);
+        tempHeroController = casterHero.GetComponent<HeroController>();
         if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
             List<GameObject> inArea = skillMesh.GetComponentInChildren<CollisionObserver>().CollidedObjects;
@@ -56,9 +56,9 @@ public class EarthShattererUltimateSkill : Spell
                 }
             }
 
-            CasterAnimator.CrossFade("Attack", 0.1f);
+            tempHeroController.AttackAnimation();
         }
-        tempHeroController.setIsAttacking(false);
+        tempHeroController.SetIsAttacking(false);
         tempHeroController.Agent.enabled = true;
         tempHeroController.HeroLock = false;
     }
