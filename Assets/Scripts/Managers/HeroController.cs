@@ -331,10 +331,15 @@ public class HeroController : MonoBehaviour
     }
     public void ResetAnimations()
     {
-        heroAnimator.enabled = false;
-        heroAnimator.enabled = true;
+        StartCoroutine(ResetAnimationCoroutine());
     }
 
+    IEnumerator ResetAnimationCoroutine()
+    {
+        heroAnimator.enabled = false;
+        yield return new WaitForEndOfFrame();
+        heroAnimator.enabled = true;
+    }
     public void RunningAnimation()
     {
         heroAnimator.CrossFade("Run", 0.1f);

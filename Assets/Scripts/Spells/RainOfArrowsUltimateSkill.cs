@@ -55,16 +55,18 @@ public class RainOfArrowsUltimateSkill : Spell
             {
                 foreach (Hero hero in tempHeroList)
                 {
-                    if(hero.Health > 0 && hero.transform.position != null)
+                    if(hero.Health > 0)
                     {
-                        arrows[arrows.Count - 1].transform.DOMove(hero.transform.position, 0.3f);
-                        yield return new WaitForSeconds(0.3f);
-                        Destroy(arrows[arrows.Count - 1]);
+                        arrows[arrows.Count - 1].transform.DOMove(hero.transform.position, 0.2f);
+                        yield return new WaitForSeconds(0.4f);
+                        Destroy(arrows[arrows.Count - 1] , 0.5f);
                         arrows.RemoveAt(arrows.Count - 1);
+                        Vector3 splashTempPosition = hero.transform.position;
                         GameObject splash = Instantiate(Effects[1], hero.transform.position + Vector3.up, Quaternion.identity);
                         Destroy(splash, 0.3f);
                         hero.Hurt((int)(casterHero.Damage * (PrimaryDamagePercent / 100f)));
                         lowerDef(hero, ReduceDefSeconds);
+                        
                     }
                     else
                     { 

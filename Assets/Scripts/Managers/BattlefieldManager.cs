@@ -145,7 +145,7 @@ public class BattlefieldManager : MonoBehaviour
 
             if(whileHandbreak > 10)
             {
-                Debug.Log("Navmesh Error");
+                Debug.LogError("Navmesh Error");
                 break;
             }
         }
