@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private List<InventoryItem> items = new();
+    [SerializeField] private List<InventoryItem> items = new List<InventoryItem>();
     [SerializeField] private int capacity = 10;
 
 

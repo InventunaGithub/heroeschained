@@ -19,21 +19,21 @@ namespace DuloGames.UI
 
             if (this.gameObject.CompareTag("PlayerItem"))
             {
-                UIItemSlot[] playerSlots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
-                List<UIItemInfo> playerItemInfo = new();
-                InventoryItem[] playerInventoryItem = UIInventoryItemDatabase.Instance.PlayerItems;
-
-                for (int i = 0; i < playerInventoryItem.Length; i++)
+                UIItemSlot[] inventorySlots = this.m_Container.gameObject.GetComponentsInChildren<UIItemSlot>();
+                List<UIItemInfo> inventoryItemInfo = new();
+                InventoryItem[] inventoryInventoryItem = UIInventoryItemDatabase.Instance.PlayerItems;
+            
+                for (int i = 0; i < inventoryInventoryItem.Length; i++)
                 {
-                    playerItemInfo.Add(InventoryItemConventer.Instance.Conventer(playerInventoryItem[i]));
+                    inventoryItemInfo.Add(InventoryItemConventer.Instance.Conventer(inventoryInventoryItem[i]));
                 }
 
-                if (playerSlots.Length > 0 && playerItemInfo.Count > 0)
+                if (inventorySlots.Length > 0 && inventoryItemInfo.Count > 0)
                 {
-                    for (int i = 0; i < playerSlots.Length; i++)
+                    for (int i = 0; i < inventorySlots.Length; i++)
                     {
-                        UIItemSlot slot = playerSlots[i];
-                        slot.Assign(playerItemInfo[Random.Range(0, playerItemInfo.Count)]);
+                        UIItemSlot slot = inventorySlots[i];
+                        slot.Assign(inventoryItemInfo[i]);
                     }
                 }
             }
@@ -53,7 +53,7 @@ namespace DuloGames.UI
                     for (int i = 0; i < marketSlots.Length; i++)
                     {
                         UIItemSlot slot = marketSlots[i];
-                        slot.Assign(marketItemInfo[Random.Range(0, marketItemInfo.Count)]);
+                        slot.Assign(marketItemInfo[i]);
                     }
                 }
             }

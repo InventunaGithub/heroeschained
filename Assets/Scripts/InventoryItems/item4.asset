@@ -10,16 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d067d160f7a044d2a81757103f32a82, type: 3}
-  m_Name: Inventory Item
+  m_Name: item4
   m_EditorClassIdentifier: 
-  Id: 0
-  MinLevel: 0
-  MaxLevel: 0
+  Id: 4
+  MinLevel: 1
+  MaxLevel: 3
   SpecificToClass: 0
   ItemLevel: 1
-  ItemName: 
-  ItemDescription: 
-  ItemType: 0
+  ItemName: Ring Of Felankor
+  ItemDescription: The miracle Ring from the enormous dragon
+  ItemType: 9
+  ItemQuality: 3
+  EquipmentItemPlace: 7
   Consumable: 0
   AccountBound: 0
-  SellValue: 0
+  SellValue: 10
+  BuyValue: 15
+  Icon: {fileID: 21300000, guid: ada1850caea736a469d3d147cca53d9b, type: 3}

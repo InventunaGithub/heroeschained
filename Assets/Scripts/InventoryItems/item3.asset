@@ -10,16 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d067d160f7a044d2a81757103f32a82, type: 3}
-  m_Name: Inventory Item 1
+  m_Name: item3
   m_EditorClassIdentifier: 
-  Id: 0
+  Id: 3
   MinLevel: 0
-  MaxLevel: 0
+  MaxLevel: 5
   SpecificToClass: 0
   ItemLevel: 1
-  ItemName: 
-  ItemDescription: 
-  ItemType: 13
+  ItemName: Iron Necklace
+  ItemDescription: The miracle Necklace
+  ItemType: 10
+  ItemQuality: 3
+  EquipmentItemPlace: 2
   Consumable: 0
   AccountBound: 0
-  SellValue: 0
+  SellValue: 5
+  BuyValue: 7
+  Icon: {fileID: 21300000, guid: 19172c7190fdb784f81bfc594073958e, type: 3}

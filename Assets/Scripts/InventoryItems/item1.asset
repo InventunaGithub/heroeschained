@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d067d160f7a044d2a81757103f32a82, type: 3}
-  m_Name: 8003TestItem2
+  m_Name: item1
   m_EditorClassIdentifier: 
-  Id: 2
+  Id: 1
   MinLevel: 1
-  MaxLevel: 10
+  MaxLevel: 9
   SpecificToClass: 0
-  ItemLevel: 7
-  ItemName: Iron Bow
-  ItemDescription: The miracle bow
-  ItemType: 0
+  ItemLevel: 9
+  ItemName: Raptor
+  ItemDescription: Spear
+  ItemType: 1
   ItemQuality: 0
-  EquipmentItemPlace: 5
+  EquipmentItemPlace: 6
   Consumable: 0
   AccountBound: 0
-  SellValue: 0
+  SellValue: 5
   BuyValue: 0
-  Icon: {fileID: 21300000, guid: cb38ed43e87ec3f4e9bcf5557c767bb0, type: 3}
+  Icon: {fileID: 21300000, guid: 10f84c976431925449c6c450abe174fc, type: 3}
