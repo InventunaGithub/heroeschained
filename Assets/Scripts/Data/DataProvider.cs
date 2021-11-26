@@ -51,4 +51,30 @@ public abstract class DataProvider : MonoBehaviour
     public abstract void TestIfUserNameExists(string userName, OnCompletionDelegateWithParameter onComplete);
     public abstract void SaveUserName(string userId, string userName, string mailAddress);
     public abstract void SaveNickName(string userId, string nickName);
+
+    // Resource related commands
+    public abstract void AddResource(string userId, string name, int tier, int amount, OnCompletionDelegateWithParameter onComplete);
+    public abstract void GetResourceAmount(string userId, string name, int tier, OnCompletionDelegateWithParameter onComplete);
+    public abstract void GetResourceAmount(string userId, string name, OnCompletionDelegateWithParameter onComplete);
+    public abstract void GetResources(string userId, OnCompletionDelegateWithParameter onComplete);
+    public abstract void CollectResource(string resourceId, string userId, string resourceType, int resourceTier, int amount, OnCompletionDelegateWithParameter onComplete);
+    public abstract void IfResourceCollected(string resourceId, string userId, OnCompletionDelegateWithParameter onComplete);
+
+    // Land related commands
+    public abstract void FetchLandResources(string landId, string userId, OnCompletionDelegateWithParameter onComplete);
+    public abstract void GetLandInfo(string landId, OnCompletionDelegateWithParameter onComplete);
+
+    // Beacon related commands
+    public abstract void AddBeacon(Vector3 location, int index, string userId);
+    public abstract void GetUserBeacons(string userId, OnCompletionDelegateWithParameter onComplete);
+    public abstract void ResetBeacons(string userId);
+    public abstract void GetNearbyLands(Vector3 origin, float distance, OnCompletionDelegateWithParameter onComplete);
+
+    // Dungeon related commands
+    public abstract void GetLandDungeons(string landId, OnCompletionDelegateWithParameter onComplete);
+    public abstract void IfDungeonCleaned(string landId, string dungeonId, string userId, OnCompletionDelegateWithParameter onComplete);
+    public abstract void VisitDungeon(int result, string landId, string dungeonId, string userId);
+
+    // Misc. Commands
+    public abstract void ResetResources();
 }

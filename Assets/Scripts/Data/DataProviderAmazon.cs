@@ -110,4 +110,84 @@ public class DataProviderAmazon : DataProvider
     {
         throw new System.NotImplementedException();
     }
+
+    public override void AddResource(string userId, string name, int tier, int amount, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetResourceAmount(string userId, string name, int tier, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetResources(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetResourceAmount(string userId, string name, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void FetchLandResources(string landId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void CollectResource(string resourceId, string userId, string resourceType, int resourceTier, int amount, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void IfResourceCollected(string resourceId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void ResetResources()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void AddBeacon(Vector3 location, int index, string userId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetUserBeacons(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetLandInfo(string landId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void ResetBeacons(string userId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetNearbyLands(Vector3 origin, float distance, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GetLandDungeons(string landId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void IfDungeonCleaned(string landId, string dungeonId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void VisitDungeon(int result, string landId, string dungeonId, string userId)
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -131,6 +131,74 @@ public class DataProviderFirebase : DataProvider
         public DateTime readAt { get; set; }
     }
 
+
+    [FirestoreData]
+    class FirebaseUserResource
+    {
+        [FirestoreProperty]
+        public string name { get; set; }
+
+        [FirestoreProperty]
+        public int tier { get; set; }
+
+        [FirestoreProperty]
+        public int amount { get; set; }
+    }
+
+    [FirestoreData]
+    class FirebaseUserResourceCollected
+    {
+        [FirestoreProperty]
+        public string name { get; set; }
+
+        [FirestoreProperty]
+        public int tier { get; set; }
+
+        [FirestoreProperty]
+        public int amount { get; set; }
+
+        [FirestoreProperty]
+        public string id { get; set; }
+
+        [FirestoreProperty]
+        public DateTime dateTime { get; set; }
+    }
+
+    [FirestoreData]
+    class FirebaseUserBeacon
+    {
+        [FirestoreProperty]
+        public float locX { get; set; }
+
+        [FirestoreProperty]
+        public float locY { get; set; }
+
+        [FirestoreProperty]
+        public float locZ { get; set; }
+
+        [FirestoreProperty]
+        public int index { get; set; }
+
+        [FirestoreProperty]
+        public DateTime dateTime { get; set; }
+    }
+
+    [FirestoreData]
+    class FirebaseDungeonResult
+    {
+        [FirestoreProperty]
+        public DateTime clearedAt { get; set; }
+
+        [FirestoreProperty]
+        public int result { get; set; }
+
+        [FirestoreProperty]
+        public string dungeonId { get; set; }
+
+        [FirestoreProperty]
+        public string landId { get; set; }
+    }
+
     FirebaseFirestore firebase;
 
     // abstract method implementations
@@ -287,7 +355,9 @@ public class DataProviderFirebase : DataProvider
                 {
                     Debug.Log("Fault 102");
                     // REAL ERROR HANDLING INSTEAD
-                } else {
+                }
+                else
+                {
                     foreach (DocumentSnapshot dsg in task.Result.Documents)
                     {
                         gameData = dsg.ToDictionary();
@@ -475,7 +545,8 @@ public class DataProviderFirebase : DataProvider
                         if (date >= DateTime.Now)
                         {
                             onRestriction?.Invoke(date, gameData["restrictionReason"].ToString());
-                        } else
+                        }
+                        else
                         {
                             onRestriction?.Invoke(DateTime.MinValue, "");
                         }
@@ -530,7 +601,8 @@ public class DataProviderFirebase : DataProvider
             if (snapshot != null)
             {
                 onComplete?.Invoke(snapshot.Count);
-            } else
+            }
+            else
             {
                 onComplete?.Invoke(0);
             }
@@ -824,5 +896,647 @@ public class DataProviderFirebase : DataProvider
         };
 
         firebase.Collection("users").Document(topUserId).UpdateAsync(updates);
+    }
+
+    public override void AddResource(string userId, string name, int tier, int amount, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(AddResourceNow(userId, name, tier, amount, onComplete));
+    }
+
+    IEnumerator AddResourceNow(string userId, string name, int tier, int amount, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("resources").WhereEqualTo("name", name).WhereEqualTo("tier", tier).GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        int recordCount = 0;
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            recordCount += 1;
+            break;
+        }
+
+        if (recordCount == 0)
+        {
+            // record for this resource is not present, add it for the first time
+            FirebaseUserResource newRecord = new FirebaseUserResource
+            {
+                name = name,
+                amount = amount,
+                tier = tier
+            };
+
+            foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+            {
+                var addTask = dsg.Reference.Collection("resources").AddAsync(newRecord);
+                yield return new WaitUntil(() => addTask.IsCompleted);
+
+                onComplete?.Invoke(amount);
+                break;
+            }
+        }
+        else
+        {
+            // update the amount
+            foreach (DocumentSnapshot dsg in task.Result.Documents)
+            {
+                var data = dsg.ToDictionary();
+                var updates = new Dictionary<FieldPath, object>
+                {
+                    { new FieldPath("amount"), amount + int.Parse(data["amount"].ToString()) }
+                };
+
+                firebase.Collection("users").Document(topUserId).Collection("resources").Document(dsg.Id).UpdateAsync(updates);
+                onComplete?.Invoke(amount + int.Parse(data["amount"].ToString()));
+
+                break;
+            }
+        }
+    }
+
+    public override void GetResourceAmount(string userId, string name, int tier, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetResourceAmountNow(userId, name, tier, onComplete));
+    }
+
+    IEnumerator GetResourceAmountNow(string userId, string name, int tier, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("resources").WhereEqualTo("name", name).WhereEqualTo("tier", tier).GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            onComplete?.Invoke(int.Parse(gameData["amount"].ToString()));
+
+            yield break;
+        }
+
+        onComplete?.Invoke(0);
+    }
+
+    public override void GetResourceAmount(string userId, string name, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetResourceAmountNow(userId, name, onComplete));
+    }
+
+    IEnumerator GetResourceAmountNow(string userId, string name, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("resources").WhereEqualTo("name", name).GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        List<string> results = new List<string>();
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            results.Add(gameData["name"] + "|" + gameData["tier"] + "|" + gameData["amount"]);
+        }
+
+        onComplete?.Invoke(results);
+    }
+
+    public override void GetResources(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetResourcesNow(userId, onComplete));
+    }
+
+    IEnumerator GetResourcesNow(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("resources").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        List<string> results = new List<string>();
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            results.Add(gameData["name"] + "|" + gameData["tier"] + "|" + gameData["amount"]);
+        }
+
+        onComplete?.Invoke(results);
+    }
+
+    public override void FetchLandResources(string landId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(FetchLandResourcesNow(landId, userId, onComplete));
+    }
+
+    IEnumerator FetchLandResourcesNow(string landId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskLand = firebase.Collection("lands").WhereEqualTo("landId", landId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskLand.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topLandId = "";
+        foreach (DocumentSnapshot dsg in taskLand.Result.Documents)
+        {
+            topLandId = dsg.Id;
+            break;
+        }
+
+        var task = firebase.Collection("lands").Document(topLandId).Collection("resources").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        List<string> results = new List<string>();
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            results.Add(dsg.Id + "|" + gameData["name"] + "|" + gameData["tier"] + "|" + gameData["amountMin"] + "|" + gameData["amountMax"] + "|" + gameData["locX"] + "|" + gameData["locY"] + "|" + gameData["locZ"]);
+        }
+
+        onComplete?.Invoke(results);
+    }
+
+    public override void CollectResource(string resourceId, string userId, string resourceType, int resourceTier, int amount, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(CollectResourceNow(resourceId, userId, resourceType, resourceTier, amount, onComplete));
+    }
+
+    IEnumerator CollectResourceNow(string resourceId, string userId, string resourceType, int resourceTier, int amount, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("collected_resources").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        bool found = false;
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            if (gameData["id"].ToString() == resourceId)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
+        {
+            onComplete?.Invoke(false);
+            yield break;
+        }
+
+        // add new record as collected
+        var newRecord = new FirebaseUserResourceCollected
+        {
+            id = resourceId,
+            name = resourceType,
+            tier = resourceTier,
+            amount = amount,
+            dateTime = DateTime.Now
+        };
+
+        var addTask = firebase.Collection("users").Document(topUserId).Collection("collected_resources").AddAsync(newRecord);
+        yield return new WaitUntil(() => addTask.IsCompleted);
+
+        onComplete?.Invoke(true);
+    }
+
+    public override void IfResourceCollected(string resourceId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(IfResourceCollectedNow(resourceId, userId, onComplete));
+    }
+
+    IEnumerator IfResourceCollectedNow(string resourceId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("collected_resources").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        bool collected = false;
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            if (gameData["id"].ToString() == resourceId)
+            {
+                collected = true;
+                break;
+            }
+        }
+
+        onComplete(collected);
+    }
+
+    public override void ResetResources()
+    {
+        StartCoroutine(ResetResourcesNew());
+    }
+
+    IEnumerator ResetResourcesNew()
+    {
+#if DEBUG
+        Debug.LogWarning("If you are not sure what you are doing, DO NOT PROCEED!");
+
+        var taskUsr = firebase.Collection("users").GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        string id;
+        foreach (DocumentSnapshot snp in taskUsr.Result.Documents)
+        {
+            id = snp.Id;
+
+            var docTask = snp.Reference.Collection("collected_resources").GetSnapshotAsync();
+            yield return new WaitUntil(() => docTask.IsCompleted);
+
+            foreach (DocumentSnapshot dsh in docTask.Result.Documents)
+            {
+                dsh.Reference.DeleteAsync();
+            }
+        }
+#else
+        Debug.Log("Can't execute this command");
+        yield break;
+#endif
+    }
+
+    public override void AddBeacon(Vector3 location, int index, string userId)
+    {
+        StartCoroutine(AddBeaconNow(location, index, userId));
+    }
+
+    IEnumerator AddBeaconNow(Vector3 location, int index, string userId)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        // add new record as collected
+        var newRecord = new FirebaseUserBeacon
+        {
+            locX = location.x,
+            locY = location.y,
+            locZ = location.z,
+            dateTime = DateTime.Now,
+            index = index
+        };
+
+        var addTask = firebase.Collection("users").Document(topUserId).Collection("beacons").AddAsync(newRecord);
+        yield return new WaitUntil(() => addTask.IsCompleted);
+    }
+
+    public override void GetUserBeacons(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetUserBeaconsNow(userId, onComplete));
+    }
+
+    IEnumerator GetUserBeaconsNow(string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("beacons").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        string result = "";
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+
+            result += gameData["locX"] + ":" + gameData["locY"] + ":" + gameData["locZ"] + "|" + gameData["index"] + "~";
+        }
+
+        if (result.EndsWith("~"))
+        {
+            result = result.Substring(0, result.Length - 1);
+        }
+
+        onComplete?.Invoke(result);
+    }
+
+    public override void GetLandInfo(string landId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetLandInfoNow(landId, onComplete));
+    }
+
+    IEnumerator GetLandInfoNow(string landId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var task = firebase.Collection("lands").WhereEqualTo("landId", landId).GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            int width = int.Parse(gameData["width"].ToString());
+            int height = int.Parse(gameData["height"].ToString());
+            float locX = float.Parse(gameData["locX"].ToString());
+            float locY = float.Parse(gameData["locY"].ToString());
+            float locZ = float.Parse(gameData["locZ"].ToString());
+            string theme = gameData["theme"].ToString();
+            string landEast = gameData["landEast"].ToString();
+            string landWest = gameData["landWest"].ToString();
+            string landNorth = gameData["landNorth"].ToString();
+            string landSouth = gameData["landSouth"].ToString();
+
+            LandInfo land = new LandInfo(width, height, locX, locY, locZ, theme, landEast, landWest, landNorth, landSouth);
+
+            onComplete?.Invoke(land);
+            yield break;
+        }
+
+        onComplete?.Invoke(null);
+    }
+
+    public override void ResetBeacons(string userId)
+    {
+        StartCoroutine(ResetBeaconsNow(userId));
+    }
+
+    IEnumerator ResetBeaconsNow(string userId)
+    {
+        var taskUsr = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUsr.IsCompleted);
+
+        // update the record if it is present, or add if it isn't
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUsr.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        var task = firebase.Collection("users").Document(topUserId).Collection("beacons").GetSnapshotAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        foreach (DocumentSnapshot dsg in task.Result.Documents)
+        {
+            dsg.Reference.DeleteAsync();
+        }
+    }
+
+    public override void GetNearbyLands(Vector3 origin, float distance, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetNearbyLandsNow(origin, distance, onComplete));
+    }
+
+    IEnumerator GetNearbyLandsNow(Vector3 origin, float distance, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskLands = firebase.Collection("lands").GetSnapshotAsync();
+        yield return new WaitUntil(() => taskLands.IsCompleted);
+
+        List<string> result = new List<string>();
+        Vector3 v;
+        foreach (DocumentSnapshot dsg in taskLands.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            v = new Vector3(float.Parse(gameData["locX"].ToString()), float.Parse(gameData["locY"].ToString()), float.Parse(gameData["locZ"].ToString()));
+            if (Vector3.Distance(v, origin) <= distance)
+            {
+                result.Add(gameData["landId"].ToString());
+            }
+        }
+
+        onComplete?.Invoke(result.ToArray());
+    }
+
+    public override void GetLandDungeons(string landId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(GetLandDungeonsNow(landId, onComplete));
+    }
+
+    IEnumerator GetLandDungeonsNow(string landId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskLand = firebase.Collection("lands").WhereEqualTo("landId", landId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskLand.IsCompleted);
+
+        string topLandId = "";
+        foreach (DocumentSnapshot dsg in taskLand.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topLandId = dsg.Id;
+
+            break;
+        }
+
+        var dungeons = firebase.Collection("lands").Document(topLandId).Collection("dungeons");
+        if (dungeons != null)
+        {
+            var taskDungeons = dungeons.GetSnapshotAsync();
+            yield return new WaitUntil(() => taskDungeons.IsCompleted);
+
+            List<string> result = new List<string>();
+            string line;
+            foreach (DocumentSnapshot dsg in taskDungeons.Result.Documents)
+            {
+                var gameData = dsg.ToDictionary();
+                line = gameData["dungeonId"].ToString() + "|" + gameData["locX"].ToString() + "|" + gameData["locY"].ToString() + "|" + gameData["locZ"].ToString() + "|" + gameData["prefab"] + "|" + gameData["possibleThemes"].ToString();
+
+                for (int i = 0; i < (int)(float.Parse(gameData["possibleThemes"].ToString())); i++)
+                {
+                    line += "|" + gameData["possibleTheme" + (i + 1)].ToString();
+                }
+
+                result.Add(line);
+            }
+
+            onComplete?.Invoke(result.ToArray());
+        }
+        else
+        {
+            onComplete?.Invoke(null);
+        }
+    }
+
+    public override void IfDungeonCleaned(string landId, string dungeonId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        StartCoroutine(IfDungeonCleanedNow(landId, dungeonId, userId, onComplete));
+    }
+
+    IEnumerator IfDungeonCleanedNow(string landId, string dungeonId, string userId, OnCompletionDelegateWithParameter onComplete)
+    {
+        var taskUser = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUser.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUser.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        var taskDungeon = firebase.Collection("users").Document(topUserId).Collection("dungeons").WhereEqualTo("dungeonId", dungeonId).WhereEqualTo("landId", landId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskDungeon.IsCompleted);
+
+        string topDungeonId = "";
+        foreach (DocumentSnapshot dsg in taskDungeon.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topDungeonId = dsg.Id;
+
+            break;
+        }
+
+        if (!string.IsNullOrEmpty(topDungeonId))
+        {
+            var task = firebase.Collection("users").Document(topUserId).Collection("dungeons").Document(topDungeonId).GetSnapshotAsync();
+            yield return new WaitUntil(() => task.IsCompleted);
+
+            var gameData = task.Result.ToDictionary();
+            DateTime completedAt = DateTime.Parse(gameData["clearedAt"].ToString().Substring(11));
+            string result = completedAt.ToOADate() + "|" + gameData["result"].ToString();
+
+            onComplete?.Invoke(result);
+        }
+        else
+        {
+            onComplete?.Invoke(null);
+        }
+    }
+
+    public override void VisitDungeon(int result, string landId, string dungeonId, string userId)
+    {
+        StartCoroutine(VisitDungeonNow(result, landId, dungeonId, userId));
+    }
+
+    IEnumerator VisitDungeonNow(int result, string landId, string dungeonId, string userId)
+    {
+        // test if such a dungeon exists
+        var taskLand = firebase.Collection("lands").WhereEqualTo("landId", landId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskLand.IsCompleted);
+
+        string topLandId = "";
+        foreach (DocumentSnapshot dsg in taskLand.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topLandId = dsg.Id;
+
+            break;
+        }
+
+        var taskDungeon = firebase.Collection("lands").Document(topLandId).Collection("dungeons").WhereEqualTo("dungeonId", dungeonId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskDungeon.IsCompleted);
+
+        string topDungeonId = "";
+        foreach (DocumentSnapshot dsg in taskDungeon.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topDungeonId = dsg.Id;
+
+            break;
+        }
+
+        if (string.IsNullOrEmpty(topDungeonId))
+        {
+            // no such dungeon exists
+            yield break;
+        }
+
+        // add new dungeon record
+        var taskUser = firebase.Collection("users").WhereEqualTo("userId", userId).GetSnapshotAsync();
+        yield return new WaitUntil(() => taskUser.IsCompleted);
+
+        string topUserId = "";
+        foreach (DocumentSnapshot dsg in taskUser.Result.Documents)
+        {
+            var gameData = dsg.ToDictionary();
+            topUserId = dsg.Id;
+
+            break;
+        }
+
+        FirebaseDungeonResult dungeonResult = new FirebaseDungeonResult
+        {
+            dungeonId = dungeonId,
+            landId = landId,
+            clearedAt = DateTime.Now,
+            result = result
+        };
+
+        var taskUserDungeon = firebase.Collection("users").Document(topUserId).Collection("dungeons").AddAsync(dungeonResult);
+        yield return new WaitUntil(() => taskUserDungeon.IsCompleted);
     }
 }

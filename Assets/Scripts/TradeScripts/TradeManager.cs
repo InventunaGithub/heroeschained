@@ -1,52 +1,72 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DuloGames.UI;
 
 //Author: Deniz Afşar
 //Date: 28.10.21
 
 public class TradeManager : MonoBehaviour
 {
-    public float SaleTax = 0f;
-    public float AuctionTax = 0f;
+    public DataSource Data;
+    public GUITownTemporary TownTemporary;
 
-    public TradeResponse Trade(GameCharacter buyer, GameCharacter seller, InventoryItem item)
+    private void Start()
     {
-        if((buyer is GamePlayer) && (seller is GameNpc))
-        {
-            if (((GamePlayer)buyer).Gold >= buyer.GetBuyValue(item))
-            {
-                if (buyer.AddInventoryItem(item))
-                {
-                    ((GamePlayer)buyer).Gold -= buyer.GetBuyValue(item);
-                    return TradeResponse.OK;
-                }
-                else
-                {
-                    Debug.Log("Player hasn't any available item place.");
-                    return TradeResponse.InsufficientInventorySpace;
-                }
-            }
-            else
-            {
-                Debug.Log("Player's gold is insufficient.");
-                return TradeResponse.InsufficientFunds;
-            }
-        }else if((buyer is GameNpc) && (seller is GamePlayer))
-        {
-            if (seller.RemoveInventoryItem(item))
-            {
-                ((GamePlayer)seller).Gold += buyer.GetSellValue(item);
-                return TradeResponse.OK;
-            }
-            else
-            {
-                Debug.Log("Player hasn't got this item.");
-                return TradeResponse.InexistentItem;
-            }
-        }
-        Debug.Log("Trade is not happened");
-        return TradeResponse.UnexpectedTradePair;
+        //Data.GetProvider().AddResource(VariableManager.Instance.GetVariable("userid").ToString(), "gold", 1, 0, null);
     }
-}
 
+    public void TradeDialog(GameObject go)
+    {
+        if (go.CompareTag("MarketItem"))
+        {
+            TownTemporary.Confirm("Are you sure for buying this item?", "Yes"
+                , "No", () => BuyTrade(null), () => { });
+        }
+        else if (go.CompareTag("PlayerItem"))
+        {
+            TownTemporary.Confirm("Are you sure for selling this item?", "Yes"
+                , "No", () => SellTrade(null), () => { });
+        }
+    }
+
+    public TradeResponse SellTrade(InventoryItem item)
+    {
+        //if (((GamePlayer)buyer).Gold >= buyer.GetBuyValue(item))
+        //{
+        //    if (buyer.AddInventoryItem(item))
+        //    {
+        //        ((GamePlayer)buyer).Gold -= buyer.GetBuyValue(item);
+        //        return TradeResponse.OK;
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("Player hasn't any available item place.");
+        //        return TradeResponse.InsufficientInventorySpace;
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.Log("Player's gold is insufficient.");
+        Debug.Log("Sold");
+            return TradeResponse.InsufficientFunds;
+        //}
+    }
+    public TradeResponse BuyTrade(InventoryItem item)
+    {
+        //    if (seller.RemoveInventoryItem(item))
+        //    {
+        //        ((GamePlayer)seller).Gold += buyer.GetSellValue(item);
+        //        return TradeResponse.OK;
+        //    }
+        //    else
+        //    {
+        //    Debug.Log("Player hasn't got this item.");
+        //    return TradeResponse.InexistentItem;
+        //    }
+
+        //Debug.Log("Trade is not happened");
+        Debug.Log("Buyed");
+        return TradeResponse.UnexpectedTradePair;
+    }  
+}

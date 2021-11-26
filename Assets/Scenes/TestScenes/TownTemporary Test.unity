@@ -698,8 +698,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 16, y: -48}
-  m_SizeDelta: {x: 474, y: 34}
+  m_AnchoredPosition: {x: 16, y: -53.199997}
+  m_SizeDelta: {x: 474, y: 24.799997}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &126942194
 MonoBehaviour:
@@ -1245,19 +1245,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 182669573}
   m_CullTransparentMesh: 1
---- !u!114 &187185585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573784437753286727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0dbe5955743c744915476127de1a6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ItemTemplate: {fileID: 9082226696654081710}
 --- !u!1 &198424327
 GameObject:
   m_ObjectHideFlags: 0
@@ -9722,6 +9709,7 @@ GameObject:
   - component: {fileID: 1134940251}
   - component: {fileID: 1134940253}
   - component: {fileID: 1134940254}
+  - component: {fileID: 1134940255}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -9789,6 +9777,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 2115343630}
+--- !u!114 &1134940255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134940250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86bc54b6d664145dfae5eac7fa028d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data: {fileID: 2115343630}
+  TownTemporary: {fileID: 2144311734}
 --- !u!1 &1161684378
 GameObject:
   m_ObjectHideFlags: 0
@@ -22841,6 +22843,7 @@ GameObject:
   - component: {fileID: 2144311731}
   - component: {fileID: 2144311730}
   - component: {fileID: 2144311734}
+  - component: {fileID: 2144311735}
   m_Layer: 5
   m_Name: CanvasUI
   m_TagString: Untagged
@@ -22989,6 +22992,21 @@ MonoBehaviour:
   MessageCount: {fileID: 1982580448}
   MaxMessagesInMessageBox: 100
   MessageTemplate: {fileID: 7625891487969667838}
+--- !u!114 &2144311735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144311729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d0dbe5955743c744915476127de1a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ItemTemplate: {fileID: 9082226696654081710}
+  PlayerContext: {fileID: 1573784437753286726}
+  MarketContext: {fileID: 4640050498106178155}
 --- !u!224 &340155457431964648
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23323,7 +23341,6 @@ GameObject:
   - component: {fileID: 1573784437753286731}
   - component: {fileID: 1573784437753286724}
   - component: {fileID: 1573784437753286725}
-  - component: {fileID: 187185585}
   m_Layer: 5
   m_Name: Content
   m_TagString: PlayerItem
@@ -26458,7 +26475,6 @@ GameObject:
   - component: {fileID: 4819465825210607697}
   - component: {fileID: 4819487794578769873}
   - component: {fileID: 4862835076193634140}
-  - component: {fileID: 4862835076193634142}
   m_Layer: 5
   m_Name: Content
   m_TagString: MarketItem
@@ -26466,19 +26482,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &4862835076193634142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4862835076193634141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0dbe5955743c744915476127de1a6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ItemTemplate: {fileID: 9082226696654081710}
 --- !u!1 &4862990888424778163
 GameObject:
   m_ObjectHideFlags: 0
@@ -29558,7 +29561,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4787812542648303216}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1134940255}
+        m_TargetAssemblyTypeName: TradeManager, Assembly-CSharp
+        m_MethodName: TradeDialog
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 9082226696654081710}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7138078940078760853
 GameObject:
   m_ObjectHideFlags: 0
@@ -29750,7 +29765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 215311111312428910, guid: e75e363b27fea1e46b6d682ea220c6b5, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 44
+      value: 37.199997
       objectReference: {fileID: 0}
     - target: {fileID: 215311111312428910, guid: e75e363b27fea1e46b6d682ea220c6b5, type: 3}
       propertyPath: m_AnchoredPosition.x
