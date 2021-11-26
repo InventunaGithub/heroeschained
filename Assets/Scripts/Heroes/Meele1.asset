@@ -22,7 +22,7 @@ MonoBehaviour:
   Health: 0
   Range: 1
   MaxEnergy: 50
-  MaxUltimateEnergy: 10
+  MaxUltimateEnergy: 25
   Skills: 000000000b000000
   UltimateSkill: 9
   UltimateSkillCardID: 3

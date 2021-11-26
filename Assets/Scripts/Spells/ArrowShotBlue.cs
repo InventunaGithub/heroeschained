@@ -12,25 +12,33 @@ public class ArrowShotBlue : Spell
     public Vector3 offset = new Vector3(0, 1, 0);
     private float travelTime;
     public int GainEnergyAmount;
-
     public override void Cast(GameObject caster, GameObject target)
     {
         travelTime = Vector3.Distance(caster.transform.position, target.transform.position) * 0.05f;
         SetCaster(caster);
         SetTarget(target);
         tempHeroController = caster.GetComponent<HeroController>();
-        tempHeroController.AttackAnimation();
+        tempHeroController.CastAnimation();
         tempHeroController.SetIsAttacking(true);
+        StartCoroutine(WaitForAnimation(caster, target));
+    }
+
+    IEnumerator WaitForAnimation(GameObject caster, GameObject target)
+    {
+        yield return new WaitForSeconds(CastTime);
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
+        tempHeroController.AttackAnimation();
         projectileGO = Instantiate(Effects[0], caster.transform.position + offset, caster.transform.rotation);
         projectileGO.transform.DOMove(target.transform.position + offset, travelTime);
-        StartCoroutine(TravelTime(tempHeroController , projectileGO));
+        Destroy(projectileGO, travelTime + 0.5f);
+        StartCoroutine(TravelTime(tempHeroController));
     }
-    IEnumerator TravelTime(HeroController tempHeroController ,GameObject projectileGO)
+
+    IEnumerator TravelTime(HeroController tempHeroController)
     {
         Hero casterHero = GetCaster().GetComponent<Hero>();
         Hero targetHero = GetTarget().GetComponent<Hero>();
         yield return new WaitForSeconds(travelTime);
-        Destroy(projectileGO);
         GameObject splashGO = Instantiate(Effects[1], GetTarget().transform.position + offset, GetTarget().transform.rotation);
         targetHero.Hurt(casterHero.Damage);
         casterHero.GainEnergy(GainEnergyAmount);

@@ -23,7 +23,7 @@ MonoBehaviour:
   Range: 10
   MaxEnergy: 42
   MaxUltimateEnergy: 0
-  Skills: 0200000003000000
+  Skills: 0200000005000000
   UltimateSkill: 0
   UltimateSkillCardID: 0
   AIType: 0

@@ -7,8 +7,6 @@ using DG.Tweening;
 //Date: 5.11.2021
 public class SparkAttack : Spell
 {
-    Animator casterAnimator;
-    Animator targetAnimator;
     HeroController tempHeroController;
     GameObject projectileGO;
     public Vector3 offset = new Vector3(0 ,1, 0);
@@ -22,13 +20,20 @@ public class SparkAttack : Spell
         tempHeroController = caster.GetComponent<HeroController>();
         tempHeroController.AttackAnimation();
         tempHeroController.SetIsAttacking(true);
-        projectileGO = Instantiate(Effects[0], caster.transform.position + offset, caster.transform.rotation);
-        projectileGO.transform.DOMove(target.transform.position + offset, travelTime);
-        Destroy(projectileGO , travelTime + 0.5f);
-        StartCoroutine(TravelTime(tempHeroController , projectileGO));
+        StartCoroutine(WaitForAnimation(caster, target));
     }
 
-    IEnumerator TravelTime(HeroController tempHeroController , GameObject projectileGO)
+    IEnumerator WaitForAnimation(GameObject caster, GameObject target)
+    {
+        yield return new WaitForSeconds(CastTime);
+        HeroController tempHeroController = caster.GetComponent<HeroController>();
+        projectileGO = Instantiate(Effects[0], caster.transform.position + offset, caster.transform.rotation);
+        projectileGO.transform.DOMove(target.transform.position + offset, travelTime);
+        Destroy(projectileGO, travelTime + 0.5f);
+        StartCoroutine(TravelTime(tempHeroController));
+    }
+
+    IEnumerator TravelTime(HeroController tempHeroController)
     {
         Hero casterHero = GetCaster().GetComponent<Hero>();
         Hero targetHero = GetTarget().GetComponent<Hero>();

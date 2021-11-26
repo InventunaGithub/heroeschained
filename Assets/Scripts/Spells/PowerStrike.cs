@@ -34,7 +34,6 @@ public class PowerStrike :  Spell
         yield return new WaitForSeconds(CastTime);
         if (!tempHeroController.IsDead && !tempHeroController.Victory)
         {
-            tempHeroController.AttackAnimation();
             targetHero.Hurt((int)(Math.Round(casterHero.Damage * (PrimaryDamagePercent / 100f))));
             targetHero.Normalise();
             GameObject tempEffect = Instantiate(Effects[0], target.transform.position + Vector3.up, target.transform.rotation);

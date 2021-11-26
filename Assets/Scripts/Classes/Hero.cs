@@ -59,7 +59,7 @@ public class Hero : MonoBehaviour
         UltimateSkillCardID = rootSO.UltimateSkillCardID;
         UltimateEnergy = 0;
         Energy = 0;
-        AttackSpeed = 0.5f; //This here will be effected by weapon. 1 is default for now
+        AttackSpeed = 1f; //This here will be effected by weapon. 1 is default for now
         inventory = GetComponent<Inventory>();
         equipment = GetComponent<Equipment>();
     }

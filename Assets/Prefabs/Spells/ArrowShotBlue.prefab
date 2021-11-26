@@ -48,7 +48,7 @@ MonoBehaviour:
   Effects:
   - {fileID: 185492, guid: ab277be0b43f1824090ab10e4ce64cef, type: 3}
   - {fileID: 130626, guid: e7208592fcd84db46be48b5bce0525a5, type: 3}
-  CastTime: 0
+  CastTime: 0.9
   AOERange: 0
   EnergyCost: 0
   CasterAnimator: {fileID: 0}

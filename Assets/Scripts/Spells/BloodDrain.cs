@@ -24,7 +24,7 @@ public class BloodDrain : Spell
         }
         Hero casterHero = caster.GetComponent<Hero>();
         Hero targetHero = target.GetComponent<Hero>();
-        target.GetComponent<HeroController>().CastAnimation();
+        caster.GetComponent<HeroController>().CastAnimation();
         GameObject castingEffect = Instantiate(Effects[2], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         StartCoroutine(CastSpellLag(casterHero, targetHero, caster, target));

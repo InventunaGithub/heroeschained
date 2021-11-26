@@ -357,7 +357,7 @@ public class HeroController : MonoBehaviour
     }
     public void CastAnimation()
     {
-        heroAnimator.CrossFade("Idle", 0.1f);
+        heroAnimator.CrossFade("Cast", 0.1f);
     }
 
     public void VictoryAnimation()
@@ -371,6 +371,16 @@ public class HeroController : MonoBehaviour
     public void SetIsAttacking(bool given)
     {
         isAttacking = given;
+    }
+
+    public bool AnimatorIsPlaying(string stateName)
+    {
+        return AnimatorIsPlaying() && heroAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
+    }
+    public bool AnimatorIsPlaying()
+    {
+        return heroAnimator.GetCurrentAnimatorStateInfo(0).length >
+               heroAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
     }
 
     public void CalculateNormalAttackCooldown()
