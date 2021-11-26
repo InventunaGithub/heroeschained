@@ -82,8 +82,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainHero: {fileID: 0}
   TargetHero: 0
-  SkillEnergyCost: 15
-  NormalAttackCooldown: 0
+  SkillEnergyCost: 40
+  EnemyTeam: []
+  Agent: {fileID: 0}
+  NormalAttackCooldown: 3
   Radius: 25
   angle: 180
   TargetHeroGO: {fileID: 0}
@@ -93,10 +95,16 @@ MonoBehaviour:
   - {fileID: 2773334633327699315, guid: c2a3023df43ce7143bbeda5322a78e78, type: 3}
   - {fileID: 130848, guid: d16221e794fe16e4e8994a7f8c770561, type: 3}
   - {fileID: 1272483159307946, guid: cc0bdc9defd87ef4fba2c3954f1bb0d1, type: 3}
+  IsDead: 0
+  Victory: 0
   SeeingTarget: 0
+  UltimateSkillPulled: 0
+  HeroLock: 0
   Distance: 0
   HealthBarGO: {fileID: 928425666421249429, guid: 39af5cb212791b247bced8c171ad5af7, type: 3}
   EnergyBarGO: {fileID: 928425666421249429, guid: 9f6016d2100dc0d4587b5acaccaaa2c0, type: 3}
+  GridCurrentlyOn: {fileID: 0}
+  ConnectedHeroCard: {fileID: 0}
 --- !u!195 &1941975299658355593
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -173,23 +181,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Skills: 
+  UltimateSkill: 0
+  UltimateSkillCardID: 0
   RootSO: {fileID: 0}
-  HeroID: 0
+  ID: 0
   Name: 
   HeroObject: {fileID: 0}
   BaseHealth: 0
   BaseDamage: 0
-  Strength: 0
-  Dexterity: 0
-  Intelligence: 0
-  Vitality: 0
+  BaseDefence: 0
+  AttackSpeed: 0
   Armor: 0
   Damage: 0
+  Defence: 0
   Health: 0
-  MaxHealth: 0
   Range: 0
   MaxEnergy: 0
+  MaxUltimateEnergy: 0
   Energy: 0
+  UltimateEnergy: 0
   AIType: 0
   HeroType: 0
   HeroSkin: {fileID: 0}

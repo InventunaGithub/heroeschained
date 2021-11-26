@@ -39,8 +39,8 @@ public class FormationManager : MonoBehaviour
     {
         thumbnailArea = GameObject.Find("Content");
         Trash = GameObject.Find("Trash");
-        battleFieldManager = GameObject.Find("Managers").GetComponent<BattlefieldManager>();
-        battleFieldUIManager = GameObject.Find("Managers").GetComponent<BattlefieldUIManager>();
+        battleFieldManager = GetComponent<BattlefieldManager>();
+        battleFieldUIManager = GameObject.FindObjectOfType<BattlefieldUIManager>();
         FormationArea = GameObject.Find("FormationArea");
 
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("HeroLayer"), LayerMask.NameToLayer("HeroLayer"), true);

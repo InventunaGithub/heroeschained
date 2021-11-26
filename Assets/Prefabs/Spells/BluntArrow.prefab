@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4521149661928869733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2026000201054497918}
+  - component: {fileID: -6391698102407654992}
+  m_Layer: 0
+  m_Name: BluntArrow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2026000201054497918
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4521149661928869733}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6391698102407654992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4521149661928869733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e04f760491da85b46bdaeddff2209881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 12
+  Effects:
+  - {fileID: 119634, guid: 8d2980ba5e59f33419a0275c1ec29e38, type: 3}
+  - {fileID: 164886, guid: e16ed42fec42f5f4eb4f89b453707d71, type: 3}
+  - {fileID: 180838, guid: bfbeddd8307f4e441aa8ae4537bf45ad, type: 3}
+  - {fileID: 109542, guid: 2ed06ab528b7c474eb9246421cd7c791, type: 3}
+  CastTime: 2
+  AOERange: 0
+  EnergyCost: 20
+  CasterAnimator: {fileID: 0}
+  TargetAnimator: {fileID: 0}
+  PrimaryDamagePercent: 80
+  StunTime: 2

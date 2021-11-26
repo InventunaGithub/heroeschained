@@ -21,7 +21,7 @@ MonoBehaviour:
   Damage: 0
   Health: 0
   Range: 1
-  MaxEnergy: 30
+  MaxEnergy: 42
   MaxUltimateEnergy: 0
   Skills: 0000000004000000
   UltimateSkill: 0

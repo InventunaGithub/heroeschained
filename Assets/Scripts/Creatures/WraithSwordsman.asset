@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 751b2209685ca134c9fc24ee1726abb3, type: 3}
-  m_Name: Spider
+  m_Name: WraithSwordsman
   m_EditorClassIdentifier: 
-  HeroID: 1001
-  Name: Spider
-  BaseHealth: 3500
+  HeroID: 1006
+  Name: Wraith Swordsman
+  BaseHealth: 1000
   BaseDefence: 0
-  BaseDamage: 30
+  BaseDamage: 40
   Defence: 0
-  Damage: 5
+  Damage: 0
   Health: 0
-  Range: 2
+  Range: 1
   MaxEnergy: 42
   MaxUltimateEnergy: 0
-  Skills: 0000000003000000
+  Skills: 0000000004000000
   UltimateSkill: 0
   UltimateSkillCardID: 0
   AIType: 0
   HeroType: 2
-  HeroSkin: {fileID: 100148, guid: aca06175fb9d86a4ea082e5027692018, type: 3}
+  HeroSkin: {fileID: 1414134527487444, guid: 2d14bff838599234e8f16f538060b4ed, type: 3}

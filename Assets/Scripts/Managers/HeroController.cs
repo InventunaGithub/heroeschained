@@ -53,6 +53,7 @@ public class HeroController : MonoBehaviour
     private GameObject UltimateSkillCardGO;
     public GridController GridCurrentlyOn;
     public GameObject ConnectedHeroCard;
+    private GameObject canvas;
 
     void Start()
     {
@@ -75,15 +76,14 @@ public class HeroController : MonoBehaviour
             team = battlefieldManager.Team2;
             EnemyTeam = battlefieldManager.Team1;
         }
-        HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , gameObject.transform.rotation);
-        HeroHealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
-        HeroEnergyBar = Instantiate(EnergyBarGO, gameObject.transform.position + -(Vector3.up * 0.1f), gameObject.transform.rotation);
-        HeroEnergyBar.transform.SetParent(GameObject.Find("Canvas").transform);
+        canvas = GameObject.Find("Canvas");
+        HeroHealthBar = Instantiate(HealthBarGO, gameObject.transform.position , Quaternion.identity , canvas.transform);
+        HeroEnergyBar = Instantiate(EnergyBarGO, gameObject.transform.position + -(Vector3.up * 0.1f), Quaternion.identity , canvas.transform);
         obstructionMask = LayerMask.GetMask("Obstacle");
         CalculateNormalAttackCooldown();
-        if (NormalAttackCooldown < 0.7f)
+        if (NormalAttackCooldown < 0.3f)
         {
-            NormalAttackCooldown = 0.7f;
+            NormalAttackCooldown = 0.3f;
         }
         HealthBar = HeroHealthBar.GetComponent<Slider>();
         HealthBar.maxValue = MainHero.BaseHealth;
@@ -241,7 +241,7 @@ public class HeroController : MonoBehaviour
                                 {
                                     StartCoroutine(CooldownTimer(NormalAttackCooldown));
                                     spellManager.Cast(MainHero.Skills[1], MainHero.HeroObject, EnemyTeam[TargetHero].HeroObject);
-                                    MainHero.Energy -= 10;
+                                    MainHero.Energy -= SkillEnergyCost;
                                 }
                             }
                         }

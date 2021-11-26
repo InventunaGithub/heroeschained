@@ -24,6 +24,7 @@ public class SparkAttack : Spell
         tempHeroController.SetIsAttacking(true);
         projectileGO = Instantiate(Effects[0], caster.transform.position + offset, caster.transform.rotation);
         projectileGO.transform.DOMove(target.transform.position + offset, travelTime);
+        Destroy(projectileGO , travelTime + 0.5f);
         StartCoroutine(TravelTime(tempHeroController , projectileGO));
     }
 
@@ -32,7 +33,6 @@ public class SparkAttack : Spell
         Hero casterHero = GetCaster().GetComponent<Hero>();
         Hero targetHero = GetTarget().GetComponent<Hero>();
         yield return new WaitForSeconds(travelTime);
-        Destroy(projectileGO);
         GameObject splashGO = Instantiate(Effects[1], GetTarget().transform.position + offset, GetTarget().transform.rotation);
         targetHero.Hurt(casterHero.Damage);
         casterHero.GainEnergy(GainEnergyAmount);

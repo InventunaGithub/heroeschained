@@ -14,6 +14,7 @@ public class Card : MonoBehaviour
     public string Description;
     public CardTypes CardType;
     [HideInInspector]public GameObject UsingHero;
+    public GameObject SkillMesh;
     private CardManager cardManager;
     private SpellManager spellManager;
     private Button cardButton;

@@ -17,9 +17,8 @@ public class CardManager : MonoBehaviour
     private bool firstDraw = false;
     private LayerMask heroLayer;
     public GameObject AOEIndicatorPrefab;
-    public GameObject AOEIndicatorConePrefab;
     private GameObject AOEIndicator;
-    private GameObject AOEIndicatorCone;
+    private GameObject skillMesh;
     private Card usingCard;
     private GameObject usingHeroGO;
     private GameObject usingCardGO;
@@ -81,7 +80,8 @@ public class CardManager : MonoBehaviour
                 {
                     if (Physics.Raycast(ray, out hitData, 1000, ~heroLayer))
                     {
-                        AOEIndicatorCone.transform.DOLookAt(hitData.point , 0.01f, AxisConstraint.Y);
+                        skillMesh.transform.DOMove(usingHeroGO.transform.position , 0.01f);
+                        skillMesh.transform.DOLookAt(hitData.point , 0.01f, AxisConstraint.Y);
                     }
                 }
             }
@@ -115,8 +115,10 @@ public class CardManager : MonoBehaviour
                         GuildEnergy -= spellManager.FindSpell(usingCard.SpellID).EnergyCost;
                         HC.MainHero.UltimateEnergy = 0;
                         HC.UltimateSkillPulled = false;
-                        spellManager.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, AOEIndicatorCone , usingHeroGO);
-                        AOEIndicatorCone.SetActive(false);
+                        GameObject tempSkillMesh = skillMesh;
+                        spellManager.CastWithDirection(usingHeroGO.GetComponent<Hero>().UltimateSkill, tempSkillMesh, usingHeroGO);
+                        skillMesh.SetActive(false);
+                        Destroy(skillMesh , 5f);
                     }
                     else
                     {
@@ -194,20 +196,12 @@ public class CardManager : MonoBehaviour
                 AOEIndicator.transform.localScale = Vector3.one * 0.4f * spellManager.FindSpell(usingCard.SpellID).AOERange;
                 this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
             }
-            else if (usingCard.CardType == CardTypes.PickADirectionUlti)
+            else if (usingCard.CardType == CardTypes.PickADirectionUlti) // Change this , causes problems and what is going to happen when there is different types of cones ?
             {
                 Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
                 this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
-                if (AOEIndicatorCone == null)
-                {
-                    AOEIndicatorCone = Instantiate(AOEIndicatorConePrefab, usingHeroGO.transform.position, spawnRotation);
-                }
-                else if (!AOEIndicatorCone.activeSelf)
-                {
-                    AOEIndicatorCone.SetActive(true);
-                    AOEIndicatorCone.transform.position = usingHeroGO.transform.position;
-                }
-                AOEIndicatorCone.GetComponentInChildren<CollisionObserver>().CollidedObjects.Clear();
+                skillMesh = Instantiate(usedCard.GetComponent<Card>().SkillMesh , usingHeroGO.transform.position, Quaternion.identity);
+                //Instantiate SkillMesh
             }
             else if (usingCard.CardType == CardTypes.CastUlti)
             {

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 3
   Name: Medium1
-  BaseHealth: 400
+  BaseHealth: 4000
   BaseDefence: 10
   BaseDamage: 60
   Defence: 0
