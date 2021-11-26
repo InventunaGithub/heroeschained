@@ -119,9 +119,9 @@ public class Hero : MonoBehaviour
         {
             AttackSpeed = 5;
         }
-        if (AttackSpeed < 0)
+        if (AttackSpeed < 0.2f)
         {
-            AttackSpeed = 0;
+            AttackSpeed = 0.2f;
         }
     }
 

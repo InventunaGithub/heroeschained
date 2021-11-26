@@ -30,9 +30,14 @@ public class EarthShattererUltimateSkill : Spell
         GameObject castingEffect = Instantiate(Effects[0], caster.transform.position + Vector3.up, Quaternion.identity);
         Destroy(castingEffect, CastTime);
         tempHeroController.HeroLock = true;
+        StartCoroutine(LookAtTarget(caster, skillMesh));
+        StartCoroutine(CastSpellLag(casterHero, caster , skillMesh));
+    }
+    IEnumerator LookAtTarget(GameObject caster , GameObject skillMesh)
+    {
+        yield return new WaitForEndOfFrame();
         tempHeroController.Agent.enabled = false;
         caster.transform.DOLookAt(skillMesh.transform.position + Vector3.forward, 0.1f);
-        StartCoroutine(CastSpellLag(casterHero, caster , skillMesh));
     }
     IEnumerator CastSpellLag(Hero casterHero, GameObject caster, GameObject skillMesh)
     {
@@ -60,6 +65,7 @@ public class EarthShattererUltimateSkill : Spell
         }
         tempHeroController.SetIsAttacking(false);
         tempHeroController.Agent.enabled = true;
+        yield return new WaitForEndOfFrame();
         tempHeroController.HeroLock = false;
     }
     
@@ -80,14 +86,16 @@ public class EarthShattererUltimateSkill : Spell
         HeroController inConeHC = targetGO.transform.GetComponent<HeroController>();
         targetGO.transform.GetComponent<Rigidbody>().useGravity = false;
         inConeHC.HeroLock = true;
+        yield return new WaitForEndOfFrame();
         inConeHC.Agent.enabled = false;
         Vector3 origin = targetGO.transform.position;
         yield return new WaitForSeconds(0.1f);
         targetGO.transform.DOMoveY(3, 0.3f);
         yield return new WaitForSeconds(0.4f);
         targetGO.transform.DOMove(origin, 0.3f);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.35f);
         inConeHC.Agent.enabled = true;
+        yield return new WaitForEndOfFrame();
         inConeHC.HeroLock = false;
         targetGO.transform.GetComponent<Rigidbody>().useGravity = true;
     }
