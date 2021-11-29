@@ -17,7 +17,7 @@ public class HeroController : MonoBehaviour
     public int TargetHero;
     public int SkillEnergyCost;
     public List<Hero> EnemyTeam;
-    private List<Hero> team;
+    public List<Hero> Team;
     public NavMeshAgent Agent;
     public float NormalAttackCooldown;
     private bool onCooldown = false;
@@ -68,12 +68,12 @@ public class HeroController : MonoBehaviour
         MainHero.HeroObject = this.gameObject;
         if(gameObject.tag == "Team1")
         {
-            team = battlefieldManager.Team1;
+            Team = battlefieldManager.Team1;
             EnemyTeam = battlefieldManager.Team2;
         }
         else if(gameObject.tag == "Team2")
         {
-            team = battlefieldManager.Team2;
+            Team = battlefieldManager.Team2;
             EnemyTeam = battlefieldManager.Team1;
         }
         canvas = GameObject.Find("Canvas");
@@ -115,7 +115,7 @@ public class HeroController : MonoBehaviour
                 EnergyBar.value = 0;
                 IsDead = true;
                 DyingAnimation();
-                team.Remove(MainHero);
+                Team.Remove(MainHero);
                 if (Agent.enabled)
                 {
                     Agent.isStopped = true;
@@ -276,6 +276,40 @@ public class HeroController : MonoBehaviour
                 if (distance < closestTargetDistance)
                 {
                     closestTargetDistance = distance;
+                    TargetHero = i;
+                    Temp = enemyTeam[TargetHero].HeroObject;
+                }
+            }
+
+        }
+        return Temp;
+    }
+    public GameObject FurthestEnemy(List<Hero> enemyTeam)
+    {
+        float furthestTargetDistance = float.MinValue;
+        NavMeshPath path = null;
+        GameObject Temp = null;
+
+        for (int i = 0; i < enemyTeam.Count; i++)
+        {
+            if (enemyTeam[i] == null)
+            {
+                continue;
+            }
+            path = new NavMeshPath();
+
+            if (NavMesh.CalculatePath(transform.position, enemyTeam[i].HeroObject.transform.position, Agent.areaMask, path))
+            {
+                float distance = Vector3.Distance(transform.position, path.corners[0]);
+
+                for (int j = 1; j < path.corners.Length; j++)
+                {
+                    distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
+                }
+
+                if (distance > furthestTargetDistance)
+                {
+                    furthestTargetDistance = distance;
                     TargetHero = i;
                     Temp = enemyTeam[TargetHero].HeroObject;
                 }

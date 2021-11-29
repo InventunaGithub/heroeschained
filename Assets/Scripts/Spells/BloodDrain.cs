@@ -7,9 +7,10 @@ using UnityEngine;
 
 public class BloodDrain : Spell
 {
-    //Renamed as Blood Steal
     public float PrimaryDamagePercent;
     public float HealAmountPercent;
+
+    //Attack closet enemy for 130% damage and self heal for 50% of damage
     public override void Cast(GameObject caster , GameObject target)
     {
         SetCaster(caster);
