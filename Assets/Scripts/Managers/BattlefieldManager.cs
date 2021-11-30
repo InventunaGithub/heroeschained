@@ -165,7 +165,9 @@ public class BattlefieldManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             whileHandbreak += 1;
 
-            if(whileHandbreak > 30)
+            Debug.Log("Waiting For Navmesh");
+
+            if (whileHandbreak > 30)
             {
                 Debug.LogError("Navmesh Error");
                 break;

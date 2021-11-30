@@ -37,7 +37,7 @@ public class EarthShattererUltimateSkill : Spell
     {
         yield return new WaitForEndOfFrame();
         tempHeroController.Agent.enabled = false;
-        caster.transform.DOLookAt(skillMesh.transform.position + Vector3.forward, 0.1f);
+        caster.transform.DORotate(skillMesh.transform.rotation.eulerAngles , 0.1f);
     }
     IEnumerator CastSpellLag(Hero casterHero, GameObject caster, GameObject skillMesh)
     {

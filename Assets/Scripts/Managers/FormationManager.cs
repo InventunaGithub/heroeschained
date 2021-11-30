@@ -107,7 +107,9 @@ public class FormationManager : MonoBehaviour
                     swappedOutHeroCard.ChangeColor(Color.green);
                     swappedOutHeroCard.OnTeam = false;
                     battleFieldManager.Team1.Remove(clickedHeroController.MainHero);
-                    Destroy(clickedHeroController.MainHero.HeroObject);
+                    Destroy(clickedHeroController.HeroEnergyBar);
+                    Destroy(clickedHeroController.HeroHealthBar);
+                    Destroy(clickedHeroController.gameObject);
                     Trash.GetComponent<TrashAreaObserver>().destroyed();
                 }
                 else
@@ -165,6 +167,8 @@ public class FormationManager : MonoBehaviour
             {
                 if (OnTrash)
                 {
+                    Destroy(createdHeroGO.GetComponent<HeroController>().HeroEnergyBar);
+                    Destroy(createdHeroGO.GetComponent<HeroController>().HeroHealthBar);
                     Destroy(createdHeroGO);
                     Trash.GetComponent<TrashAreaObserver>().destroyed();
                 }
@@ -193,6 +197,8 @@ public class FormationManager : MonoBehaviour
                             else
                             {
                                 Debug.Log("maxteamcount reached");
+                                Destroy(createdHeroGO.GetComponent<HeroController>().HeroEnergyBar);
+                                Destroy(createdHeroGO.GetComponent<HeroController>().HeroHealthBar);
                                 Destroy(createdHeroGO);
                             }
 
@@ -257,6 +263,8 @@ public class FormationManager : MonoBehaviour
                         else
                         {
                             Debug.Log("Maxteamcount reached");
+                            Destroy(createdHeroGO.GetComponent<HeroController>().HeroEnergyBar);
+                            Destroy(createdHeroGO.GetComponent<HeroController>().HeroHealthBar);
                             Destroy(createdHeroGO);
                         }
                     }

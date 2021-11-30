@@ -40,8 +40,8 @@ public class HeroController : MonoBehaviour
     public float Distance = 0;
     public GameObject HealthBarGO;
     public GameObject EnergyBarGO;
-    private GameObject HeroHealthBar;
-    private GameObject HeroEnergyBar;
+    public GameObject HeroHealthBar;
+    public GameObject HeroEnergyBar;
     private Slider HealthBar;
     private Slider EnergyBar;
     private BattlefieldManager battlefieldManager;
@@ -99,6 +99,8 @@ public class HeroController : MonoBehaviour
     {
         HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
         HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + -(Vector3.up * 0.1f));
+        HealthBar.value = MainHero.Health;
+        EnergyBar.value = MainHero.Energy;
 
         if (battlefieldManager.GameStarted && !HeroLock)
         {
@@ -111,8 +113,7 @@ public class HeroController : MonoBehaviour
             if (MainHero.Health <= 0 && EnemyTeam.Count != 0  && !IsDead) //Death state
             {
                 Destroy(UltimateSkillCardGO);
-                HealthBar.value = MainHero.Health;
-                EnergyBar.value = 0;
+                MainHero.Energy = 0;
                 IsDead = true;
                 DyingAnimation();
                 Team.Remove(MainHero);
@@ -127,10 +128,6 @@ public class HeroController : MonoBehaviour
             }
             else if (EnemyTeam.Count == 0 && !Victory && !IsDead && battlefieldManager.LastPhase) //Victory state
             {
-                
-                HealthBar.value = MainHero.Health;
-                EnergyBar.value = MainHero.Energy;
-
                 if (MainHero.Health == 0)
                 {
                     MainHero.Health = 1;
@@ -147,10 +144,6 @@ public class HeroController : MonoBehaviour
             }
             else if(!Victory && !IsDead)
             {
-                HeroHealthBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position);
-                HealthBar.value = MainHero.Health;
-                HeroEnergyBar.transform.position = mainCam.WorldToScreenPoint(MainHero.HeroObject.transform.position + - (Vector3.up * 0.1f));
-                EnergyBar.value = MainHero.Energy;
 
                 if(MainHero.UltimateEnergy == MainHero.MaxUltimateEnergy && MainHero.MaxUltimateEnergy != 0)
                 {
