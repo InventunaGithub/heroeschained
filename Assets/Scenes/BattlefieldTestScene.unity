@@ -65006,6 +65006,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 595877796}
     m_Modifications:
+    - target: {fileID: 1064508613114155276, guid: 0dd410fdf4697c34aa9e6d58d87c909e, type: 3}
+      propertyPath: EnergyCost
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 1064508613114155277, guid: 0dd410fdf4697c34aa9e6d58d87c909e, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -65171,6 +65175,10 @@ PrefabInstance:
     - target: {fileID: 2134996521587747625, guid: e691209cbc7cb874ca9bab2986ea83d0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134996521587747630, guid: e691209cbc7cb874ca9bab2986ea83d0, type: 3}
+      propertyPath: EnergyCost
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e691209cbc7cb874ca9bab2986ea83d0, type: 3}
@@ -65438,6 +65446,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 595877796}
     m_Modifications:
+    - target: {fileID: 3163738141674562315, guid: 00d329faaff32f14b81f74f4e5f7c67f, type: 3}
+      propertyPath: EnergyCost
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 5487621010082569744, guid: 00d329faaff32f14b81f74f4e5f7c67f, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -65844,6 +65856,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 595877796}
     m_Modifications:
+    - target: {fileID: 7631996193757230323, guid: fe1fa85a8882fb24ab06614a91662ed8, type: 3}
+      propertyPath: EnergyCost
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 7631996193757230332, guid: fe1fa85a8882fb24ab06614a91662ed8, type: 3}
       propertyPath: m_RootOrder
       value: 9

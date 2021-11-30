@@ -39,7 +39,7 @@ public class ChainLightningUltimateSkill : Spell
     {
         yield return new WaitForSeconds(CastTime);
         HeroController tempHeroController = caster.GetComponent<HeroController>();
-        if (!tempHeroController.IsDead && !tempHeroController.Victory)
+        if (!tempHeroController.IsDead && !tempHeroController.Victory && GameObject.FindObjectOfType<BattlefieldManager>().GameStarted)
         {
             GameObject targetGO = null;
             tempHeroController.AttackAnimation();

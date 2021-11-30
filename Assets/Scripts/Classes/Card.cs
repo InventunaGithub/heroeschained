@@ -18,11 +18,17 @@ public class Card : MonoBehaviour
     private CardManager cardManager;
     private SpellManager spellManager;
     private Button cardButton;
+    public Text EnergyText;
+    public Text TitleText;
+    public Text DescriptionText;
     void Start()
     {
         cardManager = GameObject.Find("Managers").GetComponent<CardManager>();
         spellManager = GameObject.Find("Managers").GetComponent<SpellManager>();
         cardButton = GetComponent<Button>();
+        EnergyText.text = spellManager.FindSpell(SpellID).GetComponent<Spell>().EnergyCost.ToString();
+        TitleText.text = Name;
+        DescriptionText.text = Description;
     }
     void Update()
     {

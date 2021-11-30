@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroID: 1003
   Name: Demon Wolf
-  BaseHealth: 5000
+  BaseHealth: 1200
   BaseDefence: 10
   BaseDamage: 40
   Defence: 0

@@ -40,7 +40,7 @@ public class RainOfArrowsUltimateSkill : Spell
     {
         yield return new WaitForSeconds(CastTime);
         HeroController tempHeroController = caster.GetComponent<HeroController>();
-        if (!tempHeroController.IsDead && !tempHeroController.Victory)
+        if (!tempHeroController.IsDead && !tempHeroController.Victory && GameObject.FindObjectOfType<BattlefieldManager>().GameStarted)
         {
             tempHeroController.AttackAnimation();
             for (int i = 0; i < tempHeroController.EnemyTeam.Count * HitEachEnemyWithAmount; i++)

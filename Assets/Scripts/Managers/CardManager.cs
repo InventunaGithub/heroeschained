@@ -163,56 +163,59 @@ public class CardManager : MonoBehaviour
     }
     public void UseCard(GameObject usedCard)
     {
-        usingCardGO = usedCard;
-        usingCard = usedCard.GetComponent<Card>(); 
-        if (GuildEnergy >= spellManager.FindSpell(usingCard.SpellID).EnergyCost)
+        if(battlefieldManager.GameStarted)
         {
-            if (usingCard.CardType == CardTypes.GuildCard)
+            usingCardGO = usedCard;
+            usingCard = usedCard.GetComponent<Card>();
+            if (GuildEnergy >= spellManager.FindSpell(usingCard.SpellID).EnergyCost)
             {
-                Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
-                if (AOEIndicator == null)
+                if (usingCard.CardType == CardTypes.GuildCard)
                 {
-                    AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, spawnRotation);
+                    Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+                    if (AOEIndicator == null)
+                    {
+                        AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, spawnRotation);
+                    }
+                    else if (!AOEIndicator.activeSelf)
+                    {
+                        AOEIndicator.SetActive(true);
+                        AOEIndicator.transform.position = usedCard.transform.position;
+                    }
+                    AOEIndicator.transform.localScale = Vector3.one * 0.4f * spellManager.FindSpell(usingCard.SpellID).AOERange;
                 }
-                else if (!AOEIndicator.activeSelf)
+                else if (usingCard.CardType == CardTypes.DraggableUlti)
                 {
-                    AOEIndicator.SetActive(true);
-                    AOEIndicator.transform.position = usedCard.transform.position;
+                    Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+                    if (AOEIndicator == null)
+                    {
+                        AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, spawnRotation);
+                    }
+                    else if (!AOEIndicator.activeSelf)
+                    {
+                        AOEIndicator.SetActive(true);
+                        AOEIndicator.transform.position = usedCard.transform.position;
+                    }
+                    AOEIndicator.transform.localScale = Vector3.one * 0.4f * spellManager.FindSpell(usingCard.SpellID).AOERange;
+                    this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
                 }
-                AOEIndicator.transform.localScale = Vector3.one * 0.4f * spellManager.FindSpell(usingCard.SpellID).AOERange;
-            }
-            else if(usingCard.CardType == CardTypes.DraggableUlti)
-            {
-                Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
-                if (AOEIndicator == null)
+                else if (usingCard.CardType == CardTypes.PickADirectionUlti) // Change this , causes problems and what is going to happen when there is different types of cones ?
                 {
-                    AOEIndicator = Instantiate(AOEIndicatorPrefab, Vector3.zero, spawnRotation);
+                    Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
+                    this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
+                    skillMesh = Instantiate(usedCard.GetComponent<Card>().SkillMesh, usingHeroGO.transform.position, Quaternion.identity);
+                    //Instantiate SkillMesh
                 }
-                else if (!AOEIndicator.activeSelf)
+                else if (usingCard.CardType == CardTypes.CastUlti)
                 {
-                    AOEIndicator.SetActive(true);
-                    AOEIndicator.transform.position = usedCard.transform.position;
+                    this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
                 }
-                AOEIndicator.transform.localScale = Vector3.one * 0.4f * spellManager.FindSpell(usingCard.SpellID).AOERange;
-                this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
-            }
-            else if (usingCard.CardType == CardTypes.PickADirectionUlti) // Change this , causes problems and what is going to happen when there is different types of cones ?
-            {
-                Quaternion spawnRotation = Quaternion.Euler(90, 0, 0);
-                this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
-                skillMesh = Instantiate(usedCard.GetComponent<Card>().SkillMesh , usingHeroGO.transform.position, Quaternion.identity);
-                //Instantiate SkillMesh
-            }
-            else if (usingCard.CardType == CardTypes.CastUlti)
-            {
-                this.usingHeroGO = usedCard.GetComponent<Card>().UsingHero;
-            }
-            clickedOn = true;
+                clickedOn = true;
 
-        }
-        else
-        {
-            Debug.Log("Not Enough Energy");
+            }
+            else
+            {
+                Debug.Log("Not Enough Energy");
+            }
         }
     }
 

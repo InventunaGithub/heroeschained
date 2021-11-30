@@ -43,7 +43,7 @@ public class EarthShattererUltimateSkill : Spell
     {
         yield return new WaitForSeconds(CastTime);
         tempHeroController = casterHero.GetComponent<HeroController>();
-        if (!tempHeroController.IsDead && !tempHeroController.Victory)
+        if (!tempHeroController.IsDead && !tempHeroController.Victory && GameObject.FindObjectOfType<BattlefieldManager>().GameStarted)
         {
             List<GameObject> inArea = skillMesh.GetComponentInChildren<CollisionObserver>().CollidedObjects;
             
